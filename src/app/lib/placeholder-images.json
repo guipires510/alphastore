@@ -9,13 +9,13 @@
     {
       "id": "featured-highlight",
       "description": "Destaque de Oferta Home - Proporção 16:9 (Sugerido: 1200x675px)",
-      "imageUrl": "https://http2.mlstatic.com/D_NQ_NP_2X_930502-MLB79243674706_092024-F-kit-com-10-cuecas-boxer-adulto-algodo-lupo.webp",
+      "imageUrl": "https://i.imgur.com/A2PO69a.png",
       "imageHint": "men underwear luxury"
     },
     {
       "id": "kit-lupo-10",
       "description": "Produto - Proporção 1:1 Quadrada (Sugerido: 800x800px)",
-      "imageUrl": "https://http2.mlstatic.com/D_NQ_NP_2X_930502-MLB79243674706_092024-F-kit-com-10-cuecas-boxer-adulto-algodo-lupo.webp",
+      "imageUrl": "https://i.imgur.com/A2PO69a.png",
       "imageHint": "lupo underwear kit"
     },
     {
@@ -27,7 +27,7 @@
     {
       "id": "kit-ck-premium",
       "description": "Produto - Proporção 1:1 Quadrada (Sugerido: 800x800px)",
-      "imageUrl": "https://picsum.photos/seed/ck_alpha/800/800",
+      "imageUrl": "https://i.imgur.com/2TET2bx.png",
       "imageHint": "calvin klein underwear"
     },
     {
