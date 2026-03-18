@@ -1,3 +1,4 @@
+
 import Image from "next/image";
 import Link from "next/link";
 import { Navbar } from "@/components/navbar";
@@ -7,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, ShieldCheck, Truck, Zap, ShoppingCart, AlertCircle } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Badge } from "@/components/ui/badge";
+import { AlphaLogo } from "@/components/alpha-logo";
 
 export default function Home() {
   const heroImage = PlaceHolderImages.find(img => img.id === 'hero-banner')?.imageUrl || '';
@@ -183,9 +185,8 @@ export default function Home() {
       <footer className="bg-card py-16 border-t">
         <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12">
           <div className="space-y-6">
-            <Link href="/" className="flex flex-col">
-              <span className="text-2xl font-black tracking-tighter text-primary italic uppercase leading-none">AlphaFlow</span>
-              <span className="text-[10px] font-medium tracking-[0.3em] uppercase">Underwear</span>
+            <Link href="/">
+              <AlphaLogo />
             </Link>
             <p className="text-muted-foreground text-xs uppercase tracking-widest leading-relaxed">
               Elevando o padrão do underwear masculino brasileiro com conforto e estilo desde 2026.

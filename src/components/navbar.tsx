@@ -15,6 +15,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { CartDrawer } from "./cart-drawer";
+import { AlphaLogo } from "./alpha-logo";
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -77,9 +78,8 @@ export function Navbar() {
                 </nav>
               </SheetContent>
             </Sheet>
-            <Link href="/" className="flex items-center gap-2">
-              <span className="text-xl font-black tracking-tighter text-primary italic uppercase">AlphaFlow</span>
-              <span className="text-xs font-medium tracking-[0.2em] uppercase hidden sm:inline-block text-foreground">Underwear</span>
+            <Link href="/">
+              <AlphaLogo />
             </Link>
           </div>
 
