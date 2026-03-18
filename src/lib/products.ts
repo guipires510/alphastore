@@ -70,7 +70,7 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'lupo-4',
-    name: 'Kit 4 Cuecas Boxer Lupo Performance',
+    name: 'Kit 4 Cuecas Boxer Microfibra sem Costura Lupo',
     price: 34.90,
     description: 'Kit 4 Cuecas Boxer Microfibra sem Costura Lupo\nModelo: 00436-926\n\nDesenvolvida para oferecer máximo conforto, ajuste preciso e alta durabilidade, esta peça é produzida com a avançada tecnologia SEAMLESS, que elimina costuras, evitando atritos e proporcionando um encaixe anatômico perfeito ao corpo. O resultado é uma experiência de uso extremamente confortável, mesmo em longos períodos.\n\nO punho comfortable foi projetado para se adaptar naturalmente ao corpo, sem apertar ou marcar a pele, garantindo liberdade de movimento, toque suave e sensação constante de bem-estar. Ideal para quem busca conforto aliado à performance.\n\nConfeccionada em microfibra de alta qualidade, a peça oferece excelente resistência, flexibilidade e leveza. Seu tecido possui secagem rápida, auxiliando no controle da umidade e mantendo a pele sempre seca e fresca. Além disso, o toque macio e sedoso eleva o nível de conforto, tornando a peça perfeita para uso diário, prática esportiva ou uso prolongado.\n\nUma combinação completa de tecnologia, conforto e funcionalidade, pensada para quem valoriza qualidade em cada detalhe.\n\nCaracterísticas Principais:\n- Tecnologia Seamless (sem costura).\n- Punho confortável.\n- Microfibra de alta qualidade.\n- Secagem rápida.\n- Alta elasticidade.\n- Ajuste anatômico.\n- Conforto prolongado.\n\nFicha Técnica:\n- Material: Microfibra.\n- Tecnologia: Seamless.\n- Elasticidade: Alta.\n- Modelagem: Anatômica.\n- Uso indicado: Diário / Esportivo.\n- Costuras: Não.\n\nO Kit 4 Cuecas Boxer Microfibra sem Costura Lupo pode ser encontrado aqui na AlphaFlow!\n\nGarantia de fábrica: 30 dias',
     image: PlaceHolderImages.find(img => img.id === 'kit-lupo-4')?.imageUrl || 'https://picsum.photos/seed/lupo4/600/600',
@@ -82,15 +82,15 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'lupo-5-slip',
-    name: 'Kit 5 Cuecas Slip Lupo Algodão',
+    name: 'Kit 5 Cuecas Slip Lupo Microfibra Seamless',
     price: 39.90,
-    description: 'Kit com 5 cuecas modelo Slip da Lupo. Desenvolvidas em algodão de alta qualidade para proporcionar o máximo de conforto e liberdade de movimento.',
+    description: 'PRODUTO ORIGINAL!!! LOJA FÍSICA DESDE 1977\nCOMPRE COM CONFIANÇA! COM NOTA FISCAL\n\n5 CUECAS SLIP LUPO REF:691-002 MICROFIBRA\n\nDescrição:\n- Kit com 5 cuecas slip, confeccionadas em microfibra de toque extremamente suave e macio.\n- Desenvolvidas com a tecnologia sem costura, não marca sob a roupa e proporciona muito mais conforto.\n- Parte frontal com formato anatômico para ajuste perfeito.\n- Cintura com elástico reforçado, personalizado com o nome da marca.\n- Ideal para o dia a dia, com conforto e segurança, com tecido antimicrobial (Evita proliferação de bactérias).\n\nTamanhos:\nP: 38/40\nM: 42/44\nG: 46/48\nGG: 50/52\nXG: 54/56\n\nComposição: 93% Poliamida, 4% Elastano e 3% Poliester.\n\nGarantia de Autenticidade AlphaFlow.',
     image: PlaceHolderImages.find(img => img.id === 'kit-lupo-5-slip')?.imageUrl || 'https://picsum.photos/seed/luposlip5/600/600',
     category: 'kit',
     brand: 'Lupo',
     quantity: 5,
-    material: '100% Algodão',
-    features: ['Modelo Slip Clássico', 'Toque Macio', 'Conforto Tradicional']
+    material: 'Microfibra (Poliamida/Elastano)',
+    features: ['Modelo REF:691-002', 'Tecnologia Antimicrobial', 'Sem Costura', 'Ajuste Anatômico']
   },
   {
     id: '4',
