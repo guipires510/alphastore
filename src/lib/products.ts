@@ -47,7 +47,7 @@ export const PRODUCTS: Product[] = [
     name: 'Kit 3 Cuecas Boxer Calvin Klein Cotton',
     price: 89.90,
     originalPrice: 249.90,
-    description: 'O ícone do estilo masculino. Algodão premium com o elástico clássico Calvin Klein em um kit exclusivo de 3 unidades.',
+    description: 'IDEAL PARA ELEVAR O SEU NÍVEL DE CONFORTO!\n\nAposte no Kit 3 Cuecas Masculinas Cotton Calvin Klein e se surpreenda com todo o conforto e estilo que este modelo tem para oferecer. Elas são perfeitas para acompanhar o seu ritmo, seja ele mais casual ou na rotina de exercícios!\n\nConfeccionadas em algodão de alta qualidade, as peças possuem cós em elástico com logo Calvin Klein, acabamento e costura no mesmo tom, design boxer com ótimo ajuste e caimento perfeito a todo tipo de corpo! É o kit ideal para acertar na escolha da peça íntima. Não fique de fora e garanta já o seu!\n--------------------------------------------------------------------------\nSOBRE A MARCA:\nNova Iorque, 1968. Nasce pelas mãos do estilista Calvin Klein uma das maiores grifes que o mundo já conheceu. A marca escolheu o caminho do minimalismo e da sofisticação para caminhar pelo concorrido universo da moda, as roupas de linhas simples e sofisticadas colocaram a Calvin Klein entre as marcas de moda mais importantes e influentes do mercado, conquistando seguidores pelos quatro cantos do mundo.',
     image: PlaceHolderImages.find(img => img.id === 'kit-ck-premium')?.imageUrl || 'https://picsum.photos/seed/ck_alpha/600/600',
     category: 'kit',
     brand: 'Calvin Klein',
