@@ -1,4 +1,3 @@
-
 import Image from "next/image";
 import Link from "next/link";
 import { Navbar } from "@/components/navbar";
@@ -109,9 +108,11 @@ export default function Home() {
                 <Badge className="bg-secondary text-white font-black italic px-4 py-1 uppercase tracking-widest text-xs animate-pulse">
                   MELHOR OFERTA DO DIA
                 </Badge>
-                <Badge className="bg-orange-600 text-white font-black italic px-3 py-1 uppercase tracking-widest text-[10px] flex items-center gap-1">
-                  <AlertCircle className="w-3 h-3" /> ÚLTIMAS UNIDADES!
-                </Badge>
+                {featuredProduct.originalPrice && (
+                  <Badge className="bg-orange-600 text-white font-black italic px-3 py-1 uppercase tracking-widest text-[10px] flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" /> ÚLTIMAS UNIDADES!
+                  </Badge>
+                )}
               </div>
             </div>
             
@@ -123,9 +124,6 @@ export default function Home() {
                 <p className="text-muted-foreground uppercase tracking-widest font-medium text-sm leading-relaxed max-w-md">
                   {featuredProduct.description}
                 </p>
-                <div className="flex items-center gap-2 text-secondary font-black italic text-xs animate-bounce">
-                  🔥 Mais de 120 pessoas compraram este kit hoje!
-                </div>
               </div>
 
               <div className="flex items-end gap-4">
@@ -139,9 +137,11 @@ export default function Home() {
                     R$ {featuredProduct.price.toFixed(2)}
                   </span>
                 </div>
-                <div className="bg-primary/10 border border-primary/20 px-3 py-1 rounded text-[10px] font-black uppercase tracking-widest text-primary mb-1">
-                  -80% NO PIX
-                </div>
+                {featuredProduct.originalPrice && (
+                  <div className="bg-primary/10 border border-primary/20 px-3 py-1 rounded text-[10px] font-black uppercase tracking-widest text-primary mb-1">
+                    OFERTA PIX
+                  </div>
+                )}
               </div>
 
               <div className="pt-4 space-y-4">
