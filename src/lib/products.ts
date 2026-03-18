@@ -72,13 +72,13 @@ export const PRODUCTS: Product[] = [
     id: 'lupo-4',
     name: 'Kit 4 Cuecas Boxer Lupo Performance',
     price: 34.90,
-    description: 'Kit essencial com 4 cuecas boxer Lupo. Conforto e durabilidade para o seu dia a dia com a qualidade reconhecida Lupo.',
+    description: 'Kit 4 Cuecas Boxer Microfibra sem Costura Lupo\nModelo: 00436-926\n\nDesenvolvida para oferecer máximo conforto, ajuste preciso e alta durabilidade, esta peça é produzida com a avançada tecnologia SEAMLESS, que elimina costuras, evitando atritos e proporcionando um encaixe anatômico perfeito ao corpo. O resultado é uma experiência de uso extremamente confortável, mesmo em longos períodos.\n\nO punho comfortable foi projetado para se adaptar naturalmente ao corpo, sem apertar ou marcar a pele, garantindo liberdade de movimento, toque suave e sensação constante de bem-estar. Ideal para quem busca conforto aliado à performance.\n\nConfeccionada em microfibra de alta qualidade, a peça oferece excelente resistência, flexibilidade e leveza. Seu tecido possui secagem rápida, auxiliando no controle da umidade e mantendo a pele sempre seca e fresca. Além disso, o toque macio e sedoso eleva o nível de conforto, tornando a peça perfeita para uso diário, prática esportiva ou uso prolongado.\n\nUma combinação completa de tecnologia, conforto e funcionalidade, pensada para quem valoriza qualidade em cada detalhe.\n\nCaracterísticas Principais:\n- Tecnologia Seamless (sem costura).\n- Punho confortável.\n- Microfibra de alta qualidade.\n- Secagem rápida.\n- Alta elasticidade.\n- Ajuste anatômico.\n- Conforto prolongado.\n\nFicha Técnica:\n- Material: Microfibra.\n- Tecnologia: Seamless.\n- Elasticidade: Alta.\n- Modelagem: Anatômica.\n- Uso indicado: Diário / Esportivo.\n- Costuras: Não.\n\nO Kit 4 Cuecas Boxer Microfibra sem Costura Lupo pode ser encontrado aqui na AlphaFlow!\n\nGarantia de fábrica: 30 dias',
     image: PlaceHolderImages.find(img => img.id === 'kit-lupo-4')?.imageUrl || 'https://picsum.photos/seed/lupo4/600/600',
     category: 'kit',
     brand: 'Lupo',
     quantity: 4,
-    material: 'Algodão Premium',
-    features: ['Ajuste Perfeito', 'Algodão Respirável', 'Cós Elástico']
+    material: 'Microfibra',
+    features: ['Tecnologia Seamless', 'Punho Confortável', 'Secagem Rápida', 'Modelo 00436-926']
   },
   {
     id: 'lupo-5-slip',
