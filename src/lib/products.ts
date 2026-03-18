@@ -1,4 +1,3 @@
-
 import { PlaceHolderImages } from './placeholder-images';
 
 export interface Product {
@@ -34,7 +33,6 @@ export const PRODUCTS: Product[] = [
     id: 'lupo-6-microfibra',
     name: 'Kit 6 Cuecas Boxer Lupo Microfibra Sem Costura',
     price: 39.90,
-    originalPrice: 99.90,
     description: 'Atenção: O kit será composto com 6 cuecas que serão enviadas de acordo com a sua escolha. Cueca boxer masculina Lupo. O kit é composto por cuecas masculinas para adultos, modelo boxer confeccionado em microfibra da marca Lupo. Cueca boxer para homens que gostam de estilo. Com formato anatômico, muito mais conforto, malha com elasticidade para ajuste perfeito. Para garantir leveza e suavidade a cada movimento, invista no bem-estar que a cueca sem costura proporciona no dia a dia, escolha certa para acompanhar homens modernos e sofisticados.',
     image: PlaceHolderImages.find(img => img.id === 'kit-lupo-6')?.imageUrl || 'https://picsum.photos/seed/lupo6/600/600',
     category: 'kit',
@@ -85,7 +83,6 @@ export const PRODUCTS: Product[] = [
     id: '5',
     name: 'Cueca Boxer Modal Ultra Soft',
     price: 49.90,
-    originalPrice: 59.90,
     description: 'O ápice da tecnologia em tecidos. Toque frio e conforto inigualável.',
     image: PlaceHolderImages.find(img => img.id === 'modal-boxer')?.imageUrl || 'https://picsum.photos/seed/5/600/600',
     category: 'single',
