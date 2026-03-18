@@ -19,7 +19,7 @@ export const PRODUCTS: Product[] = [
   {
     id: 'lupo-10',
     name: 'Kit 10 Cuecas Boxer Lupo Performance',
-    price: 49.90,
+    price: 59.90,
     originalPrice: 249.90,
     description: 'A tecnologia Lupo para o máximo conforto e durabilidade. Kit completo para renovar seu dia a dia.',
     image: PlaceHolderImages.find(img => img.id === 'kit-lupo-10')?.imageUrl || 'https://picsum.photos/seed/lupo/600/600',
@@ -32,7 +32,7 @@ export const PRODUCTS: Product[] = [
   {
     id: 'ck-premium',
     name: 'Kit 10 Cuecas Boxer Calvin Klein Cotton',
-    price: 69.90,
+    price: 89.90,
     originalPrice: 299.90,
     description: 'O ícone do estilo masculino. Algodão premium com o elástico clássico Calvin Klein em um kit completo de 10 unidades.',
     image: PlaceHolderImages.find(img => img.id === 'kit-ck-premium')?.imageUrl || 'https://picsum.photos/seed/ck/600/600',

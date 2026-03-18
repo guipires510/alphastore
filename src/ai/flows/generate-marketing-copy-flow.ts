@@ -14,7 +14,7 @@ const GenerateMarketingCopyInputSchema = z.object({
   theme: z
     .string()
     .describe(
-      'The product or promotion theme for which to generate marketing copy (e.g., "Kit 10 cuecas por R$49,90 hoje no PIX", "Novidade: cuecas boxer de algodão")'
+      'The product or promotion theme for which to generate marketing copy (e.g., "Kit 10 cuecas por R$59,90 hoje no PIX", "Novidade: cuecas boxer de algodão")'
     ),
 });
 export type GenerateMarketingCopyInput = z.infer<
