@@ -82,8 +82,24 @@
   }
 }
 
+@keyframes white-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(255, 255, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+
 .animate-gold-pulse {
   animation: gold-pulse 2s infinite;
+}
+
+.animate-white-pulse {
+  animation: white-pulse 2s infinite;
 }
 
 ::-webkit-scrollbar {

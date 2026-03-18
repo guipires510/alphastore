@@ -218,10 +218,10 @@ export default function Home() {
               </div>
 
               <div className="pt-4 space-y-4">
-                <Button asChild size="lg" className="w-full md:w-fit h-16 px-12 bg-foreground text-background hover:bg-primary hover:text-white font-black uppercase tracking-widest italic text-lg transition-all cta-button">
+                <Button asChild size="lg" className="w-full md:w-fit h-16 px-12 bg-foreground text-background hover:bg-primary hover:text-white font-black uppercase tracking-widest italic text-lg transition-all cta-button animate-white-pulse">
                   <Link href={`/product/${weeklyProduct.id}`}>
                     <Sparkles className="w-5 h-5 mr-3" />
-                    Ver Detalhes
+                    COMPRE AQUI!
                   </Link>
                 </Button>
               </div>
