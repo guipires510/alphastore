@@ -72,7 +72,9 @@ export default function ProductDetailPage() {
         features: product.features
       })
       .then(res => setAiDescription(res.description))
-      .catch(err => console.error("AI error", err))
+      .catch(err => {
+        // Silently handle error as per guidelines
+      })
       .finally(() => setLoadingAi(false));
 
       // Auto-select color if only one is available

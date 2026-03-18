@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { useState, useEffect, useMemo } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { CheckCircle2, QrCode, Copy, Wallet, Trash2, CreditCard, Search, Loader2, Plus, Sparkles } from "lucide-react";
+import { CircleCheckBig, QrCode, Copy, Wallet, Trash2, CreditCard, Search, Loader2, Plus, Sparkles } from "lucide-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { PRODUCTS } from "@/lib/products";
@@ -143,7 +143,7 @@ export default function CheckoutPage() {
         <div className="container mx-auto px-4 max-w-2xl text-center">
           <div className="bg-card border border-border rounded-2xl p-8 md:p-12 shadow-2xl space-y-8">
             <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto text-primary">
-              <CheckCircle2 className="w-12 h-12" />
+              <CircleCheckBig className="w-12 h-12" />
             </div>
             <h1 className="text-3xl md:text-5xl font-black italic uppercase tracking-tighter">Pedido <span className="text-primary">Recebido!</span></h1>
             <p className="text-muted-foreground uppercase tracking-widest font-medium text-sm">

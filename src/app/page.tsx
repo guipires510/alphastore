@@ -4,7 +4,7 @@ import { Navbar } from "@/components/navbar";
 import { MarketingBanner } from "@/components/marketing-banner";
 import { PRODUCTS } from "@/lib/products";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ShieldCheck, Truck, Zap, ShoppingCart, AlertCircle, Sparkles } from "lucide-react";
+import { ArrowRight, ShieldCheck, Truck, Zap, ShoppingCart, CircleAlert, Sparkles } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Badge } from "@/components/ui/badge";
 import { AlphaLogo } from "@/components/alpha-logo";
@@ -115,7 +115,7 @@ export default function Home() {
                 </Badge>
                 {featuredProduct.originalPrice && (
                   <Badge className="bg-orange-600 text-white font-black italic px-3 py-1 uppercase tracking-widest text-[10px] flex items-center gap-1">
-                    <AlertCircle className="w-3 h-3" /> ÚLTIMAS UNIDADES!
+                    <CircleAlert className="w-3 h-3" /> ÚLTIMAS UNIDADES!
                   </Badge>
                 )}
               </div>

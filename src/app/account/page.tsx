@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useState } from "react";
-import { Package, User, LogOut, Clock, CheckCircle, AlertCircle } from "lucide-react";
+import { Package, User, LogOut, Clock, CircleCheck, CircleAlert } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 export default function AccountPage() {
@@ -19,7 +19,7 @@ export default function AccountPage() {
       date: "12/05/2026",
       total: 59.90,
       status: "paid",
-      items: "Kit Com 10 Cuecas Boxer Algodão Lup"
+      items: "Kit Com 10 Cuecas Boxer Algodão Lupo"
     },
     {
       id: "FLOW-97103",
