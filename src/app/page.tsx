@@ -90,8 +90,8 @@ export default function Home() {
       {/* Full Width Featured Product Section */}
       <section className="py-24 container mx-auto px-4">
         <div className="mb-12 text-center md:text-left">
-          <span className="text-primary font-black uppercase italic tracking-widest text-xs">Seleção do Mês</span>
-          <h2 className="text-4xl md:text-6xl font-black italic leading-none tracking-tighter uppercase mt-2">Melhor Oferta do <span className="text-primary">Dia</span></h2>
+          <span className="text-primary font-black uppercase italic tracking-widest text-xs">OFERTA DO MÊS</span>
+          <h2 className="text-4xl md:text-6xl font-black italic leading-none tracking-tighter uppercase mt-2">Oferta mais <span className="text-primary">vendida</span></h2>
         </div>
 
         <div className="group relative bg-card border border-border rounded-2xl overflow-hidden shadow-2xl product-card-hover transition-all duration-500">
