@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Navbar } from "@/components/navbar";
@@ -18,7 +17,7 @@ export default function AccountPage() {
     {
       id: "FLOW-98212",
       date: "12/05/2026",
-      total: 199.90,
+      total: 49.90,
       status: "paid",
       items: "Kit 10 Cuecas Boxer Performance"
     },

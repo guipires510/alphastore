@@ -43,7 +43,7 @@ export const PRODUCTS: Product[] = [
   {
     id: '3',
     name: 'Kit 10 Cuecas Boxer Performance - Oferta PIX',
-    price: 199.90,
+    price: 49.90,
     originalPrice: 299.90,
     description: 'NOSSA MELHOR OFERTA. 10 CUECAS PREMIUM PARA RENOVAR SUA GAVETA DE VEZ. NOSSA MODELAGEM ALPHAFIT GARANTE QUE A CUECA NÃO ENROLE E MANTENHA O FRESCOR O DIA TODO.',
     image: PlaceHolderImages.find(img => img.id === 'kit-10-boxer')?.imageUrl || 'https://picsum.photos/seed/3/600/600',
