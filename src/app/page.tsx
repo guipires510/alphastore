@@ -7,11 +7,10 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, ShieldCheck, Truck, Zap } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Badge } from "@/components/ui/badge";
+import { ProductCard } from "@/components/product-card";
 
 export default function Home() {
   const heroImage = PlaceHolderImages.find(img => img.id === 'hero-banner')?.imageUrl || '';
-  const highlightImage = PlaceHolderImages.find(img => img.id === 'featured-highlight')?.imageUrl || '';
-  const featuredProduct = PRODUCTS.find(p => p.id === '3') || PRODUCTS[0];
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -29,7 +28,7 @@ export default function Home() {
         />
         <div className="container relative z-10 px-4 text-center">
           <Badge className="mb-6 bg-primary/20 text-primary border-primary font-black px-4 py-1 text-sm uppercase tracking-[0.3em] italic backdrop-blur-sm">
-            Coleção Premium 2026
+            Nova Coleção Alpha
           </Badge>
           <h1 className="text-5xl md:text-8xl font-black text-white italic mb-6 leading-none tracking-tighter uppercase drop-shadow-2xl">
             Redefina seu <br />
@@ -62,8 +61,8 @@ export default function Home() {
               <Truck className="w-6 h-6" />
             </div>
             <div>
-              <h4 className="font-black text-sm uppercase italic">Entrega Flash</h4>
-              <p className="text-xs text-muted-foreground uppercase tracking-widest">Enviamos em até 24h úteis.</p>
+              <h4 className="font-black text-sm uppercase italic">Entrega Rápida</h4>
+              <p className="text-xs text-muted-foreground uppercase tracking-widest">Enviamos para todo o Brasil.</p>
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -71,8 +70,8 @@ export default function Home() {
               <ShieldCheck className="w-6 h-6" />
             </div>
             <div>
-              <h4 className="font-black text-sm uppercase italic">Qualidade Alpha</h4>
-              <p className="text-xs text-muted-foreground uppercase tracking-widest">Garantia total de satisfação.</p>
+              <h4 className="font-black text-sm uppercase italic">Qualidade Garantida</h4>
+              <p className="text-xs text-muted-foreground uppercase tracking-widest">Materiais premium de alta durabilidade.</p>
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -80,96 +79,36 @@ export default function Home() {
               <Zap className="w-6 h-6" />
             </div>
             <div>
-              <h4 className="font-black text-sm uppercase italic">Pagamento PIX</h4>
-              <p className="text-xs text-muted-foreground uppercase tracking-widest">Desconto imediato no checkout.</p>
+              <h4 className="font-black text-sm uppercase italic">Pagamento Seguro</h4>
+              <p className="text-xs text-muted-foreground uppercase tracking-widest">Desconto de 5% no PIX.</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Alpha Highlight Section - Precisely matching user image */}
+      {/* Featured Products Grid */}
       <section className="py-24 container mx-auto px-4">
         <div className="flex flex-col md:flex-row items-end justify-between mb-12 gap-6">
           <div className="space-y-2">
-            <span className="text-primary font-black uppercase italic tracking-widest">Seleção do Mês</span>
-            <h2 className="text-4xl md:text-5xl font-black italic leading-none tracking-tighter uppercase">Destaque da <span className="text-primary">Temporada</span></h2>
+            <span className="text-primary font-black uppercase italic tracking-widest">Destaques</span>
+            <h2 className="text-4xl md:text-5xl font-black italic leading-none tracking-tighter uppercase">Seleção do <span className="text-primary">Mês</span></h2>
           </div>
-        </div>
-
-        <div className="group relative bg-[#0D0D0D] border border-border rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 hover:border-primary/30">
-          <div className="grid grid-cols-1 lg:grid-cols-2">
-            <div className="relative aspect-[16/9] lg:aspect-auto h-[400px] lg:h-[650px] overflow-hidden">
-              <Image
-                src={highlightImage}
-                alt="Destaque AlphaFlow"
-                fill
-                className="object-cover transition-transform duration-1000 group-hover:scale-105"
-                data-ai-hint="men underwear luxury"
-              />
-            </div>
-            <div className="p-8 lg:p-16 flex flex-col justify-center gap-8 bg-gradient-to-br from-card/50 to-background">
-              <div className="space-y-6">
-                <Badge className="bg-primary/20 text-primary border-primary font-black italic px-4 py-1.5 uppercase tracking-widest text-xs rounded-full w-fit">
-                  BEST SELLER PREMIUM
-                </Badge>
-                
-                <h3 className="text-5xl lg:text-7xl font-black italic uppercase leading-[0.85] tracking-tighter text-white">
-                  KIT 10 <br />
-                  CUECAS BOXER <br />
-                  PERFORMANCE <br />
-                  <span className="text-primary">OFERTA PIX</span>
-                </h3>
-                
-                <p className="text-muted-foreground uppercase tracking-widest font-bold text-xs lg:text-sm max-w-lg leading-relaxed">
-                  {featuredProduct.description}
-                </p>
-              </div>
-
-              <div className="flex items-center gap-8">
-                <div className="flex flex-col">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">PREÇO ALPHA</span>
-                  <span className="text-6xl lg:text-7xl font-black italic text-primary leading-none">
-                    R$ 199.90
-                  </span>
-                </div>
-                {featuredProduct.originalPrice && (
-                  <div className="flex flex-col">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">DE</span>
-                    <span className="text-2xl lg:text-3xl text-muted-foreground line-through italic decoration-primary/50 opacity-60">
-                      R$ 299.90
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              <div className="flex items-center gap-4">
-                <Button size="lg" className="h-16 px-12 bg-primary hover:bg-primary/90 text-white font-black italic uppercase tracking-widest text-lg cta-button shadow-2xl shadow-primary/20 flex-1 lg:flex-none" asChild>
-                  <Link href={`/product/${featuredProduct.id}`}>GARANTIR O MEU</Link>
-                </Button>
-                
-                <div className="bg-muted/30 border border-border/50 p-3 rounded-xl flex flex-col items-center justify-center min-w-[80px]">
-                  <span className="text-[12px] font-black leading-none">5%</span>
-                  <span className="text-[8px] font-black uppercase tracking-tighter">OFF</span>
-                  <span className="text-[8px] font-black uppercase tracking-tighter">NO PIX</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-16 text-center">
-          <Button variant="outline" size="lg" className="h-16 px-12 border-border font-black italic uppercase tracking-widest text-lg hover:bg-foreground hover:text-background transition-all duration-300" asChild>
-            <Link href="/catalog" className="flex items-center gap-3">
-              Ver Todos os Produtos <ArrowRight className="w-5 h-5" />
-            </Link>
+          <Button variant="link" className="text-primary font-black uppercase italic tracking-widest" asChild>
+            <Link href="/catalog">Ver Todos os Produtos <ArrowRight className="w-4 h-4 ml-2" /></Link>
           </Button>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {PRODUCTS.slice(0, 3).map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
         </div>
       </section>
 
       {/* Marketing Section */}
       <section className="py-12 bg-background border-t">
         <div className="container mx-auto px-4">
-          <MarketingBanner theme="Kit 10 cuecas por R$199,90 hoje no PIX com frete grátis" />
+          <MarketingBanner theme="Kit 10 cuecas boxer com desconto exclusivo no PIX" />
         </div>
       </section>
 
@@ -181,7 +120,7 @@ export default function Home() {
               <span className="text-[10px] font-medium tracking-[0.3em] uppercase">Underwear</span>
             </Link>
             <p className="text-muted-foreground text-xs uppercase tracking-widest leading-relaxed">
-              Elevando o padrão do underwear masculino brasileiro desde 2026.
+              Elevando o padrão do underwear masculino brasileiro com conforto e estilo.
             </p>
           </div>
           <div>
@@ -212,7 +151,7 @@ export default function Home() {
         </div>
         <div className="container mx-auto px-4 mt-16 pt-8 border-t border-border/50 text-center">
           <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">
-            © 2026 AlphaFlow Underwear • Shopify Headless Ready
+            © 2025 AlphaFlow Underwear • Estilo e Performance
           </p>
         </div>
       </footer>
