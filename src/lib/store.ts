@@ -10,14 +10,15 @@ export interface CartItem {
   price: number;
   quantity: number;
   size: string;
+  color: string;
   image: string;
 }
 
 interface CartStore {
   items: CartItem[];
   addItem: (item: CartItem) => void;
-  removeItem: (id: string, size: string) => void;
-  updateQuantity: (id: string, size: string, quantity: number) => void;
+  removeItem: (id: string, size: string, color: string) => void;
+  updateQuantity: (id: string, size: string, color: string, quantity: number) => void;
   clearCart: () => void;
   total: () => number;
 }
@@ -28,12 +29,12 @@ export const useCartStore = create<CartStore>()(
       items: [],
       addItem: (newItem) => {
         const existingItem = get().items.find(
-          (item) => item.id === newItem.id && item.size === newItem.size
+          (item) => item.id === newItem.id && item.size === newItem.size && item.color === newItem.color
         );
         if (existingItem) {
           set({
             items: get().items.map((item) =>
-              item.id === newItem.id && item.size === newItem.size
+              item.id === newItem.id && item.size === newItem.size && item.color === newItem.color
                 ? { ...item, quantity: item.quantity + newItem.quantity }
                 : item
             ),
@@ -42,15 +43,15 @@ export const useCartStore = create<CartStore>()(
           set({ items: [...get().items, newItem] });
         }
       },
-      removeItem: (id, size) => {
+      removeItem: (id, size, color) => {
         set({
-          items: get().items.filter((item) => !(item.id === id && item.size === size)),
+          items: get().items.filter((item) => !(item.id === id && item.size === size && item.color === color)),
         });
       },
-      updateQuantity: (id, size, quantity) => {
+      updateQuantity: (id, size, color, quantity) => {
         set({
           items: get().items.map((item) =>
-            item.id === id && item.size === size ? { ...item, quantity: Math.max(1, quantity) } : item
+            item.id === id && item.size === size && item.color === color ? { ...item, quantity: Math.max(1, quantity) } : item
           ),
         });
       },

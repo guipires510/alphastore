@@ -45,7 +45,6 @@ export default function CheckoutPage() {
     e.preventDefault();
     setIsProcessing(true);
     
-    // Generate order ID on client side to avoid hydration mismatch
     const newOrderId = `FLOW-${Math.floor(Math.random() * 99999)}`;
     
     setTimeout(() => {
@@ -79,7 +78,7 @@ export default function CheckoutPage() {
               <div className="w-48 h-48 bg-muted relative flex items-center justify-center">
                 <QrCode className="w-40 h-40 text-background" strokeWidth={1.5} />
                 <div className="absolute inset-0 flex items-center justify-center opacity-10">
-                  <span className="font-black text-4xl italic uppercase -rotate-45">PIX</span>
+                  <span className="font-black text-4xl italic uppercase -rotate-45 text-black">PIX</span>
                 </div>
               </div>
             </div>
@@ -96,7 +95,6 @@ export default function CheckoutPage() {
                   <Copy className="w-4 h-4" />
                 </Button>
               </div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-primary">Copie e cole a chave acima no seu app do banco</p>
             </div>
 
             <div className="pt-8 border-t flex flex-col gap-4">
@@ -146,16 +144,6 @@ export default function CheckoutPage() {
                   <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Endereço Completo</Label>
                   <Input required className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="RUA, NÚMERO, BAIRRO" />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Cidade</Label>
-                    <Input required className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="CIDADE" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">CEP</Label>
-                    <Input required className="bg-muted/50 border-border h-12 text-xs font-bold" placeholder="00000-000" />
-                  </div>
-                </div>
               </form>
             </div>
 
@@ -163,19 +151,17 @@ export default function CheckoutPage() {
               <h2 className="text-xl font-black italic uppercase tracking-widest mb-6 flex items-center gap-2">
                 <div className="w-1.5 h-6 bg-primary" /> Método de Pagamento
               </h2>
-              <div className="grid grid-cols-1 gap-4">
-                <div className="border-2 border-primary bg-primary/5 p-6 rounded-xl flex items-center justify-between cursor-pointer shadow-lg shadow-primary/10">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center text-white">
-                      <Wallet className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <p className="font-black italic uppercase text-lg leading-none">PIX</p>
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-primary mt-1">5% de Desconto Real</p>
-                    </div>
+              <div className="border-2 border-primary bg-primary/5 p-6 rounded-xl flex items-center justify-between shadow-lg shadow-primary/10">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center text-white">
+                    <Wallet className="w-6 h-6" />
                   </div>
-                  <div className="w-6 h-6 rounded-full border-4 border-primary bg-white shadow-inner" />
+                  <div>
+                    <p className="font-black italic uppercase text-lg leading-none">PIX</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-primary mt-1">5% de Desconto Real</p>
+                  </div>
                 </div>
+                <div className="w-6 h-6 rounded-full border-4 border-primary bg-white shadow-inner" />
               </div>
             </div>
           </div>
@@ -186,10 +172,10 @@ export default function CheckoutPage() {
               <h2 className="text-xl font-black italic uppercase tracking-widest mb-8 border-b pb-4">Resumo do <span className="text-primary">Pedido</span></h2>
               <div className="space-y-4 mb-8">
                 {items.map((item) => (
-                  <div key={`${item.id}-${item.size}`} className="flex justify-between items-center text-sm">
+                  <div key={`${item.id}-${item.size}-${item.color}`} className="flex justify-between items-center text-sm">
                     <div className="flex-1 min-w-0 pr-4">
                       <p className="font-bold uppercase tracking-tight truncate italic">{item.name}</p>
-                      <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Tam: {item.size} • Qtd: {item.quantity}</p>
+                      <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Tam: {item.size} • Cor: {item.color} • Qtd: {item.quantity}</p>
                     </div>
                     <span className="font-black italic shrink-0">R$ {(item.price * item.quantity).toFixed(2)}</span>
                   </div>
@@ -197,20 +183,8 @@ export default function CheckoutPage() {
               </div>
               
               <div className="space-y-3 border-t pt-6 mb-8 font-bold uppercase tracking-widest text-xs">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Subtotal:</span>
-                  <span>R$ {cartTotal.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between text-primary font-black">
-                  <span>Desconto PIX (5%):</span>
-                  <span>- R$ {pixDiscount.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Frete:</span>
-                  <span className="text-accent">GRÁTIS</span>
-                </div>
                 <div className="flex justify-between text-xl font-black italic pt-4 border-t border-border/50 text-foreground">
-                  <span className="uppercase tracking-tighter">Total:</span>
+                  <span className="uppercase tracking-tighter">Total c/ Pix:</span>
                   <span className="text-primary">R$ {finalTotal.toFixed(2)}</span>
                 </div>
               </div>
@@ -223,9 +197,6 @@ export default function CheckoutPage() {
               >
                 {isProcessing ? "PROCESSANDO..." : "PAGAR COM PIX AGORA"}
               </Button>
-              <p className="text-[10px] text-center text-muted-foreground mt-4 uppercase tracking-[0.2em] font-medium italic">
-                Compra 100% Segura • Checkout AlphaFlow
-              </p>
             </div>
           </div>
         </div>

@@ -12,7 +12,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Minus, Plus, Trash2, X } from "lucide-react";
+import { Minus, Plus, Trash2, ShoppingCart as ShoppingCartIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
@@ -32,8 +32,8 @@ export function CartDrawer({ children }: { children: React.ReactNode }) {
   return (
     <Sheet>
       <SheetTrigger asChild>{children}</SheetTrigger>
-      <SheetContent className="w-full sm:max-w-md bg-background flex flex-col p-0">
-        <SheetHeader className="p-6 border-b">
+      <SheetContent className="w-full sm:max-w-md bg-background flex flex-col p-0 border-l border-border">
+        <SheetHeader className="p-6 border-b border-border">
           <SheetTitle className="flex items-center gap-2 uppercase tracking-widest font-black italic">
             Meu Carrinho
           </SheetTitle>
@@ -43,16 +43,16 @@ export function CartDrawer({ children }: { children: React.ReactNode }) {
           {items.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-64 gap-4">
               <ShoppingCartIcon className="w-12 h-12 text-muted-foreground opacity-20" />
-              <p className="text-muted-foreground font-medium">Seu carrinho está vazio.</p>
-              <Button asChild variant="outline">
+              <p className="text-muted-foreground font-medium uppercase tracking-widest text-xs">Vazio.</p>
+              <Button asChild variant="outline" className="border-primary text-primary font-black italic uppercase text-xs tracking-widest">
                 <Link href="/catalog">Ver Produtos</Link>
               </Button>
             </div>
           ) : (
             <div className="space-y-6">
               {items.map((item) => (
-                <div key={`${item.id}-${item.size}`} className="flex gap-4 items-start">
-                  <div className="relative w-20 h-20 rounded-md overflow-hidden bg-muted flex-shrink-0">
+                <div key={`${item.id}-${item.size}-${item.color}`} className="flex gap-4 items-start pb-6 border-b border-border/50 last:border-0">
+                  <div className="relative w-20 h-20 rounded-xl overflow-hidden bg-muted flex-shrink-0 border border-border">
                     <Image
                       src={item.image}
                       alt={item.name}
@@ -61,31 +61,33 @@ export function CartDrawer({ children }: { children: React.ReactNode }) {
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-bold text-sm truncate uppercase tracking-tight">{item.name}</h4>
-                    <p className="text-xs text-muted-foreground mb-2">Tamanho: {item.size}</p>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center border rounded-sm overflow-hidden h-8">
+                    <h4 className="font-black text-sm truncate uppercase tracking-tight italic">{item.name}</h4>
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-1">
+                      Tam: {item.size} • Cor: {item.color}
+                    </p>
+                    <div className="flex items-center justify-between mt-4">
+                      <div className="flex items-center border border-border rounded-lg overflow-hidden h-8">
                         <button
-                          onClick={() => updateQuantity(item.id, item.size, item.quantity - 1)}
-                          className="px-2 hover:bg-muted"
+                          onClick={() => updateQuantity(item.id, item.size, item.color, item.quantity - 1)}
+                          className="px-2 hover:bg-muted text-muted-foreground"
                         >
                           <Minus className="w-3 h-3" />
                         </button>
-                        <span className="w-8 text-center text-sm font-bold">{item.quantity}</span>
+                        <span className="w-8 text-center text-xs font-black italic">{item.quantity}</span>
                         <button
-                          onClick={() => updateQuantity(item.id, item.size, item.quantity + 1)}
-                          className="px-2 hover:bg-muted"
+                          onClick={() => updateQuantity(item.id, item.size, item.color, item.quantity + 1)}
+                          className="px-2 hover:bg-muted text-muted-foreground"
                         >
                           <Plus className="w-3 h-3" />
                         </button>
                       </div>
-                      <span className="font-bold text-primary">
+                      <span className="font-black italic text-primary">
                         R$ {(item.price * item.quantity).toFixed(2)}
                       </span>
                     </div>
                   </div>
                   <button
-                    onClick={() => removeItem(item.id, item.size)}
+                    onClick={() => removeItem(item.id, item.size, item.color)}
                     className="text-muted-foreground hover:text-destructive transition-colors pt-1"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -97,38 +99,17 @@ export function CartDrawer({ children }: { children: React.ReactNode }) {
         </ScrollArea>
 
         {items.length > 0 && (
-          <SheetFooter className="p-6 border-t flex-col gap-4">
+          <SheetFooter className="p-6 border-t border-border flex-col gap-4">
             <div className="flex items-center justify-between w-full">
-              <span className="text-muted-foreground uppercase text-xs font-bold tracking-widest">Total</span>
+              <span className="text-muted-foreground uppercase text-[10px] font-black tracking-[0.2em]">Total</span>
               <span className="text-2xl font-black text-primary italic">R$ {cartTotal.toFixed(2)}</span>
             </div>
-            <Button className="w-full bg-primary hover:bg-primary/90 text-white font-bold h-12 uppercase tracking-widest italic" asChild>
+            <Button className="w-full bg-primary hover:bg-primary/90 text-white font-black h-14 uppercase tracking-widest italic cta-button" asChild>
               <Link href="/checkout">Finalizar Compra</Link>
             </Button>
           </SheetFooter>
         )}
       </SheetContent>
     </Sheet>
-  );
-}
-
-function ShoppingCartIcon(props: React.SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="8" cy="21" r="1" />
-      <circle cx="19" cy="21" r="1" />
-      <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
-    </svg>
   );
 }

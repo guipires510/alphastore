@@ -10,9 +10,9 @@ import { Badge } from "@/components/ui/badge";
 import { useState, useEffect } from "react";
 import { useCartStore } from "@/lib/store";
 import { useToast } from "@/hooks/use-toast";
-import { Check, ShieldCheck, Truck, Zap, Star, User, thumbsUp } from "lucide-react";
+import { Check, ShieldCheck, Truck, Zap, Star } from "lucide-react";
 import { generateProductDescription } from "@/ai/flows/generate-product-description-flow";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 export default function ProductDetailPage() {
   const { id } = useParams();
@@ -22,10 +22,18 @@ export default function ProductDetailPage() {
   
   const product = PRODUCTS.find((p) => p.id === id);
   const [selectedSize, setSelectedSize] = useState<string>("");
+  const [selectedColor, setSelectedColor] = useState<string>("");
   const [aiDescription, setAiDescription] = useState<string | null>(null);
   const [loadingAi, setLoadingAi] = useState(false);
 
-  // Mock Reviews
+  const colors = [
+    { name: "Brancas", hex: "#FFFFFF" },
+    { name: "Pretas", hex: "#000000" },
+    { name: "Azul Escuro", hex: "#00008B" },
+    { name: "Cinza", hex: "#808080" },
+    { name: "Sortidas", hex: "linear-gradient(45deg, #000, #808080, #fff, #00008b)" },
+  ];
+
   const reviews = [
     {
       id: 1,
@@ -81,6 +89,15 @@ export default function ProductDetailPage() {
       return;
     }
 
+    if (!selectedColor) {
+      toast({
+        title: "Atenção",
+        description: "Selecione uma cor antes de adicionar ao carrinho.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     addItem({
       id: product.id,
       name: product.name,
@@ -88,11 +105,12 @@ export default function ProductDetailPage() {
       image: product.image,
       quantity: 1,
       size: selectedSize,
+      color: selectedColor,
     });
 
     toast({
       title: "Sucesso!",
-      description: `${product.name} adicionado ao seu carrinho.`,
+      description: `${product.name} (${selectedColor}) adicionado ao seu carrinho.`,
     });
   };
 
@@ -119,19 +137,6 @@ export default function ProductDetailPage() {
                   <Badge variant="outline" className="bg-background/80 text-foreground border-border font-bold px-4 py-1 uppercase tracking-widest text-xs backdrop-blur-sm">PROMOÇÃO</Badge>
                 )}
               </div>
-            </div>
-            <div className="grid grid-cols-4 gap-4">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="aspect-square rounded-lg overflow-hidden bg-card border border-border cursor-pointer hover:border-primary transition-colors opacity-60 hover:opacity-100">
-                  <Image
-                    src={product.image}
-                    alt={`${product.name} thumbnail ${i}`}
-                    width={150}
-                    height={150}
-                    className="object-cover"
-                  />
-                </div>
-              ))}
             </div>
           </div>
 
@@ -160,20 +165,47 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-            <div className="mb-10">
+            <div className="mb-8">
               <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-4">Selecione o Tamanho</h3>
-              <div className="flex gap-4">
+              <div className="flex gap-3">
                 {sizes.map((size) => (
                   <button
                     key={size}
                     onClick={() => setSelectedSize(size)}
-                    className={`w-14 h-14 rounded-lg border-2 flex items-center justify-center font-black transition-all ${
+                    className={`w-12 h-12 rounded-lg border-2 flex items-center justify-center font-black transition-all ${
                       selectedSize === size
-                        ? "border-primary bg-primary text-white shadow-lg shadow-primary/20 scale-110"
+                        ? "border-primary bg-primary text-white shadow-lg shadow-primary/20"
                         : "border-border bg-card text-muted-foreground hover:border-muted hover:text-foreground"
                     }`}
                   >
                     {size}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="mb-10">
+              <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-4">Selecione a Cor</h3>
+              <div className="flex flex-wrap gap-3">
+                {colors.map((color) => (
+                  <button
+                    key={color.name}
+                    onClick={() => setSelectedColor(color.name)}
+                    className={`px-4 h-11 rounded-lg border-2 flex items-center gap-2 transition-all group ${
+                      selectedColor === color.name
+                        ? "border-primary bg-primary/10 shadow-lg shadow-primary/5"
+                        : "border-border bg-card hover:border-muted"
+                    }`}
+                  >
+                    <div 
+                      className="w-4 h-4 rounded-full border border-border/50" 
+                      style={{ background: color.hex }}
+                    />
+                    <span className={`text-[10px] font-black uppercase tracking-widest ${
+                      selectedColor === color.name ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
+                    }`}>
+                      {color.name}
+                    </span>
                   </button>
                 ))}
               </div>
@@ -192,6 +224,10 @@ export default function ProductDetailPage() {
                 size="lg"
                 className="w-full h-16 border-accent text-accent hover:bg-accent hover:text-accent-foreground font-black italic uppercase tracking-[0.2em] text-lg transition-all"
                 onClick={() => {
+                  if (!selectedSize || !selectedColor) {
+                    handleAddToCart();
+                    return;
+                  }
                   handleAddToCart();
                   router.push("/checkout");
                 }}
@@ -225,22 +261,12 @@ export default function ProductDetailPage() {
                   <div className="space-y-2">
                     <div className="h-3 bg-muted animate-pulse rounded w-full" />
                     <div className="h-3 bg-muted animate-pulse rounded w-4/5" />
-                    <div className="h-3 bg-muted animate-pulse rounded w-5/6" />
                   </div>
                 ) : (
                   <p className="text-foreground uppercase tracking-widest font-bold text-xs leading-relaxed italic border-l-2 border-primary pl-4">
                     {aiDescription}
                   </p>
                 )}
-              </div>
-              
-              <div className="grid grid-cols-2 gap-y-3 pt-4 border-t border-border/50">
-                {product.features.map((feature) => (
-                  <div key={feature} className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-primary" />
-                    <span className="text-[10px] font-black uppercase tracking-widest">{feature}</span>
-                  </div>
-                ))}
               </div>
             </div>
           </div>
@@ -252,19 +278,6 @@ export default function ProductDetailPage() {
             <div>
               <span className="text-primary font-black uppercase italic tracking-widest text-xs">Prova Social</span>
               <h2 className="text-3xl md:text-5xl font-black italic uppercase tracking-tighter mt-2">O que dizem os <span className="text-primary">Alphas</span></h2>
-            </div>
-            <div className="flex items-center gap-4 bg-card border border-border p-4 rounded-xl">
-              <div className="text-center">
-                <p className="text-3xl font-black italic leading-none text-primary">4.9</p>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mt-1">Média Geral</p>
-              </div>
-              <div className="w-px h-10 bg-border" />
-              <div className="flex flex-col gap-1">
-                <div className="flex gap-0.5">
-                  {[1, 2, 3, 4, 5].map((s) => <Star key={s} className="w-3 h-3 fill-primary text-primary" />)}
-                </div>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Baseado em 127 fotos</p>
-              </div>
             </div>
           </div>
 
@@ -279,33 +292,19 @@ export default function ProductDetailPage() {
                   </div>
                   <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{review.date}</span>
                 </div>
-                
                 <p className="text-xs md:text-sm font-bold uppercase tracking-tight italic leading-relaxed">
                   "{review.comment}"
                 </p>
-
                 <div className="flex items-center gap-3 pt-4">
                   <Avatar className="w-10 h-10 border border-primary/20">
                     <AvatarFallback className="bg-muted text-[10px] font-black uppercase">{review.name.substring(0, 2)}</AvatarFallback>
                   </Avatar>
                   <div>
                     <h4 className="text-[10px] font-black uppercase tracking-widest">{review.name}</h4>
-                    {review.verified && (
-                      <div className="flex items-center gap-1">
-                        <Check className="w-3 h-3 text-green-500" />
-                        <span className="text-[9px] font-black uppercase text-green-500 tracking-widest">Compra Verificada</span>
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>
             ))}
-          </div>
-
-          <div className="mt-12 text-center">
-            <Button variant="ghost" className="text-xs font-black uppercase italic tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors">
-              Carregar mais 124 avaliações...
-            </Button>
           </div>
         </section>
       </div>
