@@ -87,7 +87,7 @@ export default function Home() {
             </div>
             <div>
               <h4 className="font-black text-sm uppercase italic">Pagamento Seguro</h4>
-              <p className="text-xs text-muted-foreground uppercase tracking-widest">Desconto de 5% no PIX.</p>
+              <p className="text-xs text-muted-foreground uppercase tracking-widest">Transações rápidas via PIX.</p>
             </div>
           </div>
         </div>
@@ -144,7 +144,7 @@ export default function Home() {
                 </div>
                 {featuredProduct.originalPrice && (
                   <div className="bg-primary/10 border border-primary/20 px-3 py-1 rounded text-[10px] font-black uppercase tracking-widest text-primary mb-1">
-                    OFERTA PIX
+                    MELHOR PREÇO
                   </div>
                 )}
               </div>

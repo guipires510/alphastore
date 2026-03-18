@@ -99,8 +99,7 @@ export default function CheckoutPage() {
   // Check if any order bump (single item) is in the cart to apply extra discount
   const hasOrderBump = items.some(item => item.id === '4' || item.id === '5');
   const comboDiscount = hasOrderBump ? cartTotal * 0.10 : 0; // 10% extra if bump added
-  const pixDiscount = (cartTotal - comboDiscount) * 0.05;
-  const finalTotal = cartTotal - comboDiscount - pixDiscount;
+  const finalTotal = cartTotal - comboDiscount;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -317,7 +316,7 @@ export default function CheckoutPage() {
                     </div>
                     <div>
                       <p className="font-black italic uppercase text-lg leading-none">PIX</p>
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-primary mt-1">Aprovação Imediata • 5% de Desconto</p>
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-primary mt-1">Aprovação Imediata • Envio Prioritário</p>
                     </div>
                   </div>
                   <div className="w-6 h-6 rounded-full border-4 border-primary bg-white shadow-inner" />
@@ -432,10 +431,6 @@ export default function CheckoutPage() {
                     <span>- R$ {comboDiscount.toFixed(2)}</span>
                   </div>
                 )}
-                <div className="flex justify-between text-primary font-black italic">
-                  <span>Desconto PIX (-5%):</span>
-                  <span>- R$ {pixDiscount.toFixed(2)}</span>
-                </div>
                 <div className="flex justify-between text-xl font-black italic pt-4 border-t border-border/50 text-foreground">
                   <span className="uppercase tracking-tighter">Total Final:</span>
                   <span className="text-primary">R$ {finalTotal.toFixed(2)}</span>

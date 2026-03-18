@@ -221,7 +221,7 @@ export default function ProductDetailPage() {
                 <span className="text-4xl md:text-5xl font-black text-primary italic leading-none">R$ {product.price.toFixed(2)}</span>
               </div>
               <div className="bg-primary/10 border border-primary/20 px-3 py-1 rounded text-[10px] font-black uppercase tracking-widest text-primary">
-                OFERTA PIX
+                OFERTA EXCLUSIVA
               </div>
             </div>
 
@@ -330,7 +330,7 @@ export default function ProductDetailPage() {
               </div>
               <div className="text-center space-y-2">
                 <Zap className="w-6 h-6 text-primary mx-auto" />
-                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground leading-tight">PIX c/ Desconto</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground leading-tight">Pagamento Seguro</p>
               </div>
             </div>
           </div>
