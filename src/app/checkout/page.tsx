@@ -10,6 +10,7 @@ import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { CheckCircle2, QrCode, Copy, Wallet } from "lucide-react";
+import Image from "next/image";
 
 export default function CheckoutPage() {
   const { items, total, clearCart } = useCartStore();
@@ -183,14 +184,22 @@ export default function CheckoutPage() {
           <div className="lg:sticky lg:top-24 h-fit">
             <div className="bg-card border border-border rounded-xl p-6 md:p-8 shadow-2xl">
               <h2 className="text-xl font-black italic uppercase tracking-widest mb-8 border-b pb-4">Resumo do <span className="text-primary">Pedido</span></h2>
-              <div className="space-y-4 mb-8">
+              <div className="space-y-6 mb-8">
                 {items.map((item) => (
-                  <div key={`${item.id}-${item.size}-${item.color}`} className="flex justify-between items-center text-sm">
+                  <div key={`${item.id}-${item.size}-${item.color}`} className="flex gap-4 items-center">
+                    <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-border shrink-0 bg-muted">
+                      <Image
+                        src={item.image}
+                        alt={item.name}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
                     <div className="flex-1 min-w-0 pr-4">
-                      <p className="font-bold uppercase tracking-tight truncate italic">{item.name}</p>
+                      <p className="font-bold uppercase tracking-tight truncate italic text-sm">{item.name}</p>
                       <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Tam: {item.size} • Cor: {item.color} • Qtd: {item.quantity}</p>
                     </div>
-                    <span className="font-black italic shrink-0">R$ {(item.price * item.quantity).toFixed(2)}</span>
+                    <span className="font-black italic shrink-0 text-sm">R$ {(item.price * item.quantity).toFixed(2)}</span>
                   </div>
                 ))}
               </div>

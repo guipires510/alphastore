@@ -30,13 +30,13 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'ck-premium',
-    name: 'Kit 3 Cuecas Boxer Calvin Klein Cotton',
+    name: 'Kit 10 Cuecas Boxer Calvin Klein Cotton',
     price: 69.90,
-    originalPrice: 199.90,
-    description: 'O ícone do estilo masculino. Algodão premium com o elástico clássico Calvin Klein.',
+    originalPrice: 299.90,
+    description: 'O ícone do estilo masculino. Algodão premium com o elástico clássico Calvin Klein em um kit completo de 10 unidades.',
     image: PlaceHolderImages.find(img => img.id === 'kit-ck-premium')?.imageUrl || 'https://picsum.photos/seed/ck/600/600',
     category: 'kit',
-    quantity: 3,
+    quantity: 10,
     material: 'Algodão Premium',
     features: ['Cós Logotipado CK', 'Toque Macio', 'Luxo e Conforto']
   },
