@@ -20,6 +20,9 @@ export default function CheckoutPage() {
   const { toast } = useToast();
   const router = useRouter();
 
+  // Chave PIX Oficial fornecida pelo usuário
+  const OFFICIAL_PIX_CODE = "00020126360014BR.GOV.BCB.PIX0114+5565920013622520400005303986540549.905802BR5925Rafael Fernandez Silva Sa6009SAO PAULO62140510X3h2NJHLWB63046FBB";
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -81,17 +84,27 @@ export default function CheckoutPage() {
                   <span className="font-black text-4xl italic uppercase -rotate-45 text-black">PIX</span>
                 </div>
               </div>
+              <p className="text-[10px] text-black/40 font-bold uppercase tracking-widest mt-2">Aponte a câmera do banco</p>
             </div>
 
             <div className="space-y-4">
-              <div className="bg-muted p-4 rounded-lg flex items-center justify-between gap-4">
-                <code className="text-[10px] md:text-xs font-mono break-all text-left">
-                  00020126360014br.gov.bcb.pix0114alphaflowstore27300508FLOW123
+              <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">PIX Copia e Cola</Label>
+              <div className="bg-muted p-4 rounded-lg flex items-center justify-between gap-4 border border-primary/20">
+                <code className="text-[10px] font-mono break-all text-left line-clamp-2">
+                  {OFFICIAL_PIX_CODE}
                 </code>
-                <Button variant="ghost" size="icon" className="shrink-0" onClick={() => {
-                  navigator.clipboard.writeText("00020126360014br.gov.bcb.pix0114alphaflowstore27300508FLOW123");
-                  toast({ title: "Copiado!", description: "Chave PIX copiada para a área de transferência." });
-                }}>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="shrink-0 hover:bg-primary/20 text-primary" 
+                  onClick={() => {
+                    navigator.clipboard.writeText(OFFICIAL_PIX_CODE);
+                    toast({ 
+                      title: "Copiado!", 
+                      description: "Código PIX copiado para a área de transferência.",
+                    });
+                  }}
+                >
                   <Copy className="w-4 h-4" />
                 </Button>
               </div>
