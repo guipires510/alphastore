@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
@@ -10,10 +9,9 @@ import { Badge } from "@/components/ui/badge";
 import { useState, useEffect } from "react";
 import { useCartStore } from "@/lib/store";
 import { useToast } from "@/hooks/use-toast";
-import { Check, ShieldCheck, Truck, Zap, Star, AlertTriangle } from "lucide-react";
+import { Check, ShieldCheck, Truck, Zap, Star } from "lucide-react";
 import { generateProductDescription } from "@/ai/flows/generate-product-description-flow";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Progress } from "@/components/ui/progress";
 
 export default function ProductDetailPage() {
   const { id } = useParams();
@@ -26,7 +24,6 @@ export default function ProductDetailPage() {
   const [selectedColor, setSelectedColor] = useState<string>("");
   const [aiDescription, setAiDescription] = useState<string | null>(null);
   const [loadingAi, setLoadingAi] = useState(false);
-  const [stockProgress, setStockProgress] = useState(85); // Simulação de estoque baixo
 
   const colors = [
     { name: "Brancas", hex: "#FFFFFF" },
@@ -75,10 +72,6 @@ export default function ProductDetailPage() {
       .catch(err => console.error("AI error", err))
       .finally(() => setLoadingAi(false));
     }
-    
-    // Pequeno delay para animação da barra de estoque
-    const timer = setTimeout(() => setStockProgress(94), 500);
-    return () => clearTimeout(timer);
   }, [product]);
 
   if (!product) return <div>Produto não encontrado</div>;
@@ -165,7 +158,7 @@ export default function ProductDetailPage() {
               {product.name}
             </h1>
 
-            <div className="flex items-center gap-4 mb-4">
+            <div className="flex items-center gap-4 mb-8">
               <div className="flex flex-col">
                 {product.originalPrice && (
                   <span className="text-sm text-muted-foreground line-through decoration-primary/50 font-bold mb-1">
@@ -177,17 +170,6 @@ export default function ProductDetailPage() {
               <div className="bg-primary/10 border border-primary/20 px-3 py-1 rounded text-[10px] font-black uppercase tracking-widest text-primary">
                 OFERTA PIX
               </div>
-            </div>
-
-            {/* Urgency Stock Bar */}
-            <div className="mb-8 space-y-2">
-              <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
-                <span className="text-secondary flex items-center gap-1">
-                  <AlertTriangle className="w-3 h-3" /> RESTAM APENAS 6 UNIDADES
-                </span>
-                <span className="text-muted-foreground">94% VENDIDO</span>
-              </div>
-              <Progress value={stockProgress} className="h-1.5 bg-muted" />
             </div>
 
             {/* Credibility Badge */}
