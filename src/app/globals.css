@@ -37,6 +37,16 @@
     --input: 0 0% 20%;
     --ring: 40 48% 60%;
     --radius: 0.5rem;
+
+    /* Sidebar Variables */
+    --sidebar-background: 0 0% 5%;
+    --sidebar-foreground: 0 0% 96%;
+    --sidebar-primary: 40 48% 60%;
+    --sidebar-primary-foreground: 0 0% 5%;
+    --sidebar-accent: 0 0% 15%;
+    --sidebar-accent-foreground: 40 48% 60%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 40 48% 60%;
   }
 }
 

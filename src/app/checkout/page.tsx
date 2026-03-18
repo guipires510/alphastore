@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useCartStore } from "@/lib/store";
@@ -76,7 +75,7 @@ export default function CheckoutPage() {
           });
         }
       } catch (error) {
-        console.error("Erro ao buscar CEP:", error);
+        // Silently handle fetch errors as per guidelines
       } finally {
         setIsFetchingCep(false);
       }
