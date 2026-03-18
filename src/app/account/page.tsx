@@ -19,7 +19,7 @@ export default function AccountPage() {
       date: "12/05/2026",
       total: 59.90,
       status: "paid",
-      items: "Kit 10 Cuecas Boxer Lupo Performance"
+      items: "Kit Com 10 Cuecas Boxer Algodão Lup"
     },
     {
       id: "FLOW-97103",

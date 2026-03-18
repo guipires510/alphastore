@@ -20,10 +20,10 @@ export interface Product {
 export const PRODUCTS: Product[] = [
   {
     id: 'lupo-10',
-    name: 'Kit 10 Cuecas Boxer Lupo Performance',
+    name: 'Kit Com 10 Cuecas Boxer Algodão Lupo',
     price: 59.90,
     originalPrice: 169.90,
-    description: 'Garanta o Kit com 10 unidades em algodão premium com tecnologia Seamless. Design anatômico que proporciona conforto absoluto e durabilidade superior para o homem moderno.',
+    description: 'Kit com 10 unidades em algodão premium e elastano. Design anatômico com tecnologia Seamless que garante conforto absoluto e durabilidade superior para o dia a dia.',
     image: 'https://i.imgur.com/A2PO69a.png',
     images: [
       'https://i.imgur.com/A2PO69a.png',
