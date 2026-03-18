@@ -43,7 +43,7 @@ export default function Home() {
               <Link href="/catalog">Ver Catálogo</Link>
             </Button>
             <Button size="lg" variant="outline" className="h-14 px-10 border-white text-white hover:bg-white hover:text-black font-black italic uppercase tracking-widest text-lg backdrop-blur-sm transition-all" asChild>
-              <Link href="/catalog?filter=kit">Kits Promocionais</Link>
+              <Link href={`/product/${featuredProduct.id}`}>Kits Promocionais</Link>
             </Button>
           </div>
         </div>
