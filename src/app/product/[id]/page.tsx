@@ -146,11 +146,15 @@ export default function ProductDetailPage() {
                 priority
                 data-ai-hint="male underwear kit"
               />
-              <div className="absolute top-6 left-6 flex flex-col gap-2">
+              <div className="absolute top-6 left-6 flex flex-col items-start gap-2">
                 {hasPromotion && (
                   <>
-                    <Badge className="bg-primary text-white font-black italic px-3 py-0.5 uppercase tracking-widest text-[10px] shadow-lg">CAMPEÃO DE VENDAS</Badge>
-                    <Badge variant="secondary" className="bg-secondary text-white font-black italic px-3 py-0.5 uppercase tracking-widest text-[8px] animate-pulse shadow-lg">POUCAS UNIDADES NO ESTOQUE</Badge>
+                    <Badge className="bg-primary text-white font-black italic px-2 py-0.5 uppercase tracking-widest text-[9px] shadow-lg flex items-center justify-center text-center">
+                      CAMPEÃO DE VENDAS
+                    </Badge>
+                    <Badge variant="secondary" className="bg-secondary text-white font-black italic px-2 py-0.5 uppercase tracking-widest text-[7px] animate-pulse shadow-lg flex items-center justify-center text-center">
+                      POUCAS UNIDADES NO ESTOQUE
+                    </Badge>
                   </>
                 )}
               </div>
