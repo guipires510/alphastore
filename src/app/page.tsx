@@ -166,7 +166,7 @@ export default function Home() {
               <span className="text-[10px] font-medium tracking-[0.3em] uppercase">Underwear</span>
             </Link>
             <p className="text-muted-foreground text-xs uppercase tracking-widest leading-relaxed">
-              Elevando o padrão do underwear masculino brasileiro desde 2024.
+              Elevando o padrão do underwear masculino brasileiro desde 2026.
             </p>
           </div>
           <div>
