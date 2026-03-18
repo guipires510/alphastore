@@ -27,12 +27,12 @@ export function MarketingBanner({ theme }: { theme: string }) {
 
   if (loading) {
     return (
-      <div className="bg-primary/10 border border-primary/20 p-4 rounded-lg flex items-center justify-between gap-4">
+      <div className="bg-card border border-border p-4 rounded-lg flex items-center justify-between gap-4">
         <div className="flex-1 space-y-2">
-          <Skeleton className="h-4 w-3/4 bg-primary/20" />
-          <Skeleton className="h-3 w-1/2 bg-primary/20" />
+          <Skeleton className="h-4 w-3/4 bg-muted" />
+          <Skeleton className="h-3 w-1/2 bg-muted" />
         </div>
-        <Skeleton className="h-6 w-20 bg-primary/20" />
+        <Skeleton className="h-6 w-20 bg-muted" />
       </div>
     );
   }
@@ -40,21 +40,21 @@ export function MarketingBanner({ theme }: { theme: string }) {
   if (!copy) return null;
 
   return (
-    <div className="relative overflow-hidden bg-gradient-to-r from-primary to-primary/80 text-white p-6 rounded-xl shadow-2xl border-none">
+    <div className="relative overflow-hidden bg-gradient-to-r from-card to-background text-white p-6 rounded-xl shadow-2xl border border-primary/20">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-1">
-          <h3 className="text-xl md:text-2xl font-black italic uppercase leading-none tracking-tighter">
+          <h3 className="text-xl md:text-2xl font-black italic uppercase leading-none tracking-tighter text-primary">
             {copy.promotionalMessage}
           </h3>
-          <p className="text-white/80 text-xs md:text-sm font-medium uppercase tracking-[0.2em]">
-            Oferta Especial Gerada por IA
+          <p className="text-muted-foreground text-xs md:text-sm font-medium uppercase tracking-[0.2em]">
+            Oferta Exclusiva Alpha Club
           </p>
         </div>
-        <Badge variant="secondary" className="bg-white text-primary font-black px-4 py-2 text-sm uppercase italic animate-pulse shadow-lg self-start md:self-center shrink-0">
+        <Badge variant="secondary" className="bg-secondary text-secondary-foreground font-black px-4 py-2 text-sm uppercase italic animate-pulse shadow-lg self-start md:self-center shrink-0">
           {copy.urgencyMessage}
         </Badge>
       </div>
-      <Sparkles className="absolute -top-2 -right-2 w-16 h-16 text-white/10 rotate-12" />
+      <Sparkles className="absolute -top-2 -right-2 w-16 h-16 text-primary/10 rotate-12" />
     </div>
   );
 }
