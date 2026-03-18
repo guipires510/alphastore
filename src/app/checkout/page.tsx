@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { CheckCircle2, QrCode, Copy, Wallet, Trash2, CreditCard } from "lucide-react";
+import { CheckCircle2, QrCode, Copy, Wallet, Trash2, CreditCard, Search, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 
@@ -22,12 +22,60 @@ export default function CheckoutPage() {
   const { toast } = useToast();
   const router = useRouter();
 
-  // Chave PIX Placeholder - Substituída por segurança conforme solicitado
+  // Address State
+  const [cep, setCep] = useState("");
+  const [address, setAddress] = useState({
+    logradouro: "",
+    bairro: "",
+    cidade: "",
+    uf: "",
+    numero: "",
+    complemento: ""
+  });
+  const [isFetchingCep, setIsFetchingCep] = useState(false);
+
   const OFFICIAL_PIX_CODE = "CONFIGURAR_CHAVE_PIX_NO_PAINEL_ADMIN";
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const handleCepChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, "").substring(0, 8);
+    setCep(value);
+
+    if (value.length === 8) {
+      setIsFetchingCep(true);
+      try {
+        const response = await fetch(`https://viacep.com.br/ws/${value}/json/`);
+        const data = await response.json();
+        
+        if (data.erro) {
+          toast({
+            title: "CEP não encontrado",
+            description: "Verifique o número e tente novamente.",
+            variant: "destructive",
+          });
+        } else {
+          setAddress(prev => ({
+            ...prev,
+            logradouro: data.logradouro,
+            bairro: data.bairro,
+            cidade: data.localidade,
+            uf: data.uf
+          }));
+          toast({
+            title: "Endereço Encontrado",
+            description: `${data.logradouro}, ${data.localidade} - ${data.uf}`,
+          });
+        }
+      } catch (error) {
+        console.error("Erro ao buscar CEP:", error);
+      } finally {
+        setIsFetchingCep(false);
+      }
+    }
+  };
 
   if (!mounted) return null;
 
@@ -155,9 +203,78 @@ export default function CheckoutPage() {
                   <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">E-mail</Label>
                   <Input required type="email" className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="E-MAIL@EXEMPLO.COM" />
                 </div>
-                <div className="space-y-2">
-                  <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Endereço Completo</Label>
-                  <Input required className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="RUA, NÚMERO, BAIRRO" />
+                
+                {/* Endereço com CEP Automático */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="md:col-span-1 space-y-2">
+                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                      CEP {isFetchingCep && <Loader2 className="w-3 h-3 animate-spin text-primary" />}
+                    </Label>
+                    <div className="relative">
+                      <Input 
+                        required 
+                        value={cep}
+                        onChange={handleCepChange}
+                        className="bg-muted/50 border-border h-12 text-xs font-bold pr-10" 
+                        placeholder="00000-000" 
+                      />
+                      <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground opacity-50" />
+                    </div>
+                  </div>
+                  <div className="md:col-span-2 space-y-2">
+                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Rua / Logradouro</Label>
+                    <Input 
+                      required 
+                      value={address.logradouro}
+                      onChange={(e) => setAddress({...address, logradouro: e.target.value})}
+                      className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" 
+                      placeholder="EX: RUA DAS FLORES" 
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="md:col-span-1 space-y-2">
+                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Número</Label>
+                    <Input 
+                      required 
+                      value={address.numero}
+                      onChange={(e) => setAddress({...address, numero: e.target.value})}
+                      className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" 
+                      placeholder="123" 
+                    />
+                  </div>
+                  <div className="md:col-span-2 space-y-2">
+                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Bairro</Label>
+                    <Input 
+                      required 
+                      value={address.bairro}
+                      onChange={(e) => setAddress({...address, bairro: e.target.value})}
+                      className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" 
+                      placeholder="BAIRRO" 
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Cidade</Label>
+                    <Input 
+                      required 
+                      value={address.cidade}
+                      readOnly
+                      className="bg-muted/20 border-border h-12 uppercase text-xs font-bold cursor-not-allowed" 
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Estado (UF)</Label>
+                    <Input 
+                      required 
+                      value={address.uf}
+                      readOnly
+                      className="bg-muted/20 border-border h-12 uppercase text-xs font-bold cursor-not-allowed" 
+                    />
+                  </div>
                 </div>
               </form>
             </div>
