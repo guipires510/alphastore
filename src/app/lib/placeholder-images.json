@@ -4,32 +4,38 @@
     {
       "id": "hero-banner",
       "description": "Modern minimalist male model in premium underwear",
-      "imageUrl": "https://picsum.photos/seed/alphaflow1/1200/600",
+      "imageUrl": "https://picsum.photos/seed/alphaflow_hero/1200/600",
       "imageHint": "male model underwear"
     },
     {
       "id": "kit-3-boxer",
       "description": "Kit 3 Cuecas Boxer Algodão Premium",
-      "imageUrl": "https://picsum.photos/seed/kit3/600/600",
+      "imageUrl": "https://picsum.photos/seed/kit3_alpha/600/600",
       "imageHint": "boxer underwear kit"
     },
     {
       "id": "kit-5-boxer",
       "description": "Kit 5 Cuecas Boxer Microfibra Confort",
-      "imageUrl": "https://picsum.photos/seed/kit5/600/600",
+      "imageUrl": "https://picsum.photos/seed/kit5_alpha/600/600",
       "imageHint": "men underwear microfiber"
     },
     {
       "id": "kit-10-boxer",
       "description": "Kit 10 Cuecas Boxer Performance",
-      "imageUrl": "https://picsum.photos/seed/kit10/600/600",
+      "imageUrl": "https://picsum.photos/seed/kit10_alpha/600/600",
       "imageHint": "underwear pack"
     },
     {
       "id": "single-brief",
       "description": "Cueca Slip Algodão Clássica",
-      "imageUrl": "https://picsum.photos/seed/brief/600/600",
+      "imageUrl": "https://picsum.photos/seed/brief_alpha/600/600",
       "imageHint": "men brief"
+    },
+    {
+      "id": "modal-boxer",
+      "description": "Cueca Boxer Modal Soft",
+      "imageUrl": "https://picsum.photos/seed/modal_alpha/600/600",
+      "imageHint": "soft underwear"
     }
   ]
 }

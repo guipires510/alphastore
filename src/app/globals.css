@@ -5,26 +5,26 @@
 
 @layer base {
   :root {
-    --background: 340 13% 10%;
+    --background: 340 13% 8%;
     --foreground: 0 0% 98%;
-    --card: 340 13% 12%;
+    --card: 340 13% 10%;
     --card-foreground: 0 0% 98%;
-    --popover: 340 13% 10%;
+    --popover: 340 13% 8%;
     --popover-foreground: 0 0% 98%;
     --primary: 349 89% 51%;
     --primary-foreground: 0 0% 100%;
     --secondary: 33 94% 51%;
     --secondary-foreground: 340 13% 10%;
-    --muted: 340 13% 20%;
+    --muted: 340 13% 15%;
     --muted-foreground: 0 0% 63.9%;
     --accent: 33 94% 51%;
     --accent-foreground: 340 13% 10%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 340 13% 20%;
-    --input: 340 13% 20%;
+    --border: 340 13% 18%;
+    --input: 340 13% 18%;
     --ring: 349 89% 51%;
-    --radius: 0.5rem;
+    --radius: 0.75rem;
   }
 }
 
@@ -36,14 +36,31 @@
     @apply bg-background text-foreground font-body antialiased;
   }
   h1, h2, h3, h4, h5, h6 {
-    @apply font-headline font-bold uppercase tracking-wider;
+    @apply font-headline font-black uppercase tracking-tighter italic;
   }
 }
 
 .cta-button {
-  @apply transition-transform duration-200 active:scale-95;
+  @apply transition-all duration-200 active:scale-95 hover:brightness-110 hover:shadow-lg hover:shadow-primary/20;
 }
 
 .product-card-hover {
-  @apply transition-all duration-300 hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-1;
+  @apply transition-all duration-500 hover:shadow-[0_0_40px_rgba(255,10,60,0.15)] hover:border-primary/30;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-background;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-muted rounded-full hover:bg-primary/50 transition-colors;
+}
+
+/* Efeito de glitch sutil para textos Alpha */
+.alpha-glitch:hover {
+  text-shadow: 2px 0 #ff0a3c, -2px 0 #ff9900;
 }

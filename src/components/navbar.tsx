@@ -2,7 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import { ShoppingCart, User, Menu, X } from "lucide-react";
+import { ShoppingCart, User, Menu, X, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { useCartStore } from "@/lib/store";
@@ -30,6 +30,13 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const navLinks = [
+    { name: "Home", href: "/" },
+    { name: "Produtos", href: "/catalog" },
+    { name: "Contato", href: "/contact" },
+    { name: "Minha Conta", href: "/account" },
+  ];
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
@@ -46,12 +53,18 @@ export function Navbar() {
             </SheetTrigger>
             <SheetContent side="left" className="bg-background border-r">
               <SheetHeader>
-                <SheetTitle className="text-left">AlphaFlow</SheetTitle>
+                <SheetTitle className="text-left font-black italic uppercase tracking-tighter text-primary">AlphaFlow</SheetTitle>
               </SheetHeader>
-              <nav className="flex flex-col gap-4 mt-8">
-                <Link href="/" className="text-lg font-medium hover:text-primary transition-colors">Home</Link>
-                <Link href="/catalog" className="text-lg font-medium hover:text-primary transition-colors">Produtos</Link>
-                <Link href="/account" className="text-lg font-medium hover:text-primary transition-colors">Minha Conta</Link>
+              <nav className="flex flex-col gap-6 mt-12">
+                {navLinks.map((link) => (
+                  <Link 
+                    key={link.href} 
+                    href={link.href} 
+                    className="text-lg font-black uppercase italic tracking-widest hover:text-primary transition-colors"
+                  >
+                    {link.name}
+                  </Link>
+                ))}
               </nav>
             </SheetContent>
           </Sheet>
@@ -62,12 +75,24 @@ export function Navbar() {
         </div>
 
         <nav className="hidden md:flex items-center gap-8">
-          <Link href="/" className="text-sm font-semibold uppercase tracking-wider hover:text-primary transition-colors">Home</Link>
-          <Link href="/catalog" className="text-sm font-semibold uppercase tracking-wider hover:text-primary transition-colors">Produtos</Link>
-          <Link href="/account" className="text-sm font-semibold uppercase tracking-wider hover:text-primary transition-colors">Minha Conta</Link>
+          {navLinks.map((link) => (
+            <Link 
+              key={link.href} 
+              href={link.href} 
+              className="text-xs font-black uppercase italic tracking-[0.2em] hover:text-primary transition-colors"
+            >
+              {link.name}
+            </Link>
+          ))}
         </nav>
 
         <div className="flex items-center gap-2">
+          <Link href="/contact" className="hidden sm:inline-block">
+            <Button variant="ghost" size="icon" className="hover:text-primary">
+              <Phone className="w-5 h-5" />
+            </Button>
+          </Link>
+          
           <Link href="/account">
             <Button variant="ghost" size="icon" className="hover:text-primary">
               <User className="w-5 h-5" />
@@ -78,7 +103,7 @@ export function Navbar() {
             <Button variant="ghost" size="icon" className="relative hover:text-primary">
               <ShoppingCart className="w-5 h-5" />
               {mounted && cartItemsCount > 0 && (
-                <Badge className="absolute -top-1 -right-1 h-4 w-4 flex items-center justify-center p-0 text-[10px] bg-primary">
+                <Badge className="absolute -top-1 -right-1 h-4 w-4 flex items-center justify-center p-0 text-[10px] bg-primary border-none text-white">
                   {cartItemsCount}
                 </Badge>
               )}
