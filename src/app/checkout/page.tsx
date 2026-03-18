@@ -16,6 +16,7 @@ export default function CheckoutPage() {
   const [mounted, setMounted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
+  const [orderId, setOrderId] = useState("");
   const { toast } = useToast();
   const router = useRouter();
 
@@ -43,9 +44,13 @@ export default function CheckoutPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
-    // Simulate API call to Firebase
+    
+    // Generate order ID on client side to avoid hydration mismatch
+    const newOrderId = `FLOW-${Math.floor(Math.random() * 99999)}`;
+    
     setTimeout(() => {
       setIsProcessing(false);
+      setOrderId(newOrderId);
       setOrderComplete(true);
       clearCart();
       toast({
@@ -66,7 +71,7 @@ export default function CheckoutPage() {
             </div>
             <h1 className="text-3xl md:text-5xl font-black italic uppercase tracking-tighter">Pedido <span className="text-primary">Recebido!</span></h1>
             <p className="text-muted-foreground uppercase tracking-widest font-medium text-sm">
-              Seu pedido #FLOW-{Math.floor(Math.random() * 99999)} foi gerado. <br />
+              Seu pedido {orderId} foi gerado. <br />
               Pague agora via PIX para garantir o envio imediato.
             </p>
 
