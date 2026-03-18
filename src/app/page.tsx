@@ -4,13 +4,14 @@ import { Navbar } from "@/components/navbar";
 import { MarketingBanner } from "@/components/marketing-banner";
 import { PRODUCTS } from "@/lib/products";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ShieldCheck, Truck, Zap } from "lucide-react";
+import { ArrowRight, ShieldCheck, Truck, Zap, ShoppingCart } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Badge } from "@/components/ui/badge";
-import { ProductCard } from "@/components/product-card";
 
 export default function Home() {
   const heroImage = PlaceHolderImages.find(img => img.id === 'hero-banner')?.imageUrl || '';
+  const featuredProduct = PRODUCTS.find(p => p.id === '3') || PRODUCTS[0];
+  const featuredImage = PlaceHolderImages.find(img => img.id === 'featured-highlight')?.imageUrl || featuredProduct.image;
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -28,7 +29,7 @@ export default function Home() {
         />
         <div className="container relative z-10 px-4 text-center">
           <Badge className="mb-6 bg-primary/20 text-primary border-primary font-black px-4 py-1 text-sm uppercase tracking-[0.3em] italic backdrop-blur-sm">
-            Nova Coleção Alpha
+            Nova Coleção Alpha 2026
           </Badge>
           <h1 className="text-5xl md:text-8xl font-black text-white italic mb-6 leading-none tracking-tighter uppercase drop-shadow-2xl">
             Redefina seu <br />
@@ -86,22 +87,80 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Products Grid */}
+      {/* Full Width Featured Product Section */}
       <section className="py-24 container mx-auto px-4">
-        <div className="flex flex-col md:flex-row items-end justify-between mb-12 gap-6">
-          <div className="space-y-2">
-            <span className="text-primary font-black uppercase italic tracking-widest">Destaques</span>
-            <h2 className="text-4xl md:text-5xl font-black italic leading-none tracking-tighter uppercase">Seleção do <span className="text-primary">Mês</span></h2>
-          </div>
-          <Button variant="link" className="text-primary font-black uppercase italic tracking-widest" asChild>
-            <Link href="/catalog">Ver Todos os Produtos <ArrowRight className="w-4 h-4 ml-2" /></Link>
-          </Button>
+        <div className="mb-12">
+          <span className="text-primary font-black uppercase italic tracking-widest text-xs">Seleção do Mês</span>
+          <h2 className="text-4xl md:text-6xl font-black italic leading-none tracking-tighter uppercase mt-2">Destaques da <span className="text-primary">Temporada</span></h2>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {PRODUCTS.slice(0, 3).map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+        <div className="group relative bg-card border border-border rounded-2xl overflow-hidden shadow-2xl product-card-hover transition-all duration-500">
+          <div className="grid grid-cols-1 lg:grid-cols-2">
+            <div className="relative aspect-[16/9] lg:aspect-auto h-full overflow-hidden bg-muted">
+              <Image
+                src={featuredImage}
+                alt={featuredProduct.name}
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                data-ai-hint="luxury underwear"
+              />
+              <Badge className="absolute top-6 left-6 bg-secondary text-white font-black italic px-4 py-1 uppercase tracking-widest text-xs animate-pulse">
+                Oferta Limitada
+              </Badge>
+            </div>
+            
+            <div className="p-8 md:p-12 flex flex-col justify-center gap-6">
+              <div className="space-y-4">
+                <h3 className="text-3xl md:text-5xl font-black uppercase italic tracking-tight leading-none">
+                  {featuredProduct.name}
+                </h3>
+                <p className="text-muted-foreground uppercase tracking-widest font-medium text-sm leading-relaxed max-w-md">
+                  {featuredProduct.description}
+                </p>
+              </div>
+
+              <div className="flex items-end gap-4">
+                <div className="flex flex-col">
+                  {featuredProduct.originalPrice && (
+                    <span className="text-sm text-muted-foreground line-through decoration-primary/50 font-bold">
+                      DE R$ {featuredProduct.originalPrice.toFixed(2)}
+                    </span>
+                  )}
+                  <span className="text-4xl md:text-6xl font-black text-primary italic leading-none">
+                    R$ {featuredProduct.price.toFixed(2)}
+                  </span>
+                </div>
+                <div className="bg-primary/10 border border-primary/20 px-3 py-1 rounded text-[10px] font-black uppercase tracking-widest text-primary mb-1">
+                  -80% NO PIX
+                </div>
+              </div>
+
+              <div className="pt-4 space-y-4">
+                <Button asChild size="lg" className="w-full md:w-fit h-16 px-12 bg-foreground text-background hover:bg-primary hover:text-white font-black uppercase tracking-widest italic text-lg transition-all cta-button">
+                  <Link href={`/product/${featuredProduct.id}`}>
+                    <ShoppingCart className="w-5 h-5 mr-3" />
+                    Adquirir Agora
+                  </Link>
+                </Button>
+                <div className="flex flex-wrap gap-4">
+                  {featuredProduct.features.slice(0, 3).map((f) => (
+                    <div key={f} className="flex items-center gap-2">
+                      <Zap className="w-3 h-3 text-primary" />
+                      <span className="text-[10px] font-black uppercase tracking-widest">{f}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-12 flex justify-center">
+          <Button variant="outline" size="lg" className="h-14 px-12 border-border font-black uppercase italic tracking-widest text-sm hover:border-primary hover:text-primary transition-all group" asChild>
+            <Link href="/catalog">
+              Ver Mais Produtos <ArrowRight className="w-4 h-4 ml-3 group-hover:translate-x-2 transition-transform" />
+            </Link>
+          </Button>
         </div>
       </section>
 
@@ -120,7 +179,7 @@ export default function Home() {
               <span className="text-[10px] font-medium tracking-[0.3em] uppercase">Underwear</span>
             </Link>
             <p className="text-muted-foreground text-xs uppercase tracking-widest leading-relaxed">
-              Elevando o padrão do underwear masculino brasileiro com conforto e estilo.
+              Elevando o padrão do underwear masculino brasileiro com conforto e estilo desde 2026.
             </p>
           </div>
           <div>
@@ -151,7 +210,7 @@ export default function Home() {
         </div>
         <div className="container mx-auto px-4 mt-16 pt-8 border-t border-border/50 text-center">
           <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">
-            © 2025 AlphaFlow Underwear • Estilo e Performance
+            © 2026 AlphaFlow Underwear • Estilo e Performance
           </p>
         </div>
       </footer>
