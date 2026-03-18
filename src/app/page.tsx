@@ -1,4 +1,3 @@
-
 import Image from "next/image";
 import Link from "next/link";
 import { Navbar } from "@/components/navbar";
@@ -17,6 +16,8 @@ export default function Home() {
   
   // Imagem específica para a Oferta mais vendida
   const featuredImage = "https://i.imgur.com/6SKXG9B.jpeg";
+  // Imagem específica solicitada pelo usuário para a Oferta da Semana na Home
+  const weeklyImage = "https://i.imgur.com/cLPh42r.jpeg";
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -180,7 +181,7 @@ export default function Home() {
           <div className="grid grid-cols-1 lg:grid-cols-2">
             <div className="relative aspect-[16/9] lg:aspect-auto h-full overflow-hidden bg-muted order-1 lg:order-2">
               <Image
-                src={weeklyProduct.image}
+                src={weeklyImage}
                 alt={weeklyProduct.name}
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
