@@ -3,62 +3,62 @@
   "placeholderImages": [
     {
       "id": "hero-banner",
-      "description": "Modern minimalist male model in premium underwear",
-      "imageUrl": "https://picsum.photos/seed/alphaflow_hero/1200/600",
+      "description": "Banner Principal - Proporção 16:9 ou 21:9 (Sugerido: 1920x1080px)",
+      "imageUrl": "https://picsum.photos/seed/alphaflow_hero/1920/1080",
       "imageHint": "male model underwear"
     },
     {
       "id": "featured-highlight",
-      "description": "High impact banner for featured kit 10 units",
+      "description": "Destaque de Oferta Home - Proporção 16:9 (Sugerido: 1200x675px)",
       "imageUrl": "https://http2.mlstatic.com/D_NQ_NP_2X_930502-MLB79243674706_092024-F-kit-com-10-cuecas-boxer-adulto-algodo-lupo.webp",
       "imageHint": "men underwear luxury"
     },
     {
       "id": "kit-lupo-10",
-      "description": "Kit 10 Cuecas Boxer Lupo Performance",
+      "description": "Produto - Proporção 1:1 Quadrada (Sugerido: 800x800px)",
       "imageUrl": "https://http2.mlstatic.com/D_NQ_NP_2X_930502-MLB79243674706_092024-F-kit-com-10-cuecas-boxer-adulto-algodo-lupo.webp",
       "imageHint": "lupo underwear kit"
     },
     {
       "id": "kit-lupo-6",
-      "description": "Kit 6 Cuecas Boxer Lupo Microfibra",
-      "imageUrl": "https://picsum.photos/seed/lupo_6_micro/600/600",
+      "description": "Produto - Proporção 1:1 Quadrada (Sugerido: 800x800px)",
+      "imageUrl": "https://picsum.photos/seed/lupo_6_micro/800/800",
       "imageHint": "lupo microfibra kit"
     },
     {
       "id": "kit-ck-premium",
-      "description": "Kit 3 Cuecas Boxer Calvin Klein Cotton",
-      "imageUrl": "https://picsum.photos/seed/ck_alpha/600/600",
+      "description": "Produto - Proporção 1:1 Quadrada (Sugerido: 800x800px)",
+      "imageUrl": "https://picsum.photos/seed/ck_alpha/800/800",
       "imageHint": "calvin klein underwear"
     },
     {
       "id": "kit-polo-wear",
-      "description": "Kit 10 Cuecas Boxer Polo Wear Comfort",
-      "imageUrl": "https://picsum.photos/seed/polo_alpha/600/600",
+      "description": "Produto - Proporção 1:1 Quadrada (Sugerido: 800x800px)",
+      "imageUrl": "https://picsum.photos/seed/polo_alpha/800/800",
       "imageHint": "polo wear underwear"
     },
     {
       "id": "kit-lupo-4",
-      "description": "Kit 4 Cuecas Boxer Lupo",
-      "imageUrl": "https://picsum.photos/seed/lupo_4_units/600/600",
+      "description": "Produto - Proporção 1:1 Quadrada (Sugerido: 800x800px)",
+      "imageUrl": "https://picsum.photos/seed/lupo_4_units/800/800",
       "imageHint": "lupo boxer kit"
     },
     {
       "id": "kit-lupo-5-slip",
-      "description": "Kit 5 Cuecas Slip Lupo",
-      "imageUrl": "https://picsum.photos/seed/lupo_5_slip/600/600",
+      "description": "Produto - Proporção 1:1 Quadrada (Sugerido: 800x800px)",
+      "imageUrl": "https://picsum.photos/seed/lupo_5_slip/800/800",
       "imageHint": "lupo slip kit"
     },
     {
       "id": "single-brief",
-      "description": "Cueca Slip Algodão Clássica",
-      "imageUrl": "https://picsum.photos/seed/brief_alpha/600/600",
+      "description": "Produto - Proporção 1:1 Quadrada (Sugerido: 800x800px)",
+      "imageUrl": "https://picsum.photos/seed/brief_alpha/800/800",
       "imageHint": "men brief"
     },
     {
       "id": "modal-boxer",
-      "description": "Cueca Boxer Modal Soft",
-      "imageUrl": "https://picsum.photos/seed/modal_alpha/600/600",
+      "description": "Produto - Proporção 1:1 Quadrada (Sugerido: 800x800px)",
+      "imageUrl": "https://picsum.photos/seed/modal_alpha/800/800",
       "imageHint": "soft underwear"
     }
   ]
