@@ -14,22 +14,22 @@
       "imageHint": "men underwear luxury"
     },
     {
-      "id": "kit-3-boxer",
-      "description": "Kit 3 Cuecas Boxer Algodão Premium",
-      "imageUrl": "https://picsum.photos/seed/kit3_alpha/600/600",
-      "imageHint": "boxer underwear kit"
+      "id": "kit-lupo-10",
+      "description": "Kit 10 Cuecas Boxer Lupo Performance",
+      "imageUrl": "https://picsum.photos/seed/lupo_alpha/600/600",
+      "imageHint": "lupo underwear kit"
     },
     {
-      "id": "kit-5-boxer",
-      "description": "Kit 5 Cuecas Boxer Microfibra Confort",
-      "imageUrl": "https://picsum.photos/seed/kit5_alpha/600/600",
-      "imageHint": "men underwear microfiber"
+      "id": "kit-ck-premium",
+      "description": "Kit 3 Cuecas Boxer Calvin Klein Cotton",
+      "imageUrl": "https://picsum.photos/seed/ck_alpha/600/600",
+      "imageHint": "calvin klein underwear"
     },
     {
-      "id": "kit-10-boxer",
-      "description": "Kit 10 Cuecas Boxer Performance",
-      "imageUrl": "https://picsum.photos/seed/kit10_alpha/600/600",
-      "imageHint": "underwear pack"
+      "id": "kit-polo-wear",
+      "description": "Kit 10 Cuecas Boxer Polo Wear Comfort",
+      "imageUrl": "https://picsum.photos/seed/polo_alpha/600/600",
+      "imageHint": "polo wear underwear"
     },
     {
       "id": "single-brief",

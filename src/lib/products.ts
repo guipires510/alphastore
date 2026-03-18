@@ -1,8 +1,9 @@
+
 import { PlaceHolderImages } from './placeholder-images';
 
 export interface Product {
   id: string;
-  shopifyId?: string; // Campo para ID real do Shopify
+  shopifyId?: string;
   name: string;
   price: number;
   originalPrice?: number;
@@ -14,43 +15,42 @@ export interface Product {
   features: string[];
 }
 
-// Estes produtos agora servem como Mock de dados que viriam do Shopify
 export const PRODUCTS: Product[] = [
   {
-    id: '1',
-    name: 'Kit 3 Cuecas Boxer Algodão Premium',
-    price: 89.90,
-    originalPrice: 119.90,
-    description: 'Conforto absoluto para o dia a dia. Algodão de alta qualidade que respira.',
-    image: PlaceHolderImages.find(img => img.id === 'kit-3-boxer')?.imageUrl || 'https://picsum.photos/seed/1/600/600',
-    category: 'kit',
-    quantity: 3,
-    material: 'Algodão',
-    features: ['Respirável', 'Cós Elástico Macio', 'Sem Costuras Laterais']
-  },
-  {
-    id: '2',
-    name: 'Kit 5 Cuecas Boxer Microfibra Confort',
-    price: 129.90,
-    originalPrice: 159.90,
-    description: 'Ideal para praticantes de esportes. Secagem rápida e ajuste perfeito ao corpo.',
-    image: PlaceHolderImages.find(img => img.id === 'kit-5-boxer')?.imageUrl || 'https://picsum.photos/seed/2/600/600',
-    category: 'kit',
-    quantity: 5,
-    material: 'Microfibra',
-    features: ['Secagem Rápida', 'Ajuste Anatômico', 'Antiodor']
-  },
-  {
-    id: '3',
-    name: 'Kit 10 Cuecas Boxer Performance - Oferta PIX',
+    id: 'lupo-10',
+    name: 'Kit 10 Cuecas Boxer Lupo Performance',
     price: 49.90,
-    originalPrice: 299.90,
-    description: 'NOSSA MELHOR OFERTA. 10 CUECAS PREMIUM PARA RENOVAR SUA GAVETA DE VEZ. NOSSA MODELAGEM ALPHAFIT GARANTE QUE A CUECA NÃO ENROLE E MANTENHA O FRESCOR O DIA TODO.',
-    image: PlaceHolderImages.find(img => img.id === 'kit-10-boxer')?.imageUrl || 'https://picsum.photos/seed/3/600/600',
+    originalPrice: 249.90,
+    description: 'A tecnologia Lupo para o máximo conforto e durabilidade. Kit completo para renovar seu dia a dia.',
+    image: PlaceHolderImages.find(img => img.id === 'kit-lupo-10')?.imageUrl || 'https://picsum.photos/seed/lupo/600/600',
     category: 'kit',
     quantity: 10,
-    material: 'Mista',
-    features: ['Durabilidade', 'Variedade de Cores', 'Toque Sedoso']
+    material: 'Microfibra',
+    features: ['Tecnologia Sem Costura', 'Alta Respirabilidade', 'Ajuste Anatômico']
+  },
+  {
+    id: 'ck-premium',
+    name: 'Kit 3 Cuecas Boxer Calvin Klein Cotton',
+    price: 69.90,
+    originalPrice: 199.90,
+    description: 'O ícone do estilo masculino. Algodão premium com o elástico clássico Calvin Klein.',
+    image: PlaceHolderImages.find(img => img.id === 'kit-ck-premium')?.imageUrl || 'https://picsum.photos/seed/ck/600/600',
+    category: 'kit',
+    quantity: 3,
+    material: 'Algodão Premium',
+    features: ['Cós Logotipado CK', 'Toque Macio', 'Luxo e Conforto']
+  },
+  {
+    id: 'polo-wear-10',
+    name: 'Kit 10 Cuecas Boxer Polo Wear Comfort',
+    price: 49.90,
+    originalPrice: 229.90,
+    description: 'Qualidade Polo Wear em um kit de alto valor. Conforto garantido para todas as ocasiões.',
+    image: PlaceHolderImages.find(img => img.id === 'kit-polo-wear')?.imageUrl || 'https://picsum.photos/seed/polo/600/600',
+    category: 'kit',
+    quantity: 10,
+    material: 'Algodão/Elastano',
+    features: ['Durabilidade Reforçada', 'Cores Variadas', 'Conforto Alpha']
   },
   {
     id: '4',

@@ -1,3 +1,4 @@
+
 import Image from "next/image";
 import Link from "next/link";
 import { Navbar } from "@/components/navbar";
@@ -10,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 
 export default function Home() {
   const heroImage = PlaceHolderImages.find(img => img.id === 'hero-banner')?.imageUrl || '';
-  const featuredProduct = PRODUCTS.find(p => p.id === '3') || PRODUCTS[0];
+  const featuredProduct = PRODUCTS.find(p => p.id === 'lupo-10') || PRODUCTS[0];
   const featuredImage = PlaceHolderImages.find(img => img.id === 'featured-highlight')?.imageUrl || featuredProduct.image;
 
   return (
@@ -105,7 +106,7 @@ export default function Home() {
                 data-ai-hint="luxury underwear"
               />
               <Badge className="absolute top-6 left-6 bg-secondary text-white font-black italic px-4 py-1 uppercase tracking-widest text-xs animate-pulse">
-                Oferta Limitada
+                MELHOR OFERTA DO DIA
               </Badge>
             </div>
             
