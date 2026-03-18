@@ -116,7 +116,7 @@ export default function ProductDetailPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen pt-24 pb-12">
+    <div className="flex flex-col min-h-screen pt-32 pb-12">
       <Navbar />
       
       <div className="container mx-auto px-4">
@@ -152,7 +152,7 @@ export default function ProductDetailPage() {
               {product.name}
             </h1>
 
-            <div className="flex items-center gap-4 mb-8">
+            <div className="flex items-center gap-4 mb-6">
               <div className="flex flex-col">
                 {product.originalPrice && (
                   <span className="text-sm text-muted-foreground line-through decoration-primary/50 font-bold mb-1">
@@ -163,6 +163,18 @@ export default function ProductDetailPage() {
               </div>
               <div className="bg-primary/10 border border-primary/20 px-3 py-1 rounded text-[10px] font-black uppercase tracking-widest text-primary">
                 OFERTA PIX
+              </div>
+            </div>
+
+            {/* Credibility Badge (New) */}
+            <div className="mb-8 p-4 bg-primary/5 border border-primary/20 rounded-xl flex items-start gap-3">
+              <ShieldCheck className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+              <div className="space-y-1">
+                <p className="text-[11px] font-black uppercase tracking-widest text-foreground">Garantia de Autenticidade Alpha</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground leading-relaxed">
+                  Vendedor Oficial: <span className="text-primary italic">LUPO • CALVIN KLEIN • POLO WEAR</span>
+                </p>
+                <p className="text-[9px] font-medium uppercase tracking-widest text-muted-foreground/60 italic">Trabalhamos apenas com fornecedores homologados</p>
               </div>
             </div>
 
