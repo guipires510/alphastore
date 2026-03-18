@@ -10,8 +10,9 @@ import { Badge } from "@/components/ui/badge";
 import { useState, useEffect } from "react";
 import { useCartStore } from "@/lib/store";
 import { useToast } from "@/hooks/use-toast";
-import { Check, ShieldCheck, Truck, Zap, Star } from "lucide-react";
+import { Check, ShieldCheck, Truck, Zap, Star, User, thumbsUp } from "lucide-react";
 import { generateProductDescription } from "@/ai/flows/generate-product-description-flow";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function ProductDetailPage() {
   const { id } = useParams();
@@ -23,6 +24,34 @@ export default function ProductDetailPage() {
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [aiDescription, setAiDescription] = useState<string | null>(null);
   const [loadingAi, setLoadingAi] = useState(false);
+
+  // Mock Reviews
+  const reviews = [
+    {
+      id: 1,
+      name: "RICARDO S.",
+      date: "Há 2 dias",
+      rating: 5,
+      comment: "MELHOR CUSTO BENEFÍCIO QUE JÁ ENCONTREI. O MATERIAL É REALMENTE PREMIUM E NÃO ENROLA NA PERNA. COMPREI O KIT DE 10 E VALE CADA CENTAVO.",
+      verified: true
+    },
+    {
+      id: 2,
+      name: "MARCOS A.",
+      date: "Há 1 semana",
+      rating: 5,
+      comment: "ENTREGA MUITO RÁPIDA! O SUPORTE NO WHATSAPP FOI NOTA 10. AS CUECAS SÃO EXTREMAMENTE CONFORTÁVEIS PARA TREINAR.",
+      verified: true
+    },
+    {
+      id: 3,
+      name: "FELIPE T.",
+      date: "Há 2 semanas",
+      rating: 4,
+      comment: "CONFORTO ABSURDO. RECOMENDO PRA QUEM BUSCA QUALIDADE DE VERDADE. O TAMANHO G FICOU PERFEITO.",
+      verified: true
+    }
+  ];
 
   useEffect(() => {
     if (product) {
@@ -72,7 +101,7 @@ export default function ProductDetailPage() {
       <Navbar />
       
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 mb-24">
           {/* Gallery */}
           <div className="space-y-4">
             <div className="relative aspect-square rounded-2xl overflow-hidden bg-card border border-border group">
@@ -118,12 +147,17 @@ export default function ProductDetailPage() {
             </h1>
 
             <div className="flex items-center gap-4 mb-8">
-              <span className="text-4xl font-black text-primary italic">R$ {product.price.toFixed(2)}</span>
-              {product.originalPrice && (
-                <span className="text-lg text-muted-foreground line-through decoration-primary/50">
-                  R$ {product.originalPrice.toFixed(2)}
-                </span>
-              )}
+              <div className="flex flex-col">
+                {product.originalPrice && (
+                  <span className="text-sm text-muted-foreground line-through decoration-primary/50 font-bold mb-1">
+                    DE R$ {product.originalPrice.toFixed(2)}
+                  </span>
+                )}
+                <span className="text-4xl md:text-5xl font-black text-primary italic leading-none">R$ {product.price.toFixed(2)}</span>
+              </div>
+              <div className="bg-primary/10 border border-primary/20 px-3 py-1 rounded text-[10px] font-black uppercase tracking-widest text-primary">
+                OFERTA PIX
+              </div>
             </div>
 
             <div className="mb-10">
@@ -200,7 +234,7 @@ export default function ProductDetailPage() {
                 )}
               </div>
               
-              <div className="grid grid-cols-2 gap-y-3 pt-4">
+              <div className="grid grid-cols-2 gap-y-3 pt-4 border-t border-border/50">
                 {product.features.map((feature) => (
                   <div key={feature} className="flex items-center gap-2">
                     <Check className="w-4 h-4 text-primary" />
@@ -211,6 +245,69 @@ export default function ProductDetailPage() {
             </div>
           </div>
         </div>
+
+        {/* Reviews Section */}
+        <section className="mt-12 pt-12 border-t border-border">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-12">
+            <div>
+              <span className="text-primary font-black uppercase italic tracking-widest text-xs">Prova Social</span>
+              <h2 className="text-3xl md:text-5xl font-black italic uppercase tracking-tighter mt-2">O que dizem os <span className="text-primary">Alphas</span></h2>
+            </div>
+            <div className="flex items-center gap-4 bg-card border border-border p-4 rounded-xl">
+              <div className="text-center">
+                <p className="text-3xl font-black italic leading-none text-primary">4.9</p>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mt-1">Média Geral</p>
+              </div>
+              <div className="w-px h-10 bg-border" />
+              <div className="flex flex-col gap-1">
+                <div className="flex gap-0.5">
+                  {[1, 2, 3, 4, 5].map((s) => <Star key={s} className="w-3 h-3 fill-primary text-primary" />)}
+                </div>
+                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Baseado em 127 fotos</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {reviews.map((review) => (
+              <div key={review.id} className="bg-card border border-border p-8 rounded-2xl space-y-4 hover:border-primary/30 transition-all">
+                <div className="flex items-center justify-between">
+                  <div className="flex gap-0.5">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className={`w-3 h-3 ${i < review.rating ? 'fill-primary text-primary' : 'text-muted'}`} />
+                    ))}
+                  </div>
+                  <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{review.date}</span>
+                </div>
+                
+                <p className="text-xs md:text-sm font-bold uppercase tracking-tight italic leading-relaxed">
+                  "{review.comment}"
+                </p>
+
+                <div className="flex items-center gap-3 pt-4">
+                  <Avatar className="w-10 h-10 border border-primary/20">
+                    <AvatarFallback className="bg-muted text-[10px] font-black uppercase">{review.name.substring(0, 2)}</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <h4 className="text-[10px] font-black uppercase tracking-widest">{review.name}</h4>
+                    {review.verified && (
+                      <div className="flex items-center gap-1">
+                        <Check className="w-3 h-3 text-green-500" />
+                        <span className="text-[9px] font-black uppercase text-green-500 tracking-widest">Compra Verificada</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-12 text-center">
+            <Button variant="ghost" className="text-xs font-black uppercase italic tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors">
+              Carregar mais 124 avaliações...
+            </Button>
+          </div>
+        </section>
       </div>
     </div>
   );
