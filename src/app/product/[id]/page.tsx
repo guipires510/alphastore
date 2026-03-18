@@ -149,8 +149,8 @@ export default function ProductDetailPage() {
               <div className="absolute top-6 left-6 flex flex-col gap-2">
                 {hasPromotion && (
                   <>
-                    <Badge className="bg-primary text-white font-black italic px-4 py-1 uppercase tracking-widest text-xs shadow-lg">CAMPEÃO DE VENDAS</Badge>
-                    <Badge variant="secondary" className="bg-secondary text-white font-black italic px-4 py-1 uppercase tracking-widest text-[10px] animate-pulse shadow-lg">POUCAS UNIDADES NO ESTOQUE</Badge>
+                    <Badge className="bg-primary text-white font-black italic px-3 py-0.5 uppercase tracking-widest text-[10px] shadow-lg">CAMPEÃO DE VENDAS</Badge>
+                    <Badge variant="secondary" className="bg-secondary text-white font-black italic px-3 py-0.5 uppercase tracking-widest text-[8px] animate-pulse shadow-lg">POUCAS UNIDADES NO ESTOQUE</Badge>
                   </>
                 )}
               </div>
