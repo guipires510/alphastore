@@ -1,4 +1,3 @@
-
 import { PlaceHolderImages } from './placeholder-images';
 
 export interface Product {
@@ -23,7 +22,7 @@ export const PRODUCTS: Product[] = [
     name: 'Kit 10 Cuecas Boxer Lupo Performance',
     price: 59.90,
     originalPrice: 169.90,
-    description: 'Kit com 10 unidades em algodão premium e elastano. Design anatômico com tecnologia Seamless que garante conforto absoluto e durabilidade superior para o dia a dia.',
+    description: 'Kit com 10 cuecas em algodão premium e elastano. Design anatômico com tecnologia Seamless para conforto absoluto. Durabilidade superior para o uso diário com ajuste perfeito ao corpo. A escolha ideal para quem busca qualidade Alpha.',
     image: 'https://http2.mlstatic.com/D_NQ_NP_2X_930502-MLB79243674706_092024-F-kit-com-10-cuecas-boxer-adulto-algodo-lupo.webp',
     images: [
       'https://http2.mlstatic.com/D_NQ_NP_2X_930502-MLB79243674706_092024-F-kit-com-10-cuecas-boxer-adulto-algodo-lupo.webp',
@@ -38,10 +37,10 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'ck-premium',
-    name: 'Kit 3 Cuecas Boxer Cotton Calvin Klein',
+    name: 'Kit 3 Cuecas Masculinas Boxer Cotton Calvin Klein',
     price: 89.90,
     originalPrice: 249.90,
-    description: 'Sofisticação em algodão de alta qualidade com o icônico cós logotipado CK. Design minimalista com ajuste impecável, ideal para elevar o nível de conforto e estilo.',
+    description: 'Kit 3 cuecas Calvin Klein em algodão de alta qualidade. Cós elástico icônico com logo CK e design minimalista. Conforto extremo com caimento perfeito para rotinas casuais ou treinos. Sofisticação e luxo para o seu dia a dia.',
     image: PlaceHolderImages.find(img => img.id === 'kit-ck-premium')?.imageUrl || 'https://picsum.photos/seed/ck_alpha/600/600',
     category: 'kit',
     brand: 'Calvin Klein',
@@ -54,8 +53,8 @@ export const PRODUCTS: Product[] = [
     name: 'Kit 10 Cuecas Boxer Polo Wear Comfort',
     price: 49.90,
     originalPrice: 229.90,
-    description: 'Kit exclusivo com modelagem clássica Alpha. Tecido resistente com elastano que se adapta ao corpo, oferecendo o melhor custo-benefício e praticidade do mercado.',
-    image: PlaceHolderImages.find(img => img.id === 'kit-polo-wear')?.imageUrl || 'https://picsum.photos/seed/polo_alpha/600/600',
+    description: 'Kit exclusivo com 10 cuecas Polo Wear em algodão e elastano. Modelagem clássica Alpha que se adapta perfeitamente ao corpo masculino. Alta resistência e praticidade com o melhor custo-benefício. Garanta estilo e durabilidade.',
+    image: 'https://i.imgur.com/qEpA80D.png',
     category: 'kit',
     brand: 'Polo Wear',
     quantity: 10,
@@ -67,7 +66,7 @@ export const PRODUCTS: Product[] = [
     name: 'Kit 6 Cuecas Boxer Lupo Microfibra',
     price: 49.90,
     originalPrice: 149.00,
-    description: 'Kit de microfibra com tecnologia sem costura. Oferece conforto térmico, secagem ultra rápida e ajuste anatômico total, ideal para uso intenso e esportivo.',
+    description: 'Kit 6 cuecas Lupo em microfibra com tecnologia sem costura. Conforto térmico e secagem ultra rápida para uso esportivo ou intenso. Ajuste anatômico total que não enrola na perna. Performance e qualidade garantidas.',
     image: PlaceHolderImages.find(img => img.id === 'kit-lupo-6')?.imageUrl || 'https://picsum.photos/seed/lupo_6_micro/800/800',
     category: 'kit',
     brand: 'Lupo',
