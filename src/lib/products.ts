@@ -80,10 +80,11 @@ export const PRODUCTS: Product[] = [
     price: 49.90,
     originalPrice: 149.00,
     description: 'Aproveite o Kit com 6 unidades em microfibra com tecnologia sem costura. Conforto térmico e secagem rápida para uso intenso ou esportivo com ajuste total.',
-    image: 'https://picsum.photos/seed/lupo_6_micro/800/800',
+    image: 'https://i.imgur.com/ULYwgXw.png',
     images: [
-      'https://picsum.photos/seed/lupo_6_micro/800/800',
-      'https://picsum.photos/seed/lupo_micro_detail/800/800'
+      'https://i.imgur.com/ULYwgXw.png',
+      'https://i.imgur.com/Hb2uMNx.png',
+      'https://i.imgur.com/JhSJAgd.png'
     ],
     category: 'kit',
     brand: 'Lupo',
