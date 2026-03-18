@@ -5,7 +5,7 @@ import { Navbar } from "@/components/navbar";
 import { MarketingBanner } from "@/components/marketing-banner";
 import { PRODUCTS } from "@/lib/products";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ShieldCheck, Truck, Zap, ShoppingCart } from "lucide-react";
+import { ArrowRight, ShieldCheck, Truck, Zap, ShoppingCart, AlertCircle } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Badge } from "@/components/ui/badge";
 
@@ -105,9 +105,14 @@ export default function Home() {
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
                 data-ai-hint="luxury underwear"
               />
-              <Badge className="absolute top-6 left-6 bg-secondary text-white font-black italic px-4 py-1 uppercase tracking-widest text-xs animate-pulse">
-                MELHOR OFERTA DO DIA
-              </Badge>
+              <div className="absolute top-6 left-6 flex flex-col gap-2">
+                <Badge className="bg-secondary text-white font-black italic px-4 py-1 uppercase tracking-widest text-xs animate-pulse">
+                  MELHOR OFERTA DO DIA
+                </Badge>
+                <Badge className="bg-orange-600 text-white font-black italic px-3 py-1 uppercase tracking-widest text-[10px] flex items-center gap-1">
+                  <AlertCircle className="w-3 h-3" /> ÚLTIMAS UNIDADES!
+                </Badge>
+              </div>
             </div>
             
             <div className="p-8 md:p-12 flex flex-col justify-center gap-6">
@@ -118,6 +123,9 @@ export default function Home() {
                 <p className="text-muted-foreground uppercase tracking-widest font-medium text-sm leading-relaxed max-w-md">
                   {featuredProduct.description}
                 </p>
+                <div className="flex items-center gap-2 text-secondary font-black italic text-xs animate-bounce">
+                  🔥 Mais de 120 pessoas compraram este kit hoje!
+                </div>
               </div>
 
               <div className="flex items-end gap-4">

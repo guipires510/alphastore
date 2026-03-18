@@ -10,9 +10,10 @@ import { Badge } from "@/components/ui/badge";
 import { useState, useEffect } from "react";
 import { useCartStore } from "@/lib/store";
 import { useToast } from "@/hooks/use-toast";
-import { Check, ShieldCheck, Truck, Zap, Star } from "lucide-react";
+import { Check, ShieldCheck, Truck, Zap, Star, AlertTriangle } from "lucide-react";
 import { generateProductDescription } from "@/ai/flows/generate-product-description-flow";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Progress } from "@/components/ui/progress";
 
 export default function ProductDetailPage() {
   const { id } = useParams();
@@ -25,6 +26,7 @@ export default function ProductDetailPage() {
   const [selectedColor, setSelectedColor] = useState<string>("");
   const [aiDescription, setAiDescription] = useState<string | null>(null);
   const [loadingAi, setLoadingAi] = useState(false);
+  const [stockProgress, setStockProgress] = useState(85); // Simulação de estoque baixo
 
   const colors = [
     { name: "Brancas", hex: "#FFFFFF" },
@@ -73,17 +75,30 @@ export default function ProductDetailPage() {
       .catch(err => console.error("AI error", err))
       .finally(() => setLoadingAi(false));
     }
+    
+    // Pequeno delay para animação da barra de estoque
+    const timer = setTimeout(() => setStockProgress(94), 500);
+    return () => clearTimeout(timer);
   }, [product]);
 
   if (!product) return <div>Produto não encontrado</div>;
 
-  const sizes = ["P", "M", "G", "GG"];
+  const sizes = ["P", "M", "G", "GG", "XG"];
 
   const handleAddToCart = () => {
     if (!selectedSize) {
       toast({
         title: "Seleção Obrigatória",
         description: "Por favor, escolha o TAMANHO antes de continuar.",
+        variant: "destructive",
+      });
+      return false;
+    }
+
+    if (selectedSize === "XG") {
+      toast({
+        title: "Tamanho Esgotado",
+        description: "Infelizmente o tamanho XG não está disponível no momento.",
         variant: "destructive",
       });
       return false;
@@ -134,9 +149,7 @@ export default function ProductDetailPage() {
               />
               <div className="absolute top-6 left-6 flex flex-col gap-2">
                 <Badge className="bg-primary text-white font-black italic px-4 py-1 uppercase tracking-widest text-xs">Best Seller</Badge>
-                {product.originalPrice && (
-                  <Badge variant="outline" className="bg-background/80 text-foreground border-border font-bold px-4 py-1 uppercase tracking-widest text-xs backdrop-blur-sm">PROMOÇÃO</Badge>
-                )}
+                <Badge variant="secondary" className="bg-secondary text-white font-black italic px-4 py-1 uppercase tracking-widest text-[10px] animate-pulse">POUCAS UNIDADES NO ESTOQUE</Badge>
               </div>
             </div>
           </div>
@@ -152,7 +165,7 @@ export default function ProductDetailPage() {
               {product.name}
             </h1>
 
-            <div className="flex items-center gap-4 mb-6">
+            <div className="flex items-center gap-4 mb-4">
               <div className="flex flex-col">
                 {product.originalPrice && (
                   <span className="text-sm text-muted-foreground line-through decoration-primary/50 font-bold mb-1">
@@ -166,7 +179,18 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-            {/* Credibility Badge (New) */}
+            {/* Urgency Stock Bar */}
+            <div className="mb-8 space-y-2">
+              <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
+                <span className="text-secondary flex items-center gap-1">
+                  <AlertTriangle className="w-3 h-3" /> RESTAM APENAS 6 UNIDADES
+                </span>
+                <span className="text-muted-foreground">94% VENDIDO</span>
+              </div>
+              <Progress value={stockProgress} className="h-1.5 bg-muted" />
+            </div>
+
+            {/* Credibility Badge */}
             <div className="mb-8 p-4 bg-primary/5 border border-primary/20 rounded-xl flex items-start gap-3">
               <ShieldCheck className="w-5 h-5 text-primary shrink-0 mt-0.5" />
               <div className="space-y-1">
@@ -182,20 +206,31 @@ export default function ProductDetailPage() {
               <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-4">
                 Selecione o Tamanho <span className="text-primary italic font-black">(Obrigatório)</span>
               </h3>
-              <div className="flex gap-3">
-                {sizes.map((size) => (
-                  <button
-                    key={size}
-                    onClick={() => setSelectedSize(size)}
-                    className={`w-12 h-12 rounded-lg border-2 flex items-center justify-center font-black transition-all ${
-                      selectedSize === size
-                        ? "border-primary bg-primary text-white shadow-lg shadow-primary/20"
-                        : "border-border bg-card text-muted-foreground hover:border-muted hover:text-foreground"
-                    }`}
-                  >
-                    {size}
-                  </button>
-                ))}
+              <div className="flex flex-wrap gap-3">
+                {sizes.map((size) => {
+                  const isSoldOut = size === "XG";
+                  return (
+                    <button
+                      key={size}
+                      disabled={isSoldOut}
+                      onClick={() => setSelectedSize(size)}
+                      className={`relative min-w-[3rem] h-12 px-3 rounded-lg border-2 flex flex-col items-center justify-center font-black transition-all ${
+                        isSoldOut 
+                          ? "border-muted/30 bg-muted/10 text-muted-foreground/40 cursor-not-allowed overflow-hidden" 
+                          : selectedSize === size
+                            ? "border-primary bg-primary text-white shadow-lg shadow-primary/20"
+                            : "border-border bg-card text-muted-foreground hover:border-muted hover:text-foreground"
+                      }`}
+                    >
+                      <span className={isSoldOut ? "opacity-50 line-through" : ""}>{size}</span>
+                      {isSoldOut && (
+                        <span className="absolute inset-0 flex items-center justify-center bg-background/60">
+                          <span className="text-[8px] font-black uppercase italic tracking-tighter text-secondary rotate-[-15deg]">ESGOTADO</span>
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
