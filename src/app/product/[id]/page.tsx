@@ -82,20 +82,20 @@ export default function ProductDetailPage() {
   const handleAddToCart = () => {
     if (!selectedSize) {
       toast({
-        title: "Atenção",
-        description: "Selecione um tamanho antes de adicionar ao carrinho.",
+        title: "Seleção Obrigatória",
+        description: "Por favor, escolha o TAMANHO antes de continuar.",
         variant: "destructive",
       });
-      return;
+      return false;
     }
 
     if (!selectedColor) {
       toast({
-        title: "Atenção",
-        description: "Selecione uma cor antes de adicionar ao carrinho.",
+        title: "Seleção Obrigatória",
+        description: "Por favor, escolha a COR antes de continuar.",
         variant: "destructive",
       });
-      return;
+      return false;
     }
 
     addItem({
@@ -112,6 +112,7 @@ export default function ProductDetailPage() {
       title: "Sucesso!",
       description: `${product.name} (${selectedColor}) adicionado ao seu carrinho.`,
     });
+    return true;
   };
 
   return (
@@ -166,7 +167,9 @@ export default function ProductDetailPage() {
             </div>
 
             <div className="mb-8">
-              <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-4">Selecione o Tamanho</h3>
+              <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-4">
+                Selecione o Tamanho <span className="text-primary italic font-black">(Obrigatório)</span>
+              </h3>
               <div className="flex gap-3">
                 {sizes.map((size) => (
                   <button
@@ -185,7 +188,9 @@ export default function ProductDetailPage() {
             </div>
 
             <div className="mb-10">
-              <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-4">Selecione a Cor</h3>
+              <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-4">
+                Selecione a Cor <span className="text-primary italic font-black">(Obrigatório)</span>
+              </h3>
               <div className="flex flex-wrap gap-3">
                 {colors.map((color) => (
                   <button
@@ -224,12 +229,9 @@ export default function ProductDetailPage() {
                 size="lg"
                 className="w-full h-16 border-accent text-accent hover:bg-accent hover:text-accent-foreground font-black italic uppercase tracking-[0.2em] text-lg transition-all"
                 onClick={() => {
-                  if (!selectedSize || !selectedColor) {
-                    handleAddToCart();
-                    return;
+                  if (handleAddToCart()) {
+                    router.push("/checkout");
                   }
-                  handleAddToCart();
-                  router.push("/checkout");
                 }}
               >
                 Comprar Agora no PIX
