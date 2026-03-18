@@ -13,18 +13,18 @@ import { Badge } from "@/components/ui/badge";
 export default function AccountPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Mock Orders
+  // Mock Orders updated to 2026
   const orders = [
     {
       id: "FLOW-98212",
-      date: "12/05/2024",
+      date: "12/05/2026",
       total: 199.90,
       status: "paid",
       items: "Kit 10 Cuecas Boxer Performance"
     },
     {
       id: "FLOW-97103",
-      date: "05/04/2024",
+      date: "05/04/2026",
       total: 89.90,
       status: "delivered",
       items: "Kit 3 Cuecas Boxer Algodão Premium"

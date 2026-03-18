@@ -29,7 +29,7 @@ export default function Home() {
         />
         <div className="container relative z-10 px-4 text-center">
           <Badge className="mb-6 bg-primary/20 text-primary border-primary font-black px-4 py-1 text-sm uppercase tracking-[0.3em] italic backdrop-blur-sm">
-            Coleção Premium 2024
+            Coleção Premium 2026
           </Badge>
           <h1 className="text-5xl md:text-8xl font-black text-white italic mb-6 leading-none tracking-tighter uppercase drop-shadow-2xl">
             Redefina seu <br />
@@ -199,7 +199,7 @@ export default function Home() {
             <ul className="space-y-4">
               <li><Link href="#" className="text-xs text-muted-foreground hover:text-primary uppercase tracking-widest transition-colors font-medium">Rastrear Pedido</Link></li>
               <li><Link href="#" className="text-xs text-muted-foreground hover:text-primary uppercase tracking-widest transition-colors font-medium">Política de Troca</Link></li>
-              <li><Link href="#" className="text-xs text-muted-foreground hover:text-primary uppercase tracking-widest transition-colors font-medium">Fale Conosco</Link></li>
+              <li><Link href="/contact" className="text-xs text-muted-foreground hover:text-primary uppercase tracking-widest transition-colors font-medium">Fale Conosco</Link></li>
             </ul>
           </div>
           <div>
@@ -219,7 +219,7 @@ export default function Home() {
         </div>
         <div className="container mx-auto px-4 mt-16 pt-8 border-t border-border/50 text-center">
           <p className="text-[10px] text-muted-foreground uppercase tracking-widest">
-            © 2024 AlphaFlow Underwear. Todos os direitos reservados.
+            © 2026 AlphaFlow Underwear. Todos os direitos reservados.
           </p>
         </div>
       </footer>
