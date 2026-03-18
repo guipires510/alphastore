@@ -6,15 +6,16 @@ import { Navbar } from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { CheckCircle2, QrCode, Copy, Wallet, Trash2, CreditCard, Search, Loader2 } from "lucide-react";
+import { CheckCircle2, QrCode, Copy, Wallet, Trash2, CreditCard, Search, Loader2, Plus, Sparkles } from "lucide-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
+import { PRODUCTS } from "@/lib/products";
 
 export default function CheckoutPage() {
-  const { items, total, clearCart, removeItem } = useCartStore();
+  const { items, total, clearCart, removeItem, addItem } = useCartStore();
   const [mounted, setMounted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
@@ -35,6 +36,11 @@ export default function CheckoutPage() {
   const [isFetchingCep, setIsFetchingCep] = useState(false);
 
   const OFFICIAL_PIX_CODE = "CONFIGURAR_CHAVE_PIX_NO_PAINEL_ADMIN";
+
+  // Order Bumps Selection
+  const orderBumps = useMemo(() => {
+    return PRODUCTS.filter(p => p.category === 'single').slice(0, 2);
+  }, []);
 
   useEffect(() => {
     setMounted(true);
@@ -91,8 +97,11 @@ export default function CheckoutPage() {
   }
 
   const cartTotal = total();
-  const pixDiscount = cartTotal * 0.05;
-  const finalTotal = cartTotal - pixDiscount;
+  // Check if any order bump (single item) is in the cart to apply extra discount
+  const hasOrderBump = items.some(item => item.id === '4' || item.id === '5');
+  const comboDiscount = hasOrderBump ? cartTotal * 0.10 : 0; // 10% extra if bump added
+  const pixDiscount = (cartTotal - comboDiscount) * 0.05;
+  const finalTotal = cartTotal - comboDiscount - pixDiscount;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -110,6 +119,22 @@ export default function CheckoutPage() {
         description: "Aguardando pagamento via PIX.",
       });
     }, 1500);
+  };
+
+  const handleAddBump = (product: any) => {
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      quantity: 1,
+      size: "G", // Default for bump
+      color: "Sortidas", // Default for bump
+    });
+    toast({
+      title: "Oferta Ativada!",
+      description: "Desconto Alpha de 10% aplicado ao seu carrinho.",
+    });
   };
 
   if (orderComplete) {
@@ -318,8 +343,8 @@ export default function CheckoutPage() {
             </div>
           </div>
 
-          {/* Summary */}
-          <div className="lg:sticky lg:top-24 h-fit">
+          {/* Summary Column */}
+          <div className="lg:sticky lg:top-24 h-fit space-y-8">
             <div className="bg-card border border-border rounded-xl p-6 md:p-8 shadow-2xl">
               <h2 className="text-xl font-black italic uppercase tracking-widest mb-8 border-b pb-4">Resumo do <span className="text-primary">Pedido</span></h2>
               <div className="space-y-6 mb-8">
@@ -357,10 +382,63 @@ export default function CheckoutPage() {
                   </div>
                 ))}
               </div>
+
+              {/* Order Bump Section */}
+              <div className="bg-primary/5 border-2 border-dashed border-primary/30 rounded-xl p-4 mb-8 space-y-4">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-primary animate-pulse" />
+                  <span className="text-[10px] font-black uppercase tracking-widest text-primary italic">Oferta Relâmpago Alpha</span>
+                </div>
+                <h4 className="text-xs font-black uppercase italic tracking-tighter">Adicione e ganhe +10% de desconto em todo o pedido!</h4>
+                
+                <div className="space-y-3">
+                  {orderBumps.map((product) => {
+                    const isAlreadyInCart = items.some(i => i.id === product.id);
+                    return (
+                      <div key={product.id} className={`flex items-center justify-between gap-4 p-3 rounded-lg border transition-all ${isAlreadyInCart ? 'bg-primary/20 border-primary' : 'bg-background/50 border-border hover:border-primary/50'}`}>
+                        <div className="flex items-center gap-3">
+                          <div className="relative w-10 h-10 rounded border border-border overflow-hidden">
+                            <Image src={product.image} alt={product.name} fill className="object-cover" />
+                          </div>
+                          <div>
+                            <p className="text-[10px] font-bold uppercase truncate w-32">{product.name}</p>
+                            <p className="text-[10px] font-black text-primary">R$ {product.price.toFixed(2)}</p>
+                          </div>
+                        </div>
+                        {isAlreadyInCart ? (
+                          <Badge className="bg-primary text-white text-[8px] font-black italic uppercase">ADICIONADO</Badge>
+                        ) : (
+                          <Button 
+                            onClick={() => handleAddBump(product)}
+                            size="sm" 
+                            className="h-8 px-3 bg-foreground text-background font-black italic uppercase text-[9px] hover:bg-primary hover:text-white"
+                          >
+                            <Plus className="w-3 h-3 mr-1" /> ADICIONAR
+                          </Button>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
               
-              <div className="space-y-3 border-t pt-6 mb-8 font-bold uppercase tracking-widest text-xs">
+              <div className="space-y-3 border-t pt-6 mb-8 font-bold uppercase tracking-widest text-[10px]">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Subtotal:</span>
+                  <span>R$ {cartTotal.toFixed(2)}</span>
+                </div>
+                {hasOrderBump && (
+                  <div className="flex justify-between text-green-500 font-black italic">
+                    <span>Desconto Combo Alpha (-10%):</span>
+                    <span>- R$ {comboDiscount.toFixed(2)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between text-primary font-black italic">
+                  <span>Desconto PIX (-5%):</span>
+                  <span>- R$ {pixDiscount.toFixed(2)}</span>
+                </div>
                 <div className="flex justify-between text-xl font-black italic pt-4 border-t border-border/50 text-foreground">
-                  <span className="uppercase tracking-tighter">Total c/ Pix:</span>
+                  <span className="uppercase tracking-tighter">Total Final:</span>
                   <span className="text-primary">R$ {finalTotal.toFixed(2)}</span>
                 </div>
               </div>
