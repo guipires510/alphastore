@@ -58,8 +58,9 @@ export const PRODUCTS: Product[] = [
     price: 49.90,
     originalPrice: 229.90,
     description: 'Kit exclusivo com 10 unidades em algodão e elastano. Modelagem clássica Alpha que se adapta perfeitamente ao corpo masculino, unindo resistência e praticidade com o melhor custo-benefício.',
-    image: 'https://i.imgur.com/qEpA80D.png',
+    image: 'https://i.imgur.com/iSm6PZu.png',
     images: [
+      'https://i.imgur.com/iSm6PZu.png',
       'https://i.imgur.com/qEpA80D.png',
       'https://i.imgur.com/5vcGwdE.png'
     ],
