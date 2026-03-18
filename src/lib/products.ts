@@ -72,7 +72,7 @@ export const PRODUCTS: Product[] = [
     quantity: 10,
     material: 'Algodão/Elastano',
     features: ['Durabilidade Reforçada', 'Cores Variadas', 'Conforto Alpha'],
-    availableColors: ['Cinza', 'Pretas']
+    availableColors: ['Cinza', 'Pretas', 'Sortidas']
   },
   {
     id: 'lupo-6',
