@@ -2,7 +2,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Navbar } from "@/components/navbar";
-import { ProductCard } from "@/components/product-card";
 import { MarketingBanner } from "@/components/marketing-banner";
 import { PRODUCTS } from "@/lib/products";
 import { Button } from "@/components/ui/button";
@@ -10,8 +9,9 @@ import { ArrowRight, ShieldCheck, Truck, Zap } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 
 export default function Home() {
-  const featuredProducts = PRODUCTS.slice(0, 3);
   const heroImage = PlaceHolderImages.find(img => img.id === 'hero-banner')?.imageUrl || '';
+  const highlightImage = PlaceHolderImages.find(img => img.id === 'featured-highlight')?.imageUrl || '';
+  const featuredProduct = PRODUCTS.find(p => p.id === '3') || PRODUCTS[0];
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -87,24 +87,69 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Products */}
+      {/* Featured Highlight Section */}
       <section className="py-24 container mx-auto px-4">
         <div className="flex flex-col md:flex-row items-end justify-between mb-12 gap-6">
           <div className="space-y-2">
             <span className="text-primary font-black uppercase italic tracking-widest">Seleção do Mês</span>
-            <h2 className="text-4xl md:text-5xl font-black italic leading-none tracking-tighter uppercase">Destaques da <span className="text-primary">Temporada</span></h2>
+            <h2 className="text-4xl md:text-5xl font-black italic leading-none tracking-tighter uppercase">Destaque da <span className="text-primary">Temporada</span></h2>
           </div>
-          <Button variant="link" className="text-primary font-black uppercase italic tracking-widest hover:translate-x-2 transition-transform" asChild>
-            <Link href="/catalog" className="flex items-center">
-              Ver Tudo <ArrowRight className="w-4 h-4 ml-2" />
-            </Link>
-          </Button>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {featuredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+        {/* Single Full Card / Highlight Banner */}
+        <div className="group relative bg-card border border-border rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 hover:border-primary/30">
+          <div className="grid grid-cols-1 lg:grid-cols-2">
+            <div className="relative aspect-[16/9] lg:aspect-auto h-[400px] lg:h-[650px] overflow-hidden">
+              <Image
+                src={highlightImage}
+                alt="Destaque AlphaFlow"
+                fill
+                className="object-cover transition-transform duration-1000 group-hover:scale-105"
+                data-ai-hint="men underwear luxury"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-background/40 to-transparent lg:hidden" />
+            </div>
+            <div className="p-8 lg:p-16 flex flex-col justify-center gap-8">
+              <div className="space-y-4">
+                <Badge className="bg-primary text-white font-black italic px-4 py-1 uppercase tracking-widest text-xs">Best Seller Premium</Badge>
+                <h3 className="text-4xl lg:text-6xl font-black italic uppercase leading-[0.9] tracking-tighter">
+                  {featuredProduct.name.split('-')[0]} <br />
+                  <span className="text-primary">{featuredProduct.name.split('-')[1] || 'Performance'}</span>
+                </h3>
+                <p className="text-muted-foreground uppercase tracking-widest font-medium text-sm lg:text-base max-w-lg leading-relaxed">
+                  {featuredProduct.description} Nossa modelagem AlphaFit garante que a cueca não enrole e mantenha o frescor o dia todo.
+                </p>
+              </div>
+
+              <div className="flex items-baseline gap-4">
+                <span className="text-5xl lg:text-6xl font-black italic text-primary">R$ {featuredProduct.price.toFixed(2)}</span>
+                {featuredProduct.originalPrice && (
+                  <span className="text-2xl text-muted-foreground line-through italic decoration-primary/50">
+                    R$ {featuredProduct.originalPrice.toFixed(2)}
+                  </span>
+                )}
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button size="lg" className="h-16 px-12 bg-primary hover:bg-primary/90 text-white font-black italic uppercase tracking-widest text-lg cta-button shadow-2xl shadow-primary/20" asChild>
+                  <Link href={`/product/${featuredProduct.id}`}>Garantir o Meu</Link>
+                </Button>
+                <div className="flex items-center gap-2 px-4 py-2 bg-muted/50 rounded-xl border border-border/50">
+                  <Zap className="w-5 h-5 text-primary" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em]">5% OFF NO PIX</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* View More Products Button */}
+        <div className="mt-16 text-center">
+          <Button variant="outline" size="lg" className="h-16 px-12 border-border font-black italic uppercase tracking-widest text-lg hover:bg-foreground hover:text-background transition-all duration-300" asChild>
+            <Link href="/catalog" className="flex items-center gap-3">
+              Ver Todos os Produtos <ArrowRight className="w-5 h-5" />
+            </Link>
+          </Button>
         </div>
       </section>
 

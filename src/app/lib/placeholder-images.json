@@ -8,6 +8,12 @@
       "imageHint": "male model underwear"
     },
     {
+      "id": "featured-highlight",
+      "description": "High impact banner for featured kit 10 units",
+      "imageUrl": "https://picsum.photos/seed/alpha_highlight/1200/675",
+      "imageHint": "men underwear luxury"
+    },
+    {
       "id": "kit-3-boxer",
       "description": "Kit 3 Cuecas Boxer Algodão Premium",
       "imageUrl": "https://picsum.photos/seed/kit3_alpha/600/600",
