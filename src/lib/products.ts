@@ -33,7 +33,7 @@ export const PRODUCTS: Product[] = [
   {
     id: 'lupo-6-microfibra',
     name: 'Kit 6 Cuecas Boxer Lupo Microfibra Sem Costura',
-    price: 39.90,
+    price: 230.00,
     description: 'Atenção: O kit será composto com 6 cuecas que serão enviadas de acordo com a sua escolha. Cueca boxer masculina Lupo. O kit é composto por cuecas masculinas para adultos, modelo boxer confeccionado em microfibra da marca Lupo. Cueca boxer para homens que gostam de estilo. Com formato anatômico, muito mais conforto, malha com elasticidade para ajuste perfeito. Para garantir leveza e suavidade a cada movimento, invista no bem-estar que a cueca sem costura proporciona no dia a dia, escolha certa para acompanhar homens modernos e sofisticados.',
     image: PlaceHolderImages.find(img => img.id === 'kit-lupo-6')?.imageUrl || 'https://picsum.photos/seed/lupo6/600/600',
     category: 'kit',
@@ -83,7 +83,7 @@ export const PRODUCTS: Product[] = [
   {
     id: 'lupo-5-slip',
     name: 'Kit 5 Cuecas Slip Lupo Microfibra Seamless',
-    price: 39.90,
+    price: 185.00,
     description: 'PRODUTO ORIGINAL!!! LOJA FÍSICA DESDE 1977\nCOMPRE COM CONFIANÇA! COM NOTA FISCAL\n\n5 CUECAS SLIP LUPO REF:691-002 MICROFIBRA\n\nDescrição:\n- Kit com 5 cuecas slip, confeccionadas em microfibra de toque extremamente suave e macio.\n- Desenvolvidas com a tecnologia sem costura, não marca sob a roupa e proporciona muito mais conforto.\n- Parte frontal com formato anatômico para ajuste perfeito.\n- Cintura com elástico reforçado, personalizado com o nome da marca.\n- Ideal para o dia a dia, com conforto e segurança, com tecido antimicrobial (Evita proliferação de bactérias).\n\nTamanhos:\nP: 38/40\nM: 42/44\nG: 46/48\nGG: 50/52\nXG: 54/56\n\nComposição: 93% Poliamida, 4% Elastano e 3% Poliester.\n\nGarantia de Autenticidade AlphaFlow.',
     image: PlaceHolderImages.find(img => img.id === 'kit-lupo-5-slip')?.imageUrl || 'https://picsum.photos/seed/luposlip5/600/600',
     category: 'kit',
