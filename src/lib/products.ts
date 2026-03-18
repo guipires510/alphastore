@@ -20,7 +20,7 @@ export const PRODUCTS: Product[] = [
     id: 'lupo-10',
     name: 'Kit 10 Cuecas Boxer Lupo Performance',
     price: 59.90,
-    originalPrice: 249.90,
+    originalPrice: 169.90,
     description: 'Descubra o conforto e a qualidade das cuecas boxer da marca Lupo, especialmente desenvolvidas para o homem moderno. Composto por 77% algodão, 17% elastano e 6% poliéster, este modelo proporciona um toque suave à pele e uma elasticidade que acompanha cada movimento, garantindo liberdade e conforto ao longo do dia. O design boxer é ideal para quem busca toda a praticidade e proteção, com um corte que se ajusta perfeitamente ao corpo. Além disso, a facilidade de dobrar as cuecas torna o armazenamento simples e eficiente, ideal para a rotina do dia a dia. Cada peça foi pensada para oferecer durabilidade e resistência, permitindo que você desfrute de um produto que mantém sua forma e conforto mesmo após várias lavagens. Ideal para homens que valorizam estilo e funcionalidade, o modelo 00523-952 é perfeito para todas as ocasiões, seja no trabalho ou em momentos de lazer.',
     image: PlaceHolderImages.find(img => img.id === 'kit-lupo-10')?.imageUrl || 'https://picsum.photos/seed/lupo/600/600',
     category: 'kit',
