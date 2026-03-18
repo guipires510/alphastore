@@ -20,8 +20,8 @@ export default function CheckoutPage() {
   const { toast } = useToast();
   const router = useRouter();
 
-  // Chave PIX Oficial fornecida pelo usuário
-  const OFFICIAL_PIX_CODE = "00020126360014BR.GOV.BCB.PIX0114+5565920013622520400005303986540549.905802BR5925Rafael Fernandez Silva Sa6009SAO PAULO62140510X3h2NJHLWB63046FBB";
+  // Chave PIX Placeholder - Substitua por uma variável de ambiente ou configuração segura
+  const OFFICIAL_PIX_CODE = "CONFIGURAR_CHAVE_PIX_NO_PAINEL";
 
   useEffect(() => {
     setMounted(true);
