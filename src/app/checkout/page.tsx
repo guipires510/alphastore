@@ -9,8 +9,9 @@ import { Label } from "@/components/ui/label";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { CheckCircle2, QrCode, Copy, Wallet, Trash2 } from "lucide-react";
+import { CheckCircle2, QrCode, Copy, Wallet, Trash2, CreditCard } from "lucide-react";
 import Image from "next/image";
+import { Badge } from "@/components/ui/badge";
 
 export default function CheckoutPage() {
   const { items, total, clearCart, removeItem } = useCartStore();
@@ -21,8 +22,8 @@ export default function CheckoutPage() {
   const { toast } = useToast();
   const router = useRouter();
 
-  // Chave PIX Placeholder
-  const OFFICIAL_PIX_CODE = "CONFIGURAR_CHAVE_PIX_NO_PAINEL";
+  // Chave PIX Placeholder - Substituída por segurança conforme solicitado
+  const OFFICIAL_PIX_CODE = "CONFIGURAR_CHAVE_PIX_NO_PAINEL_ADMIN";
 
   useEffect(() => {
     setMounted(true);
@@ -165,17 +166,37 @@ export default function CheckoutPage() {
               <h2 className="text-xl font-black italic uppercase tracking-widest mb-6 flex items-center gap-2">
                 <div className="w-1.5 h-6 bg-primary" /> Método de Pagamento
               </h2>
-              <div className="border-2 border-primary bg-primary/5 p-6 rounded-xl flex items-center justify-between shadow-lg shadow-primary/10">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center text-white">
-                    <Wallet className="w-6 h-6" />
+              
+              <div className="space-y-4">
+                {/* PIX Option - Active */}
+                <div className="border-2 border-primary bg-primary/5 p-6 rounded-xl flex items-center justify-between shadow-lg shadow-primary/10">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center text-white">
+                      <Wallet className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <p className="font-black italic uppercase text-lg leading-none">PIX</p>
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-primary mt-1">Aprovação Imediata • 5% de Desconto</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-black italic uppercase text-lg leading-none">PIX</p>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-primary mt-1">5% de Desconto Real</p>
-                  </div>
+                  <div className="w-6 h-6 rounded-full border-4 border-primary bg-white shadow-inner" />
                 </div>
-                <div className="w-6 h-6 rounded-full border-4 border-primary bg-white shadow-inner" />
+
+                {/* Credit Card Option - Disabled */}
+                <div className="border border-border bg-muted/30 p-6 rounded-xl flex items-center justify-between opacity-60 grayscale cursor-not-allowed relative overflow-hidden group">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center text-muted-foreground">
+                      <CreditCard className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <p className="font-black italic uppercase text-lg leading-none">CARTÃO DE CRÉDITO</p>
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-destructive mt-1">Indisponível no momento</p>
+                    </div>
+                  </div>
+                  <Badge variant="destructive" className="absolute top-2 right-2 text-[8px] font-black uppercase italic tracking-widest px-2 py-0.5">
+                    DESATIVADO TEMPORARIAMENTE
+                  </Badge>
+                </div>
               </div>
             </div>
           </div>
