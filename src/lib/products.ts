@@ -90,7 +90,8 @@ export const PRODUCTS: Product[] = [
     brand: 'Lupo',
     quantity: 6,
     material: 'Microfibra',
-    features: ['Tecnologia Sem Costura', 'Secagem Rápida', 'Conforto Térmico']
+    features: ['Tecnologia Sem Costura', 'Secagem Rápida', 'Conforto Térmico'],
+    availableColors: ['Pretas', 'Azul Escuro', 'Sortidas']
   },
   {
     id: '4',
