@@ -1,4 +1,3 @@
-
 import { PlaceHolderImages } from './placeholder-images';
 
 export interface Product {
@@ -10,6 +9,7 @@ export interface Product {
   description: string;
   image: string;
   category: 'kit' | 'single';
+  brand: 'Lupo' | 'Calvin Klein' | 'Polo Wear' | 'Alpha';
   quantity: number;
   material: string;
   features: string[];
@@ -24,6 +24,7 @@ export const PRODUCTS: Product[] = [
     description: 'A tecnologia Lupo para o máximo conforto e durabilidade. Kit completo para renovar seu dia a dia.',
     image: PlaceHolderImages.find(img => img.id === 'kit-lupo-10')?.imageUrl || 'https://picsum.photos/seed/lupo/600/600',
     category: 'kit',
+    brand: 'Lupo',
     quantity: 10,
     material: 'Microfibra',
     features: ['Tecnologia Sem Costura', 'Alta Respirabilidade', 'Ajuste Anatômico']
@@ -36,6 +37,7 @@ export const PRODUCTS: Product[] = [
     description: 'O ícone do estilo masculino. Algodão premium com o elástico clássico Calvin Klein em um kit completo de 10 unidades.',
     image: PlaceHolderImages.find(img => img.id === 'kit-ck-premium')?.imageUrl || 'https://picsum.photos/seed/ck/600/600',
     category: 'kit',
+    brand: 'Calvin Klein',
     quantity: 10,
     material: 'Algodão Premium',
     features: ['Cós Logotipado CK', 'Toque Macio', 'Luxo e Conforto']
@@ -48,6 +50,7 @@ export const PRODUCTS: Product[] = [
     description: 'Qualidade Polo Wear em um kit de alto valor. Conforto garantido para todas as ocasiões.',
     image: PlaceHolderImages.find(img => img.id === 'kit-polo-wear')?.imageUrl || 'https://picsum.photos/seed/polo/600/600',
     category: 'kit',
+    brand: 'Polo Wear',
     quantity: 10,
     material: 'Algodão/Elastano',
     features: ['Durabilidade Reforçada', 'Cores Variadas', 'Conforto Alpha']
@@ -59,6 +62,7 @@ export const PRODUCTS: Product[] = [
     description: 'O corte clássico que nunca sai de moda. 100% algodão.',
     image: PlaceHolderImages.find(img => img.id === 'single-brief')?.imageUrl || 'https://picsum.photos/seed/4/600/600',
     category: 'single',
+    brand: 'Alpha',
     quantity: 1,
     material: 'Algodão',
     features: ['100% Algodão', 'Suporte Firme', 'Design Clássico']
@@ -71,6 +75,7 @@ export const PRODUCTS: Product[] = [
     description: 'O ápice da tecnologia em tecidos. Toque frio e conforto inigualável.',
     image: PlaceHolderImages.find(img => img.id === 'modal-boxer')?.imageUrl || 'https://picsum.photos/seed/5/600/600',
     category: 'single',
+    brand: 'Alpha',
     quantity: 1,
     material: 'Modal',
     features: ['Toque Frio', 'Sustentável', 'Alta Elasticidade']

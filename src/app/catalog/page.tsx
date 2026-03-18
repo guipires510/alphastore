@@ -1,11 +1,26 @@
+"use client";
 
 import { Navbar } from "@/components/navbar";
 import { ProductCard } from "@/components/product-card";
 import { PRODUCTS } from "@/lib/products";
-import { Filter, SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useState, useMemo } from "react";
 
 export default function CatalogPage() {
+  const [activeBrand, setActiveBrand] = useState<string | null>(null);
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+
+  const filteredProducts = useMemo(() => {
+    return PRODUCTS.filter((product) => {
+      const brandMatch = !activeBrand || product.brand === activeBrand;
+      const categoryMatch = !activeCategory || product.category === activeCategory;
+      return brandMatch && categoryMatch;
+    });
+  }, [activeBrand, activeCategory]);
+
+  const brands = ["Lupo", "Calvin Klein", "Polo Wear"];
+
   return (
     <div className="flex flex-col min-h-screen pt-24 pb-12">
       <Navbar />
@@ -21,28 +36,58 @@ export default function CatalogPage() {
         </header>
 
         <div className="flex flex-col lg:flex-row gap-12">
-          {/* Sidebar Filters - Simplified for MVP */}
+          {/* Sidebar Filters */}
           <aside className="lg:w-64 space-y-8">
             <div className="flex items-center gap-2 pb-4 border-b border-border">
               <SlidersHorizontal className="w-4 h-4 text-primary" />
-              <h3 className="font-black uppercase italic tracking-widest text-sm">Filtros</h3>
+              <h3 className="font-black uppercase italic tracking-widest text-sm">Filtros Alpha</h3>
             </div>
+
+            {/* General Filter Reset */}
+            <Button 
+              variant={!activeBrand && !activeCategory ? "secondary" : "ghost"}
+              onClick={() => { setActiveBrand(null); setActiveCategory(null); }}
+              className="w-full justify-start h-10 font-black text-xs uppercase tracking-widest italic"
+            >
+              Todos os Produtos
+            </Button>
             
             <div className="space-y-4">
-              <h4 className="text-xs font-black uppercase tracking-[0.2em]">Categorias</h4>
+              <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Categorias</h4>
               <div className="flex flex-col gap-2">
-                <Button variant="outline" className="justify-start border-primary/20 bg-primary/5 text-primary h-9 font-bold text-xs uppercase tracking-widest italic">Todos</Button>
-                <Button variant="ghost" className="justify-start h-9 font-bold text-xs uppercase tracking-widest italic hover:bg-muted">Kits Promocionais</Button>
-                <Button variant="ghost" className="justify-start h-9 font-bold text-xs uppercase tracking-widest italic hover:bg-muted">Cuecas Avulsas</Button>
+                <Button 
+                  variant={activeCategory === 'kit' ? "outline" : "ghost"}
+                  onClick={() => setActiveCategory(activeCategory === 'kit' ? null : 'kit')}
+                  className={`justify-between h-9 font-bold text-xs uppercase tracking-widest italic transition-all ${activeCategory === 'kit' ? 'border-primary text-primary bg-primary/5' : 'hover:bg-muted'}`}
+                >
+                  Kits Promocionais
+                  {activeCategory === 'kit' && <Check className="w-3 h-3" />}
+                </Button>
+                <Button 
+                  variant={activeCategory === 'single' ? "outline" : "ghost"}
+                  onClick={() => setActiveCategory(activeCategory === 'single' ? null : 'single')}
+                  className={`justify-between h-9 font-bold text-xs uppercase tracking-widest italic transition-all ${activeCategory === 'single' ? 'border-primary text-primary bg-primary/5' : 'hover:bg-muted'}`}
+                >
+                  Cuecas Avulsas
+                  {activeCategory === 'single' && <Check className="w-3 h-3" />}
+                </Button>
               </div>
             </div>
 
             <div className="space-y-4">
-              <h4 className="text-xs font-black uppercase tracking-[0.2em]">Preço</h4>
+              <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Marcas</h4>
               <div className="flex flex-col gap-2">
-                <Button variant="ghost" className="justify-start h-9 font-bold text-xs uppercase tracking-widest italic hover:bg-muted text-left">Até R$ 50,00</Button>
-                <Button variant="ghost" className="justify-start h-9 font-bold text-xs uppercase tracking-widest italic hover:bg-muted text-left">R$ 50 - R$ 150</Button>
-                <Button variant="ghost" className="justify-start h-9 font-bold text-xs uppercase tracking-widest italic hover:bg-muted text-left">Acima de R$ 150</Button>
+                {brands.map((brand) => (
+                  <Button 
+                    key={brand}
+                    variant={activeBrand === brand ? "outline" : "ghost"}
+                    onClick={() => setActiveBrand(activeBrand === brand ? null : brand)}
+                    className={`justify-between h-9 font-bold text-xs uppercase tracking-widest italic transition-all ${activeBrand === brand ? 'border-primary text-primary bg-primary/5' : 'hover:bg-muted'}`}
+                  >
+                    {brand}
+                    {activeBrand === brand && <Check className="w-3 h-3" />}
+                  </Button>
+                ))}
               </div>
             </div>
           </aside>
@@ -50,12 +95,12 @@ export default function CatalogPage() {
           {/* Product Grid */}
           <main className="flex-1">
             <div className="flex items-center justify-between mb-8 pb-4 border-b">
-              <span className="text-xs font-black text-muted-foreground uppercase tracking-widest">
-                Exibindo {PRODUCTS.length} resultados
+              <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+                Exibindo {filteredProducts.length} resultados
               </span>
               <div className="flex items-center gap-2">
-                <span className="text-xs font-bold uppercase tracking-widest">Ordenar por:</span>
-                <select className="bg-transparent border-none text-xs font-black uppercase tracking-widest text-primary italic outline-none cursor-pointer">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Ordenar por:</span>
+                <select className="bg-transparent border-none text-[10px] font-black uppercase tracking-widest text-primary italic outline-none cursor-pointer">
                   <option>Destaques</option>
                   <option>Menor Preço</option>
                   <option>Maior Preço</option>
@@ -63,11 +108,18 @@ export default function CatalogPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-              {PRODUCTS.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
+            {filteredProducts.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                {filteredProducts.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-24 text-center">
+                <p className="text-muted-foreground font-black uppercase italic tracking-widest">Nenhum produto encontrado.</p>
+                <Button variant="link" onClick={() => { setActiveBrand(null); setActiveCategory(null); }} className="mt-4 uppercase text-xs font-black italic text-primary">Limpar filtros</Button>
+              </div>
+            )}
           </main>
         </div>
       </div>
