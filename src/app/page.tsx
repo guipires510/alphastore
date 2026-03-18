@@ -87,7 +87,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Alpha Highlight Section - 16:9 Proportion */}
+      {/* Alpha Highlight Section - Precisely matching user image */}
       <section className="py-24 container mx-auto px-4">
         <div className="flex flex-col md:flex-row items-end justify-between mb-12 gap-6">
           <div className="space-y-2">
@@ -96,7 +96,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="group relative bg-card border border-border rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 hover:border-primary/30">
+        <div className="group relative bg-[#0D0D0D] border border-border rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 hover:border-primary/30">
           <div className="grid grid-cols-1 lg:grid-cols-2">
             <div className="relative aspect-[16/9] lg:aspect-auto h-[400px] lg:h-[650px] overflow-hidden">
               <Image
@@ -106,36 +106,51 @@ export default function Home() {
                 className="object-cover transition-transform duration-1000 group-hover:scale-105"
                 data-ai-hint="men underwear luxury"
               />
-              <div className="absolute inset-0 bg-gradient-to-r from-background/40 to-transparent lg:hidden" />
             </div>
-            <div className="p-8 lg:p-16 flex flex-col justify-center gap-8">
-              <div className="space-y-4">
-                <Badge className="bg-primary text-white font-black italic px-4 py-1 uppercase tracking-widest text-xs">Best Seller Premium</Badge>
-                <h3 className="text-4xl lg:text-6xl font-black italic uppercase leading-[0.9] tracking-tighter">
-                  {featuredProduct.name.split('-')[0]} <br />
-                  <span className="text-primary">{featuredProduct.name.split('-')[1] || 'Performance'}</span>
+            <div className="p-8 lg:p-16 flex flex-col justify-center gap-8 bg-gradient-to-br from-card/50 to-background">
+              <div className="space-y-6">
+                <Badge className="bg-primary/20 text-primary border-primary font-black italic px-4 py-1.5 uppercase tracking-widest text-xs rounded-full w-fit">
+                  BEST SELLER PREMIUM
+                </Badge>
+                
+                <h3 className="text-5xl lg:text-7xl font-black italic uppercase leading-[0.85] tracking-tighter text-white">
+                  KIT 10 <br />
+                  CUECAS BOXER <br />
+                  PERFORMANCE <br />
+                  <span className="text-primary">OFERTA PIX</span>
                 </h3>
-                <p className="text-muted-foreground uppercase tracking-widest font-medium text-sm lg:text-base max-w-lg leading-relaxed">
-                  {featuredProduct.description} Nossa modelagem AlphaFit garante que a cueca não enrole e mantenha o frescor o dia todo.
+                
+                <p className="text-muted-foreground uppercase tracking-widest font-bold text-xs lg:text-sm max-w-lg leading-relaxed">
+                  {featuredProduct.description}
                 </p>
               </div>
 
-              <div className="flex items-baseline gap-4">
-                <span className="text-5xl lg:text-6xl font-black italic text-primary">R$ {featuredProduct.price.toFixed(2)}</span>
-                {featuredProduct.originalPrice && (
-                  <span className="text-2xl text-muted-foreground line-through italic decoration-primary/50">
-                    R$ {featuredProduct.originalPrice.toFixed(2)}
+              <div className="flex items-center gap-8">
+                <div className="flex flex-col">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">PREÇO ALPHA</span>
+                  <span className="text-6xl lg:text-7xl font-black italic text-primary leading-none">
+                    R$ 199.90
                   </span>
+                </div>
+                {featuredProduct.originalPrice && (
+                  <div className="flex flex-col">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">DE</span>
+                    <span className="text-2xl lg:text-3xl text-muted-foreground line-through italic decoration-primary/50 opacity-60">
+                      R$ 299.90
+                    </span>
+                  </div>
                 )}
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="h-16 px-12 bg-primary hover:bg-primary/90 text-white font-black italic uppercase tracking-widest text-lg cta-button shadow-2xl shadow-primary/20" asChild>
-                  <Link href={`/product/${featuredProduct.id}`}>Garantir o Meu</Link>
+              <div className="flex items-center gap-4">
+                <Button size="lg" className="h-16 px-12 bg-primary hover:bg-primary/90 text-white font-black italic uppercase tracking-widest text-lg cta-button shadow-2xl shadow-primary/20 flex-1 lg:flex-none" asChild>
+                  <Link href={`/product/${featuredProduct.id}`}>GARANTIR O MEU</Link>
                 </Button>
-                <div className="flex items-center gap-2 px-4 py-2 bg-muted/50 rounded-xl border border-border/50">
-                  <Zap className="w-5 h-5 text-primary" />
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em]">5% OFF NO PIX</span>
+                
+                <div className="bg-muted/30 border border-border/50 p-3 rounded-xl flex flex-col items-center justify-center min-w-[80px]">
+                  <span className="text-[12px] font-black leading-none">5%</span>
+                  <span className="text-[8px] font-black uppercase tracking-tighter">OFF</span>
+                  <span className="text-[8px] font-black uppercase tracking-tighter">NO PIX</span>
                 </div>
               </div>
             </div>
