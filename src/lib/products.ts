@@ -1,3 +1,4 @@
+
 import { PlaceHolderImages } from './placeholder-images';
 
 export interface Product {
@@ -30,12 +31,25 @@ export const PRODUCTS: Product[] = [
     features: ['Modelo 00523-952', 'Toque Suave', 'Alta Durabilidade']
   },
   {
+    id: 'lupo-6-microfibra',
+    name: 'Kit 6 Cuecas Boxer Lupo Microfibra Sem Costura',
+    price: 39.90,
+    originalPrice: 99.90,
+    description: 'Atenção: O kit será composto com 6 cuecas que serão enviadas de acordo com a sua escolha. Cueca boxer masculina Lupo. O kit é composto por cuecas masculinas para adultos, modelo boxer confeccionado em microfibra da marca Lupo. Cueca boxer para homens que gostam de estilo. Com formato anatômico, muito mais conforto, malha com elasticidade para ajuste perfeito. Para garantir leveza e suavidade a cada movimento, invista no bem-estar que a cueca sem costura proporciona no dia a dia, escolha certa para acompanhar homens modernos e sofisticados.',
+    image: PlaceHolderImages.find(img => img.id === 'kit-lupo-6')?.imageUrl || 'https://picsum.photos/seed/lupo6/600/600',
+    category: 'kit',
+    brand: 'Lupo',
+    quantity: 6,
+    material: 'Microfibra Premium',
+    features: ['Sem Costura', 'Formato Anatômico', 'Leveza e Suavidade']
+  },
+  {
     id: 'ck-premium',
     name: 'Kit 3 Cuecas Boxer Calvin Klein Cotton',
     price: 89.90,
     originalPrice: 249.90,
     description: 'O ícone do estilo masculino. Algodão premium com o elástico clássico Calvin Klein em um kit exclusivo de 3 unidades.',
-    image: PlaceHolderImages.find(img => img.id === 'kit-ck-premium')?.imageUrl || 'https://picsum.photos/seed/ck/600/600',
+    image: PlaceHolderImages.find(img => img.id === 'kit-ck-premium')?.imageUrl || 'https://picsum.photos/seed/ck_alpha/600/600',
     category: 'kit',
     brand: 'Calvin Klein',
     quantity: 3,
@@ -48,7 +62,7 @@ export const PRODUCTS: Product[] = [
     price: 49.90,
     originalPrice: 229.90,
     description: 'Qualidade Polo Wear em um kit de alto valor. Conforto garantido para todas as ocasiões.',
-    image: PlaceHolderImages.find(img => img.id === 'kit-polo-wear')?.imageUrl || 'https://picsum.photos/seed/polo/600/600',
+    image: PlaceHolderImages.find(img => img.id === 'kit-polo-wear')?.imageUrl || 'https://picsum.photos/seed/polo_alpha/600/600',
     category: 'kit',
     brand: 'Polo Wear',
     quantity: 10,

@@ -20,8 +20,14 @@
       "imageHint": "lupo underwear kit"
     },
     {
+      "id": "kit-lupo-6",
+      "description": "Kit 6 Cuecas Boxer Lupo Microfibra",
+      "imageUrl": "https://picsum.photos/seed/lupo_6_micro/600/600",
+      "imageHint": "lupo microfibra kit"
+    },
+    {
       "id": "kit-ck-premium",
-      "description": "Kit 10 Cuecas Boxer Calvin Klein Cotton",
+      "description": "Kit 3 Cuecas Boxer Calvin Klein Cotton",
       "imageUrl": "https://picsum.photos/seed/ck_alpha/600/600",
       "imageHint": "calvin klein underwear"
     },
