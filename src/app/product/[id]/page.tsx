@@ -129,8 +129,8 @@ export default function ProductDetailPage() {
       
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 mb-24">
-          {/* Gallery */}
-          <div className="space-y-4">
+          {/* Gallery & Description */}
+          <div className="space-y-12">
             <div className="relative aspect-square rounded-2xl overflow-hidden bg-card border border-border group">
               <Image
                 src={product.image}
@@ -143,6 +143,26 @@ export default function ProductDetailPage() {
               <div className="absolute top-6 left-6 flex flex-col gap-2">
                 <Badge className="bg-primary text-white font-black italic px-4 py-1 uppercase tracking-widest text-xs">CAMPEÃO DE VENDAS</Badge>
                 <Badge variant="secondary" className="bg-secondary text-white font-black italic px-4 py-1 uppercase tracking-widest text-[10px] animate-pulse">POUCAS UNIDADES NO ESTOQUE</Badge>
+              </div>
+            </div>
+
+            {/* Description moved under the image */}
+            <div className="space-y-6">
+              <h3 className="text-sm font-black uppercase tracking-[0.2em] italic border-b pb-2">Descrição Detalhada</h3>
+              <div className="prose prose-invert max-w-none">
+                <p className="text-muted-foreground uppercase tracking-widest font-medium text-sm leading-relaxed mb-4">
+                  {product.description}
+                </p>
+                {loadingAi ? (
+                  <div className="space-y-2">
+                    <div className="h-3 bg-muted animate-pulse rounded w-full" />
+                    <div className="h-3 bg-muted animate-pulse rounded w-4/5" />
+                  </div>
+                ) : (
+                  <p className="text-foreground uppercase tracking-widest font-bold text-xs leading-relaxed italic border-l-2 border-primary pl-4">
+                    {aiDescription}
+                  </p>
+                )}
               </div>
             </div>
           </div>
@@ -279,25 +299,6 @@ export default function ProductDetailPage() {
               <div className="text-center space-y-2">
                 <Zap className="w-6 h-6 text-primary mx-auto" />
                 <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground leading-tight">PIX c/ Desconto</p>
-              </div>
-            </div>
-
-            <div className="space-y-6">
-              <h3 className="text-sm font-black uppercase tracking-[0.2em] italic border-b pb-2">Descrição Detalhada</h3>
-              <div className="prose prose-invert max-w-none">
-                <p className="text-muted-foreground uppercase tracking-widest font-medium text-sm leading-relaxed mb-4">
-                  {product.description}
-                </p>
-                {loadingAi ? (
-                  <div className="space-y-2">
-                    <div className="h-3 bg-muted animate-pulse rounded w-full" />
-                    <div className="h-3 bg-muted animate-pulse rounded w-4/5" />
-                  </div>
-                ) : (
-                  <p className="text-foreground uppercase tracking-widest font-bold text-xs leading-relaxed italic border-l-2 border-primary pl-4">
-                    {aiDescription}
-                  </p>
-                )}
               </div>
             </div>
           </div>
