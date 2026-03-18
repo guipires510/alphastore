@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
@@ -12,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Check, ShieldCheck, Truck, Zap, Star } from "lucide-react";
 import { generateProductDescription } from "@/ai/flows/generate-product-description-flow";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { cn } from "@/lib/utils";
 
 export default function ProductDetailPage() {
   const { id } = useParams();
@@ -22,6 +24,7 @@ export default function ProductDetailPage() {
   const product = PRODUCTS.find((p) => p.id === id);
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string>("");
+  const [activeImage, setActiveImage] = useState<string>("");
   const [aiDescription, setAiDescription] = useState<string | null>(null);
   const [loadingAi, setLoadingAi] = useState(false);
 
@@ -62,6 +65,7 @@ export default function ProductDetailPage() {
 
   useEffect(() => {
     if (product) {
+      setActiveImage(product.image);
       setLoadingAi(true);
       generateProductDescription({
         material: product.material,
@@ -77,6 +81,8 @@ export default function ProductDetailPage() {
   if (!product) return <div>Produto não encontrado</div>;
 
   const sizes = ["P", "M", "G", "GG", "XG"];
+  const hasPromotion = !!product.originalPrice;
+  const productImages = product.images || [product.image];
 
   const handleAddToCart = () => {
     if (!selectedSize) {
@@ -130,10 +136,10 @@ export default function ProductDetailPage() {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 mb-24">
           {/* Gallery & Description */}
-          <div className="space-y-12">
+          <div className="space-y-6">
             <div className="relative aspect-square rounded-2xl overflow-hidden bg-card border border-border group">
               <Image
-                src={product.image}
+                src={activeImage}
                 alt={product.name}
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-700"
@@ -141,17 +147,35 @@ export default function ProductDetailPage() {
                 data-ai-hint="male underwear kit"
               />
               <div className="absolute top-6 left-6 flex flex-col gap-2">
-                {product.originalPrice && (
+                {hasPromotion && (
                   <>
-                    <Badge className="bg-primary text-white font-black italic px-4 py-1 uppercase tracking-widest text-xs">CAMPEÃO DE VENDAS</Badge>
-                    <Badge variant="secondary" className="bg-secondary text-white font-black italic px-4 py-1 uppercase tracking-widest text-[10px] animate-pulse">POUCAS UNIDADES NO ESTOQUE</Badge>
+                    <Badge className="bg-primary text-white font-black italic px-4 py-1 uppercase tracking-widest text-xs shadow-lg">CAMPEÃO DE VENDAS</Badge>
+                    <Badge variant="secondary" className="bg-secondary text-white font-black italic px-4 py-1 uppercase tracking-widest text-[10px] animate-pulse shadow-lg">POUCAS UNIDADES NO ESTOQUE</Badge>
                   </>
                 )}
               </div>
             </div>
 
+            {/* Thumbnails */}
+            {productImages.length > 1 && (
+              <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+                {productImages.map((img, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setActiveImage(img)}
+                    className={cn(
+                      "relative w-20 h-20 rounded-lg overflow-hidden border-2 shrink-0 transition-all",
+                      activeImage === img ? "border-primary shadow-lg shadow-primary/20 scale-105" : "border-border hover:border-muted"
+                    )}
+                  >
+                    <Image src={img} alt={`${product.name} view ${idx}`} fill className="object-cover" />
+                  </button>
+                ))}
+              </div>
+            )}
+
             {/* Description under the image */}
-            <div className="space-y-6">
+            <div className="space-y-6 pt-6">
               <h3 className="text-sm font-black uppercase tracking-[0.2em] italic border-b pb-2">Descrição Detalhada</h3>
               <div className="prose prose-invert max-w-none">
                 <p className="text-muted-foreground uppercase tracking-widest font-medium text-sm leading-relaxed mb-4">
