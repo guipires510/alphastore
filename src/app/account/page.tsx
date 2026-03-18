@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 export default function AccountPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Mock Orders updated to reflect new prices
+  // Mock Orders updated to reflect new prices and quantities
   const orders = [
     {
       id: "FLOW-98212",
@@ -26,7 +26,7 @@ export default function AccountPage() {
       date: "05/04/2026",
       total: 89.90,
       status: "delivered",
-      items: "Kit 10 Cuecas Boxer CK Premium"
+      items: "Kit 3 Cuecas Boxer CK Premium"
     }
   ];
 
