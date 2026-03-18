@@ -14,6 +14,7 @@ export interface Product {
   quantity: number;
   material: string;
   features: string[];
+  availableColors?: string[]; // Cores permitidas para este produto
 }
 
 export const PRODUCTS: Product[] = [
@@ -40,24 +41,24 @@ export const PRODUCTS: Product[] = [
     name: 'Kit 3 Cuecas Masculinas Boxer Cotton Calvin Klein',
     price: 89.90,
     originalPrice: 249.90,
-    description: 'Aposte no Kit 3 Cotton Calvin Klein para elevar seu conforto. Confeccionadas em algodão de alta qualidade, possuem cós elástico com logo icônico, design boxer com ajuste perfeito e o minimalismo clássico da grife nova-iorquina.',
-    image: PlaceHolderImages.find(img => img.id === 'kit-ck-premium')?.imageUrl || 'https://picsum.photos/seed/ck_alpha/600/600',
+    description: 'Aposte no Kit 3 Cotton Calvin Klein para elevar seu conforto. Confeccionadas em algodão de alta qualidade, possuem cós elástico com logo icônico e minimalismo clássico.',
+    image: 'https://i.imgur.com/2TET2bx.png',
     images: [
-      PlaceHolderImages.find(img => img.id === 'kit-ck-premium')?.imageUrl || 'https://picsum.photos/seed/ck_alpha/600/600',
-      'https://picsum.photos/seed/ck_detail_1/800/800'
+      'https://i.imgur.com/2TET2bx.png'
     ],
     category: 'kit',
     brand: 'Calvin Klein',
     quantity: 3,
     material: 'Algodão Premium',
-    features: ['Cós Logotipado CK', 'Toque Macio', 'Luxo e Conforto']
+    features: ['Cós Logotipado CK', 'Toque Macio', 'Luxo e Conforto'],
+    availableColors: ['Pretas']
   },
   {
     id: 'polo-wear-10',
     name: 'Kit 10 Cuecas Boxer Polo Wear Comfort',
     price: 49.90,
     originalPrice: 229.90,
-    description: 'Kit exclusivo com 10 unidades em algodão e elastano. Modelagem clássica Alpha que se adapta perfeitamente ao corpo masculino, unindo resistência e praticidade com o melhor custo-benefício.',
+    description: 'Kit exclusivo com 10 unidades em algodão e elastano. Modelagem clássica Alpha que se adapta perfeitamente ao corpo masculino, unindo resistência e praticidade.',
     image: 'https://i.imgur.com/iSm6PZu.png',
     images: [
       'https://i.imgur.com/iSm6PZu.png',
@@ -75,7 +76,7 @@ export const PRODUCTS: Product[] = [
     name: 'Kit 6 Cuecas Boxer Lupo Microfibra',
     price: 49.90,
     originalPrice: 149.00,
-    description: 'Kit 6 unidades em microfibra com tecnologia sem costura. Conforto térmico e secagem rápida para uso intenso ou esportivo, com ajuste anatômico total que não enrola na perna.',
+    description: 'Kit 6 unidades em microfibra com tecnologia sem costura. Conforto térmico e secagem rápida para uso intenso ou esportivo, com ajuste anatômico total.',
     image: PlaceHolderImages.find(img => img.id === 'kit-lupo-6')?.imageUrl || 'https://picsum.photos/seed/lupo_6_micro/800/800',
     images: [
       PlaceHolderImages.find(img => img.id === 'kit-lupo-6')?.imageUrl || 'https://picsum.photos/seed/lupo_6_micro/800/800',

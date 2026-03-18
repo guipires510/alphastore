@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
@@ -10,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { useState, useEffect } from "react";
 import { useCartStore } from "@/lib/store";
 import { useToast } from "@/hooks/use-toast";
-import { Check, ShieldCheck, Truck, Zap, Star } from "lucide-react";
+import { ShieldCheck, Truck, Zap, Star } from "lucide-react";
 import { generateProductDescription } from "@/ai/flows/generate-product-description-flow";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
@@ -75,6 +74,11 @@ export default function ProductDetailPage() {
       .then(res => setAiDescription(res.description))
       .catch(err => console.error("AI error", err))
       .finally(() => setLoadingAi(false));
+
+      // Auto-select color if only one is available
+      if (product.availableColors && product.availableColors.length === 1) {
+        setSelectedColor(product.availableColors[0]);
+      }
     }
   }, [product]);
 
@@ -135,7 +139,6 @@ export default function ProductDetailPage() {
       
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 mb-24">
-          {/* Gallery & Description */}
           <div className="space-y-6">
             <div className="relative aspect-square rounded-2xl overflow-hidden bg-card border border-border group">
               <Image
@@ -144,15 +147,14 @@ export default function ProductDetailPage() {
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-700"
                 priority
-                data-ai-hint="male underwear kit"
               />
               <div className="absolute top-6 left-6 flex flex-col items-start gap-2">
                 {hasPromotion && (
                   <>
-                    <Badge className="bg-primary text-white font-black italic px-2 py-0.5 uppercase tracking-widest text-[9px] shadow-lg flex items-center justify-center text-center">
+                    <Badge className="bg-primary text-white font-black italic px-3 py-1 uppercase tracking-widest text-[10px] shadow-lg flex items-center justify-center text-center">
                       CAMPEÃO DE VENDAS
                     </Badge>
-                    <Badge variant="secondary" className="bg-secondary text-white font-black italic px-2 py-0.5 uppercase tracking-widest text-[7px] animate-pulse shadow-lg flex items-center justify-center text-center">
+                    <Badge variant="secondary" className="bg-secondary text-white font-black italic px-2 py-0.5 uppercase tracking-widest text-[8px] animate-pulse shadow-lg flex items-center justify-center text-center">
                       POUCAS UNIDADES NO ESTOQUE
                     </Badge>
                   </>
@@ -160,7 +162,6 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-            {/* Thumbnails */}
             {productImages.length > 1 && (
               <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
                 {productImages.map((img, idx) => (
@@ -178,7 +179,6 @@ export default function ProductDetailPage() {
               </div>
             )}
 
-            {/* Description under the image */}
             <div className="space-y-6 pt-6">
               <h3 className="text-sm font-black uppercase tracking-[0.2em] italic border-b pb-2">Descrição Detalhada</h3>
               <div className="prose prose-invert max-w-none">
@@ -199,7 +199,6 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          {/* Details */}
           <div className="flex flex-col">
             <div className="flex items-center gap-1 text-accent mb-4">
               {[1, 2, 3, 4, 5].map((s) => <Star key={s} className="w-3 h-3 fill-current" />)}
@@ -221,18 +220,6 @@ export default function ProductDetailPage() {
               </div>
               <div className="bg-primary/10 border border-primary/20 px-3 py-1 rounded text-[10px] font-black uppercase tracking-widest text-primary">
                 OFERTA PIX
-              </div>
-            </div>
-
-            {/* Credibility Badge */}
-            <div className="mb-8 p-4 bg-primary/5 border border-primary/20 rounded-xl flex items-start gap-3">
-              <ShieldCheck className="w-5 h-5 text-primary shrink-0 mt-0.5" />
-              <div className="space-y-1">
-                <p className="text-[11px] font-black uppercase tracking-widest text-foreground">Garantia de Autenticidade Alpha</p>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground leading-relaxed">
-                  Vendedor Oficial: <span className="text-primary italic">LUPO • CALVIN KLEIN • POLO WEAR</span>
-                </p>
-                <p className="text-[9px] font-medium uppercase tracking-widest text-muted-foreground/60 italic">Trabalhamos apenas com fornecedores homologados</p>
               </div>
             </div>
 
@@ -273,27 +260,38 @@ export default function ProductDetailPage() {
                 Selecione a Cor <span className="text-primary italic font-black">(Obrigatório)</span>
               </h3>
               <div className="flex flex-wrap gap-3">
-                {colors.map((color) => (
-                  <button
-                    key={color.name}
-                    onClick={() => setSelectedColor(color.name)}
-                    className={`px-4 h-11 rounded-lg border-2 flex items-center gap-2 transition-all group ${
-                      selectedColor === color.name
-                        ? "border-primary bg-primary/10 shadow-lg shadow-primary/5"
-                        : "border-border bg-card hover:border-muted"
-                    }`}
-                  >
-                    <div 
-                      className="w-4 h-4 rounded-full border border-border/50" 
-                      style={{ background: color.hex }}
-                    />
-                    <span className={`text-[10px] font-black uppercase tracking-widest ${
-                      selectedColor === color.name ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
-                    }`}>
-                      {color.name}
-                    </span>
-                  </button>
-                ))}
+                {colors.map((color) => {
+                  const isUnavailable = product.availableColors && !product.availableColors.includes(color.name);
+                  return (
+                    <button
+                      key={color.name}
+                      disabled={isUnavailable}
+                      onClick={() => setSelectedColor(color.name)}
+                      className={`relative px-4 h-11 rounded-lg border-2 flex items-center gap-2 transition-all group ${
+                        isUnavailable
+                          ? "border-muted/30 opacity-40 grayscale cursor-not-allowed"
+                          : selectedColor === color.name
+                            ? "border-primary bg-primary/10 shadow-lg shadow-primary/5"
+                            : "border-border bg-card hover:border-muted"
+                      }`}
+                    >
+                      <div 
+                        className="w-4 h-4 rounded-full border border-border/50" 
+                        style={{ background: color.hex }}
+                      />
+                      <span className={`text-[10px] font-black uppercase tracking-widest ${
+                        selectedColor === color.name ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
+                      }`}>
+                        {color.name}
+                      </span>
+                      {isUnavailable && (
+                        <div className="absolute inset-0 bg-background/20 flex items-center justify-center">
+                           <span className="text-[7px] font-black text-secondary rotate-[-10deg] uppercase">OFF</span>
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
@@ -336,7 +334,6 @@ export default function ProductDetailPage() {
           </div>
         </div>
 
-        {/* Reviews Section */}
         <section className="mt-12 pt-12 border-t border-border">
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-12">
             <div>
