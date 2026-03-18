@@ -9,11 +9,11 @@ import { Label } from "@/components/ui/label";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { CheckCircle2, QrCode, Copy, Wallet } from "lucide-react";
+import { CheckCircle2, QrCode, Copy, Wallet, Trash2 } from "lucide-react";
 import Image from "next/image";
 
 export default function CheckoutPage() {
-  const { items, total, clearCart } = useCartStore();
+  const { items, total, clearCart, removeItem } = useCartStore();
   const [mounted, setMounted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
@@ -21,7 +21,7 @@ export default function CheckoutPage() {
   const { toast } = useToast();
   const router = useRouter();
 
-  // Chave PIX Placeholder - Substitua por uma variável de ambiente ou configuração segura
+  // Chave PIX Placeholder
   const OFFICIAL_PIX_CODE = "CONFIGURAR_CHAVE_PIX_NO_PAINEL";
 
   useEffect(() => {
@@ -186,7 +186,7 @@ export default function CheckoutPage() {
               <h2 className="text-xl font-black italic uppercase tracking-widest mb-8 border-b pb-4">Resumo do <span className="text-primary">Pedido</span></h2>
               <div className="space-y-6 mb-8">
                 {items.map((item) => (
-                  <div key={`${item.id}-${item.size}-${item.color}`} className="flex gap-4 items-center">
+                  <div key={`${item.id}-${item.size}-${item.color}`} className="flex gap-4 items-center group">
                     <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-border shrink-0 bg-muted">
                       <Image
                         src={item.image}
@@ -195,11 +195,27 @@ export default function CheckoutPage() {
                         className="object-cover"
                       />
                     </div>
-                    <div className="flex-1 min-w-0 pr-4">
+                    <div className="flex-1 min-w-0 pr-2">
                       <p className="font-bold uppercase tracking-tight truncate italic text-sm">{item.name}</p>
                       <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Tam: {item.size} • Cor: {item.color} • Qtd: {item.quantity}</p>
                     </div>
-                    <span className="font-black italic shrink-0 text-sm">R$ {(item.price * item.quantity).toFixed(2)}</span>
+                    <div className="flex flex-col items-end gap-1">
+                      <span className="font-black italic shrink-0 text-sm">R$ {(item.price * item.quantity).toFixed(2)}</span>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-7 w-7 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
+                        onClick={() => {
+                          removeItem(item.id, item.size, item.color);
+                          toast({
+                            title: "Item removido",
+                            description: "Seu resumo de pedido foi atualizado.",
+                          });
+                        }}
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </Button>
+                    </div>
                   </div>
                 ))}
               </div>
