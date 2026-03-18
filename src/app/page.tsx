@@ -5,7 +5,7 @@ import { Navbar } from "@/components/navbar";
 import { MarketingBanner } from "@/components/marketing-banner";
 import { PRODUCTS } from "@/lib/products";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ShieldCheck, Truck, Zap, ShoppingCart, AlertCircle } from "lucide-react";
+import { ArrowRight, ShieldCheck, Truck, Zap, ShoppingCart, AlertCircle, Sparkles } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Badge } from "@/components/ui/badge";
 import { AlphaLogo } from "@/components/alpha-logo";
@@ -13,7 +13,9 @@ import { AlphaLogo } from "@/components/alpha-logo";
 export default function Home() {
   const heroImage = PlaceHolderImages.find(img => img.id === 'hero-banner')?.imageUrl || '';
   const featuredProduct = PRODUCTS.find(p => p.id === 'lupo-10') || PRODUCTS[0];
-  // Imagem específica para a Oferta do Mês conforme solicitado
+  const weeklyProduct = PRODUCTS.find(p => p.id === 'lupo-6') || PRODUCTS[3];
+  
+  // Imagem específica para a Oferta mais vendida
   const featuredImage = "https://i.imgur.com/6SKXG9B.jpeg";
 
   return (
@@ -90,10 +92,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Full Width Featured Product Section */}
+      {/* Oferta Mais Vendida Section */}
       <section className="py-24 container mx-auto px-4">
         <div className="mb-12 text-center md:text-left">
-          <span className="text-primary font-black uppercase italic tracking-widest text-xs">OFERTA DO MÊS</span>
           <h2 className="text-4xl md:text-6xl font-black italic leading-none tracking-tighter uppercase mt-2">Oferta mais <span className="text-primary">vendida</span></h2>
         </div>
 
@@ -162,6 +163,66 @@ export default function Home() {
                     </div>
                   ))}
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Oferta da Semana Section */}
+      <section className="py-24 container mx-auto px-4 bg-muted/20 border-y border-border/50">
+        <div className="mb-12 text-center md:text-left">
+          <span className="text-primary font-black uppercase italic tracking-widest text-xs">OFERTA DA SEMANA</span>
+          <h2 className="text-4xl md:text-6xl font-black italic leading-none tracking-tighter uppercase mt-2">Kit <span className="text-primary">Microfibra</span></h2>
+        </div>
+
+        <div className="group relative bg-card border border-border rounded-2xl overflow-hidden shadow-2xl product-card-hover transition-all duration-500">
+          <div className="grid grid-cols-1 lg:grid-cols-2">
+            <div className="relative aspect-[16/9] lg:aspect-auto h-full overflow-hidden bg-muted order-1 lg:order-2">
+              <Image
+                src={weeklyProduct.image}
+                alt={weeklyProduct.name}
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                data-ai-hint="lupo microfibra"
+              />
+              <div className="absolute top-6 right-6 flex flex-col items-end gap-2">
+                <Badge className="bg-primary text-white font-black italic px-4 py-1 uppercase tracking-widest text-xs">
+                  DESTAQUE ALPHA
+                </Badge>
+              </div>
+            </div>
+            
+            <div className="p-8 md:p-12 flex flex-col justify-center gap-6 order-2 lg:order-1">
+              <div className="space-y-4">
+                <h3 className="text-3xl md:text-5xl font-black uppercase italic tracking-tight leading-none">
+                  {weeklyProduct.name}
+                </h3>
+                <p className="text-muted-foreground uppercase tracking-widest font-medium text-sm leading-relaxed max-w-md">
+                  {weeklyProduct.description}
+                </p>
+              </div>
+
+              <div className="flex items-end gap-4">
+                <div className="flex flex-col">
+                  {weeklyProduct.originalPrice && (
+                    <span className="text-sm text-muted-foreground line-through decoration-primary/50 font-bold">
+                      DE R$ {weeklyProduct.originalPrice.toFixed(2)}
+                    </span>
+                  )}
+                  <span className="text-4xl md:text-6xl font-black text-primary italic leading-none">
+                    R$ {weeklyProduct.price.toFixed(2)}
+                  </span>
+                </div>
+              </div>
+
+              <div className="pt-4 space-y-4">
+                <Button asChild size="lg" className="w-full md:w-fit h-16 px-12 bg-foreground text-background hover:bg-primary hover:text-white font-black uppercase tracking-widest italic text-lg transition-all cta-button">
+                  <Link href={`/product/${weeklyProduct.id}`}>
+                    <Sparkles className="w-5 h-5 mr-3" />
+                    Ver Detalhes
+                  </Link>
+                </Button>
               </div>
             </div>
           </div>
