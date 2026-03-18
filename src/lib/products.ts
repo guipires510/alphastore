@@ -71,7 +71,8 @@ export const PRODUCTS: Product[] = [
     brand: 'Polo Wear',
     quantity: 10,
     material: 'Algodão/Elastano',
-    features: ['Durabilidade Reforçada', 'Cores Variadas', 'Conforto Alpha']
+    features: ['Durabilidade Reforçada', 'Cores Variadas', 'Conforto Alpha'],
+    availableColors: ['Cinza', 'Pretas']
   },
   {
     id: 'lupo-6',
