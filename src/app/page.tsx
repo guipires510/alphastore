@@ -1,4 +1,3 @@
-
 import Image from "next/image";
 import Link from "next/link";
 import { Navbar } from "@/components/navbar";
@@ -7,6 +6,7 @@ import { PRODUCTS } from "@/lib/products";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ShieldCheck, Truck, Zap } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { Badge } from "@/components/ui/badge";
 
 export default function Home() {
   const heroImage = PlaceHolderImages.find(img => img.id === 'hero-banner')?.imageUrl || '';
@@ -87,7 +87,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Highlight Section */}
+      {/* Alpha Highlight Section - 16:9 Proportion */}
       <section className="py-24 container mx-auto px-4">
         <div className="flex flex-col md:flex-row items-end justify-between mb-12 gap-6">
           <div className="space-y-2">
@@ -96,7 +96,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Single Full Card / Highlight Banner */}
         <div className="group relative bg-card border border-border rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 hover:border-primary/30">
           <div className="grid grid-cols-1 lg:grid-cols-2">
             <div className="relative aspect-[16/9] lg:aspect-auto h-[400px] lg:h-[650px] overflow-hidden">
@@ -143,7 +142,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* View More Products Button */}
         <div className="mt-16 text-center">
           <Button variant="outline" size="lg" className="h-16 px-12 border-border font-black italic uppercase tracking-widest text-lg hover:bg-foreground hover:text-background transition-all duration-300" asChild>
             <Link href="/catalog" className="flex items-center gap-3">
@@ -157,66 +155,6 @@ export default function Home() {
       <section className="py-12 bg-background border-t">
         <div className="container mx-auto px-4">
           <MarketingBanner theme="Kit 10 cuecas por R$199,90 hoje no PIX com frete grátis" />
-        </div>
-      </section>
-
-      {/* Category Callout */}
-      <section className="py-24 bg-card border-y">
-        <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div className="relative aspect-video rounded-2xl overflow-hidden shadow-2xl group">
-            <Image
-              src="https://picsum.photos/seed/alphaflow2/800/600"
-              alt="Kits AlphaFlow"
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-700"
-              data-ai-hint="underwear box"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex items-end p-8">
-              <div className="space-y-2">
-                <h3 className="text-3xl font-black text-white italic uppercase tracking-tighter">Kits de Renovação</h3>
-                <p className="text-white/70 text-sm font-medium uppercase tracking-widest">Economize até 40% em nossos kits de 5 e 10 unidades.</p>
-              </div>
-            </div>
-          </div>
-          <div className="space-y-8">
-            <h2 className="text-4xl font-black italic uppercase leading-none tracking-tighter">Renove sua gaveta <br /> sem <span className="text-primary">complicações.</span></h2>
-            <p className="text-muted-foreground leading-relaxed uppercase tracking-widest font-medium text-sm">
-              Desenvolvemos kits pensados para a sua praticidade. Cuecas boxer e slip com tecidos tecnológicos que não enrolam na perna e mantêm a temperatura ideal.
-            </p>
-            <ul className="space-y-4">
-              <li className="flex items-center gap-3">
-                <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                <span className="font-bold text-xs uppercase tracking-widest">Algodão Pima e Microfibra Premium</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                <span className="font-bold text-xs uppercase tracking-widest">Modelagem exclusiva AlphaFit</span>
-              </li>
-              <li className="flex items-center gap-3">
-                <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                <span className="font-bold text-xs uppercase tracking-widest">Cós que não aperta nem enrola</span>
-              </li>
-            </ul>
-            <Button size="lg" className="bg-primary hover:bg-primary/90 text-white font-black italic uppercase tracking-widest cta-button" asChild>
-              <Link href="/catalog?filter=kit">Explorar Kits</Link>
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Newsletter */}
-      <section className="py-24 bg-background">
-        <div className="container mx-auto px-4 text-center max-w-3xl">
-          <h2 className="text-3xl font-black italic uppercase mb-4 tracking-tighter">Faça parte do <span className="text-primary">Clã Alpha</span></h2>
-          <p className="text-muted-foreground uppercase tracking-widest font-medium text-sm mb-8">Receba ofertas exclusivas, lançamentos antecipados e 10% OFF na sua primeira compra.</p>
-          <div className="flex flex-col sm:flex-row gap-2">
-            <input
-              type="email"
-              placeholder="SEU MELHOR E-MAIL"
-              className="flex-1 bg-card border border-border px-6 h-12 rounded-lg font-bold uppercase tracking-widest text-xs focus:ring-2 focus:ring-primary outline-none"
-            />
-            <Button className="h-12 px-8 bg-primary hover:bg-primary/90 font-black italic uppercase tracking-widest cta-button">Cadastrar</Button>
-          </div>
         </div>
       </section>
 
@@ -236,25 +174,20 @@ export default function Home() {
             <ul className="space-y-4">
               <li><Link href="/catalog" className="text-xs text-muted-foreground hover:text-primary uppercase tracking-widest transition-colors font-medium">Todos os Produtos</Link></li>
               <li><Link href="/catalog?filter=kit" className="text-xs text-muted-foreground hover:text-primary uppercase tracking-widest transition-colors font-medium">Kits Promocionais</Link></li>
-              <li><Link href="/catalog" className="text-xs text-muted-foreground hover:text-primary uppercase tracking-widest transition-colors font-medium">Lançamentos</Link></li>
             </ul>
           </div>
           <div>
             <h4 className="font-black text-sm uppercase italic mb-6 tracking-widest">Suporte</h4>
             <ul className="space-y-4">
-              <li><Link href="#" className="text-xs text-muted-foreground hover:text-primary uppercase tracking-widest transition-colors font-medium">Rastrear Pedido</Link></li>
-              <li><Link href="#" className="text-xs text-muted-foreground hover:text-primary uppercase tracking-widest transition-colors font-medium">Política de Troca</Link></li>
               <li><Link href="/contact" className="text-xs text-muted-foreground hover:text-primary uppercase tracking-widest transition-colors font-medium">Fale Conosco</Link></li>
+              <li><Link href="#" className="text-xs text-muted-foreground hover:text-primary uppercase tracking-widest transition-colors font-medium">Trocas e Devoluções</Link></li>
             </ul>
           </div>
           <div>
-            <h4 className="font-black text-sm uppercase italic mb-6 tracking-widest">Siga-nos</h4>
+            <h4 className="font-black text-sm uppercase italic mb-6 tracking-widest">Social</h4>
             <div className="flex gap-4">
               <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center hover:bg-primary transition-colors cursor-pointer group">
                 <span className="text-[10px] font-black group-hover:text-white">IG</span>
-              </div>
-              <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center hover:bg-primary transition-colors cursor-pointer group">
-                <span className="text-[10px] font-black group-hover:text-white">FB</span>
               </div>
               <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center hover:bg-primary transition-colors cursor-pointer group">
                 <span className="text-[10px] font-black group-hover:text-white">TK</span>
@@ -263,19 +196,11 @@ export default function Home() {
           </div>
         </div>
         <div className="container mx-auto px-4 mt-16 pt-8 border-t border-border/50 text-center">
-          <p className="text-[10px] text-muted-foreground uppercase tracking-widest">
-            © 2026 AlphaFlow Underwear. Todos os direitos reservados.
+          <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">
+            © 2026 AlphaFlow Underwear • Shopify Headless Ready
           </p>
         </div>
       </footer>
-    </div>
-  );
-}
-
-function Badge({ children, className }: { children: React.ReactNode, className?: string }) {
-  return (
-    <div className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ${className}`}>
-      {children}
     </div>
   );
 }

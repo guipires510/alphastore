@@ -1,8 +1,8 @@
-
 import { PlaceHolderImages } from './placeholder-images';
 
 export interface Product {
   id: string;
+  shopifyId?: string; // Campo para ID real do Shopify
   name: string;
   price: number;
   originalPrice?: number;
@@ -14,6 +14,7 @@ export interface Product {
   features: string[];
 }
 
+// Estes produtos agora servem como Mock de dados que viriam do Shopify
 export const PRODUCTS: Product[] = [
   {
     id: '1',
