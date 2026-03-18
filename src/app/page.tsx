@@ -14,7 +14,7 @@ export default function Home() {
   const heroImage = PlaceHolderImages.find(img => img.id === 'hero-banner')?.imageUrl || '';
   const featuredProduct = PRODUCTS.find(p => p.id === 'lupo-10') || PRODUCTS[0];
   // Imagem específica para a Oferta do Mês conforme solicitado
-  const featuredImage = "https://i.imgur.com/A4RUGxy.jpeg";
+  const featuredImage = "https://i.imgur.com/6SKXG9B.jpeg";
 
   return (
     <div className="flex flex-col min-h-screen">
