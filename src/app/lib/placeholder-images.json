@@ -38,6 +38,18 @@
       "imageHint": "polo wear underwear"
     },
     {
+      "id": "kit-lupo-4",
+      "description": "Kit 4 Cuecas Boxer Lupo",
+      "imageUrl": "https://picsum.photos/seed/lupo_4_units/600/600",
+      "imageHint": "lupo boxer kit"
+    },
+    {
+      "id": "kit-lupo-5-slip",
+      "description": "Kit 5 Cuecas Slip Lupo",
+      "imageUrl": "https://picsum.photos/seed/lupo_5_slip/600/600",
+      "imageHint": "lupo slip kit"
+    },
+    {
       "id": "single-brief",
       "description": "Cueca Slip Algodão Clássica",
       "imageUrl": "https://picsum.photos/seed/brief_alpha/600/600",

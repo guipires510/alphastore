@@ -1,3 +1,4 @@
+
 import { PlaceHolderImages } from './placeholder-images';
 
 export interface Product {
@@ -66,6 +67,30 @@ export const PRODUCTS: Product[] = [
     quantity: 10,
     material: 'Algodão/Elastano',
     features: ['Durabilidade Reforçada', 'Cores Variadas', 'Conforto Alpha']
+  },
+  {
+    id: 'lupo-4',
+    name: 'Kit 4 Cuecas Boxer Lupo Performance',
+    price: 34.90,
+    description: 'Kit essencial com 4 cuecas boxer Lupo. Conforto e durabilidade para o seu dia a dia com a qualidade reconhecida Lupo.',
+    image: PlaceHolderImages.find(img => img.id === 'kit-lupo-4')?.imageUrl || 'https://picsum.photos/seed/lupo4/600/600',
+    category: 'kit',
+    brand: 'Lupo',
+    quantity: 4,
+    material: 'Algodão Premium',
+    features: ['Ajuste Perfeito', 'Algodão Respirável', 'Cós Elástico']
+  },
+  {
+    id: 'lupo-5-slip',
+    name: 'Kit 5 Cuecas Slip Lupo Algodão',
+    price: 39.90,
+    description: 'Kit com 5 cuecas modelo Slip da Lupo. Desenvolvidas em algodão de alta qualidade para proporcionar o máximo de conforto e liberdade de movimento.',
+    image: PlaceHolderImages.find(img => img.id === 'kit-lupo-5-slip')?.imageUrl || 'https://picsum.photos/seed/luposlip5/600/600',
+    category: 'kit',
+    brand: 'Lupo',
+    quantity: 5,
+    material: '100% Algodão',
+    features: ['Modelo Slip Clássico', 'Toque Macio', 'Conforto Tradicional']
   },
   {
     id: '4',
