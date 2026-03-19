@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -94,12 +95,21 @@
   }
 }
 
+@keyframes progress-fast {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(0%); }
+}
+
 .animate-gold-pulse {
   animation: gold-pulse 2s infinite;
 }
 
 .animate-white-pulse {
   animation: white-pulse 2s infinite;
+}
+
+.animate-progress-fast {
+  animation: progress-fast 0.8s ease-in-out forwards;
 }
 
 ::-webkit-scrollbar {

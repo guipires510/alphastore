@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
@@ -13,6 +14,7 @@ import { ShieldCheck, Truck, Zap, Star } from "lucide-react";
 import { generateProductDescription } from "@/ai/flows/generate-product-description-flow";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { SecureTransition } from "@/components/secure-transition";
 
 export default function ProductDetailPage() {
   const { id } = useParams();
@@ -26,6 +28,7 @@ export default function ProductDetailPage() {
   const [activeImage, setActiveImage] = useState<string>("");
   const [aiDescription, setAiDescription] = useState<string | null>(null);
   const [loadingAi, setLoadingAi] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   const colors = [
     { name: "Brancas", hex: "#FFFFFF" },
@@ -72,12 +75,9 @@ export default function ProductDetailPage() {
         features: product.features
       })
       .then(res => setAiDescription(res.description))
-      .catch(err => {
-        // Silently handle error as per guidelines
-      })
+      .catch(() => {})
       .finally(() => setLoadingAi(false));
 
-      // Auto-select color if only one is available
       if (product.availableColors && product.availableColors.length === 1) {
         setSelectedColor(product.availableColors[0]);
       }
@@ -135,9 +135,19 @@ export default function ProductDetailPage() {
     return true;
   };
 
+  const handleBuyNow = () => {
+    if (handleAddToCart()) {
+      setIsRedirecting(true);
+      setTimeout(() => {
+        router.push("/checkout");
+      }, 800);
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen pt-32 pb-12">
       <Navbar />
+      {isRedirecting && <SecureTransition />}
       
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 mb-24">
@@ -309,11 +319,7 @@ export default function ProductDetailPage() {
                 variant="outline"
                 size="lg"
                 className="w-full h-16 border-accent text-accent hover:bg-accent hover:text-accent-foreground font-black italic uppercase tracking-[0.2em] text-lg transition-all"
-                onClick={() => {
-                  if (handleAddToCart()) {
-                    router.push("/checkout");
-                  }
-                }}
+                onClick={handleBuyNow}
               >
                 Comprar Agora no PIX
               </Button>
