@@ -1,0 +1,60 @@
+
+{
+  "entities": {
+    "Order": {
+      "title": "Order",
+      "description": "Representa um pedido de compra na loja AlphaFlow.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "customer": {
+          "type": "object",
+          "properties": {
+            "name": { "type": "string" },
+            "email": { "type": "string", "format": "email" },
+            "whatsapp": { "type": "string" },
+            "address": {
+              "type": "object",
+              "properties": {
+                "cep": { "type": "string" },
+                "logradouro": { "type": "string" },
+                "numero": { "type": "string" },
+                "bairro": { "type": "string" },
+                "cidade": { "type": "string" },
+                "uf": { "type": "string" }
+              }
+            }
+          }
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "name": { "type": "string" },
+              "price": { "type": "number" },
+              "quantity": { "type": "number" },
+              "size": { "type": "string" },
+              "color": { "type": "string" }
+            }
+          }
+        },
+        "total": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "paid", "shipped", "cancelled"] },
+        "pixPayload": { "type": "string", "description": "Código Copia e Cola do PIX" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["customer", "items", "total", "status"]
+    }
+  },
+  "auth": {
+    "providers": ["google.com", "password"]
+  },
+  "firestore": {
+    "/orders/{orderId}": {
+      "schema": "#/entities/Order",
+      "description": "Coleção de pedidos realizados pelos clientes."
+    }
+  }
+}
