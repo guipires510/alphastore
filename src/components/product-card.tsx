@@ -6,12 +6,23 @@ import Link from "next/link";
 import { Product } from "@/lib/products";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export function ProductCard({ product }: { product: Product }) {
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
+  const handleNavigate = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    router.push(`/product/${product.id}`);
+  };
+
   return (
     <div className="group relative bg-card border border-border rounded-xl overflow-hidden product-card-hover flex flex-col">
-      <Link href={`/product/${product.id}`} className="block relative aspect-square overflow-hidden bg-muted">
+      <Link href={`/product/${product.id}`} onClick={handleNavigate} className="block relative aspect-square overflow-hidden bg-muted">
         <Image
           src={product.image}
           alt={product.name}
@@ -27,7 +38,7 @@ export function ProductCard({ product }: { product: Product }) {
       </Link>
       
       <div className="p-4 flex-1 flex flex-col gap-2">
-        <Link href={`/product/${product.id}`}>
+        <Link href={`/product/${product.id}`} onClick={handleNavigate}>
           <h3 className="text-sm font-black uppercase tracking-tight italic group-hover:text-primary transition-colors line-clamp-2 leading-tight">
             {product.name}
           </h3>
@@ -46,11 +57,19 @@ export function ProductCard({ product }: { product: Product }) {
       </div>
       
       <div className="p-4 pt-0">
-        <Button asChild className="w-full bg-foreground text-background hover:bg-primary hover:text-white font-bold uppercase tracking-widest italic text-xs h-9 transition-all cta-button">
-          <Link href={`/product/${product.id}`}>
-            <ShoppingCart className="w-4 h-4 mr-2" />
-            Comprar
-          </Link>
+        <Button 
+          disabled={isLoading}
+          onClick={handleNavigate}
+          className="w-full bg-foreground text-background hover:bg-primary hover:text-white font-bold uppercase tracking-widest italic text-xs h-9 transition-all cta-button"
+        >
+          {isLoading ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <>
+              <ShoppingCart className="w-4 h-4 mr-2" />
+              Comprar
+            </>
+          )}
         </Button>
       </div>
     </div>

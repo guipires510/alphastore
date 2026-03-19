@@ -1,23 +1,34 @@
+
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { Navbar } from "@/components/navbar";
 import { MarketingBanner } from "@/components/marketing-banner";
 import { PRODUCTS } from "@/lib/products";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ShieldCheck, Truck, Zap, ShoppingCart, CircleAlert, Sparkles } from "lucide-react";
+import { ArrowRight, ShieldCheck, Truck, Zap, ShoppingCart, CircleAlert, Sparkles, Loader2 } from "lucide-react";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { Badge } from "@/components/ui/badge";
 import { AlphaLogo } from "@/components/alpha-logo";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const router = useRouter();
+  const [navLoading, setNavLoading] = useState<string | null>(null);
+
   const heroImage = PlaceHolderImages.find(img => img.id === 'hero-banner')?.imageUrl || '';
   const featuredProduct = PRODUCTS.find(p => p.id === 'lupo-10') || PRODUCTS[0];
   const weeklyProduct = PRODUCTS.find(p => p.id === 'lupo-6') || PRODUCTS[3];
   
-  // Imagem específica para a Oferta mais vendida
   const featuredImage = "https://i.imgur.com/6SKXG9B.jpeg";
-  // Imagem específica solicitada pelo usuário para a Oferta da Semana na Home
   const weeklyImage = "https://i.imgur.com/cLPh42r.jpeg";
+
+  const handleNav = (id: string, path: string) => {
+    setNavLoading(id);
+    router.push(path);
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -45,11 +56,22 @@ export default function Home() {
             Cuecas de alto padrão projetadas para o homem moderno que não abre mão de estilo e durabilidade.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="h-14 px-10 bg-primary hover:bg-primary/90 text-white font-black italic uppercase tracking-widest text-lg cta-button shadow-2xl shadow-primary/20" asChild>
-              <Link href="/catalog">Ver Catálogo</Link>
+            <Button 
+              size="lg" 
+              disabled={navLoading === 'catalog'}
+              onClick={() => handleNav('catalog', '/catalog')}
+              className="h-14 px-10 bg-primary hover:bg-primary/90 text-white font-black italic uppercase tracking-widest text-lg cta-button shadow-2xl shadow-primary/20"
+            >
+              {navLoading === 'catalog' ? <Loader2 className="animate-spin" /> : "Ver Catálogo"}
             </Button>
-            <Button size="lg" variant="outline" className="h-14 px-10 border-white text-white hover:bg-white hover:text-black font-black italic uppercase tracking-widest text-lg backdrop-blur-sm transition-all" asChild>
-              <Link href={`/product/${featuredProduct.id}`}>Kits Promocionais</Link>
+            <Button 
+              size="lg" 
+              variant="outline" 
+              disabled={navLoading === 'featured'}
+              onClick={() => handleNav('featured', `/product/${featuredProduct.id}`)}
+              className="h-14 px-10 border-white text-white hover:bg-white hover:text-black font-black italic uppercase tracking-widest text-lg backdrop-blur-sm transition-all"
+            >
+              {navLoading === 'featured' ? <Loader2 className="animate-spin" /> : "Kits Promocionais"}
             </Button>
           </div>
         </div>
@@ -142,19 +164,23 @@ export default function Home() {
                     R$ {featuredProduct.price.toFixed(2)}
                   </span>
                 </div>
-                {featuredProduct.originalPrice && (
-                  <div className="bg-primary/10 border border-primary/20 px-3 py-1 rounded text-[10px] font-black uppercase tracking-widest text-primary mb-1">
-                    MELHOR PREÇO
-                  </div>
-                )}
               </div>
 
               <div className="pt-4 space-y-4">
-                <Button asChild size="lg" className="w-full md:w-fit h-16 px-12 bg-primary text-primary-foreground hover:bg-primary/90 font-black uppercase tracking-widest italic text-lg transition-all cta-button animate-gold-pulse">
-                  <Link href={`/product/${featuredProduct.id}`}>
-                    <ShoppingCart className="w-5 h-5 mr-3" />
-                    Compre Agora
-                  </Link>
+                <Button 
+                  disabled={navLoading === 'cta-featured'}
+                  onClick={() => handleNav('cta-featured', `/product/${featuredProduct.id}`)}
+                  size="lg" 
+                  className="w-full md:w-fit h-16 px-12 bg-primary text-primary-foreground hover:bg-primary/90 font-black uppercase tracking-widest italic text-lg transition-all cta-button animate-gold-pulse"
+                >
+                  {navLoading === 'cta-featured' ? (
+                    <Loader2 className="animate-spin" />
+                  ) : (
+                    <>
+                      <ShoppingCart className="w-5 h-5 mr-3" />
+                      Compre Agora
+                    </>
+                  )}
                 </Button>
                 <div className="flex flex-wrap gap-4">
                   {featuredProduct.features.slice(0, 3).map((f) => (
@@ -218,11 +244,20 @@ export default function Home() {
               </div>
 
               <div className="pt-4 space-y-4">
-                <Button asChild size="lg" className="w-full md:w-fit h-16 px-12 bg-foreground text-background hover:bg-primary hover:text-white font-black uppercase tracking-widest italic text-lg transition-all cta-button animate-white-pulse">
-                  <Link href={`/product/${weeklyProduct.id}`}>
-                    <Sparkles className="w-5 h-5 mr-3" />
-                    COMPRE AQUI!
-                  </Link>
+                <Button 
+                  disabled={navLoading === 'cta-weekly'}
+                  onClick={() => handleNav('cta-weekly', `/product/${weeklyProduct.id}`)}
+                  size="lg" 
+                  className="w-full md:w-fit h-16 px-12 bg-foreground text-background hover:bg-primary hover:text-white font-black uppercase tracking-widest italic text-lg transition-all cta-button animate-white-pulse"
+                >
+                  {navLoading === 'cta-weekly' ? (
+                    <Loader2 className="animate-spin" />
+                  ) : (
+                    <>
+                      <Sparkles className="w-5 h-5 mr-3" />
+                      COMPRE AQUI!
+                    </>
+                  )}
                 </Button>
               </div>
             </div>
@@ -230,10 +265,20 @@ export default function Home() {
         </div>
 
         <div className="mt-12 flex justify-center">
-          <Button variant="outline" size="lg" className="h-14 px-12 border-border font-black uppercase italic tracking-widest text-sm hover:border-primary hover:text-primary transition-all group" asChild>
-            <Link href="/catalog">
-              Ver Mais Produtos <ArrowRight className="w-4 h-4 ml-3 group-hover:translate-x-2 transition-transform" />
-            </Link>
+          <Button 
+            variant="outline" 
+            size="lg" 
+            disabled={navLoading === 'catalog-bottom'}
+            onClick={() => handleNav('catalog-bottom', '/catalog')}
+            className="h-14 px-12 border-border font-black uppercase italic tracking-widest text-sm hover:border-primary hover:text-primary transition-all group"
+          >
+            {navLoading === 'catalog-bottom' ? (
+              <Loader2 className="animate-spin" />
+            ) : (
+              <>
+                Ver Mais Produtos <ArrowRight className="w-4 h-4 ml-3 group-hover:translate-x-2 transition-transform" />
+              </>
+            )}
           </Button>
         </div>
       </section>
