@@ -7,7 +7,7 @@ import { Navbar } from "@/components/navbar";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useCartStore } from "@/lib/store";
 import { useToast } from "@/hooks/use-toast";
 import { ShieldCheck, Truck, Zap, Star } from "lucide-react";
@@ -38,32 +38,42 @@ export default function ProductDetailPage() {
     { name: "Sortidas", hex: "linear-gradient(45deg, #000, #808080, #fff, #00008b)" },
   ];
 
-  const reviews = [
-    {
-      id: 1,
-      name: "RICARDO S.",
-      date: "Há 2 dias",
-      rating: 5,
-      comment: "MELHOR CUSTO BENEFÍCIO QUE JÁ ENCONTREI. O MATERIAL É REALMENTE PREMIUM E NÃO ENROLA NA PERNA. COMPREI O KIT DE 10 E VALE CADA CENTAVO.",
-      verified: true
-    },
-    {
-      id: 2,
-      name: "MARCOS A.",
-      date: "Há 1 semana",
-      rating: 5,
-      comment: "ENTREGA MUITO RÁPIDA! O SUPORTE NO WHATSAPP FOI NOTA 10. AS CUECAS SÃO EXTREMAMENTE CONFORTÁVEIS PARA TREINAR.",
-      verified: true
-    },
-    {
-      id: 3,
-      name: "FELIPE T.",
-      date: "Há 2 semanas",
-      rating: 4,
-      comment: "CONFORTO ABSURDO. RECOMENDO PRA QUEM BUSCA QUALIDADE DE VERDADE. O TAMANHO G FICOU PERFEITO.",
-      verified: true
-    }
-  ];
+  const reviewsByProduct = useMemo(() => ({
+    "lupo-10": [
+      { id: 1, name: "RICARDO S.", date: "Há 2 dias", rating: 5, comment: "MELHOR CUSTO BENEFÍCIO QUE JÁ ENCONTREI. O MATERIAL É REALMENTE PREMIUM E NÃO ENROLA NA PERNA. COMPREI O KIT DE 10 E VALE CADA CENTAVO.", verified: true },
+      { id: 2, name: "MARCOS A.", date: "Há 1 semana", rating: 5, comment: "ENTREGA MUITO RÁPIDA! O SUPORTE NO WHATSAPP FOI NOTA 10. AS CUECAS SÃO EXTREMAMENTE CONFORTÁVEIS PARA TREINAR.", verified: true },
+      { id: 3, name: "FELIPE T.", date: "Há 2 semanas", rating: 5, comment: "CONFORTO ABSURDO. RECOMENDO PRA QUEM BUSCA QUALIDADE DE VERDADE. O TAMANHO G FICOU PERFEITO.", verified: true }
+    ],
+    "ck-premium": [
+      { id: 1, name: "GUSTAVO L.", date: "Há 1 dia", rating: 5, comment: "CALVIN KLEIN É OUTRO NÍVEL. O AJUSTE NO CORPO É PERFEITO E O ELÁSTICO NÃO APERTA NADA.", verified: true },
+      { id: 2, name: "ANDRÉ M.", date: "Há 4 dias", rating: 5, comment: "KIT ORIGINAL E MUITO BONITO. VALEU CADA CENTAVO PELO ESTILO E PELO CONFORTO PREMIUM.", verified: true },
+      { id: 3, name: "THIAGO B.", date: "Há 12 dias", rating: 5, comment: "QUALIDADE IMPECÁVEL. AS CORES SÃO EXATAMENTE COMO NA FOTO. ENTREGA ALPHA RÁPIDA.", verified: true }
+    ],
+    "polo-wear-10": [
+      { id: 1, name: "JOÃO P.", date: "Há 3 dias", rating: 5, comment: "MUITO RESISTENTES. USO PARA TRABALHAR E SÃO AS MELHORES QUE JÁ TIVE EM TERMOS DE DURABILIDADE.", verified: true },
+      { id: 2, name: "CARLOS R.", date: "Há 6 dias", rating: 5, comment: "EXCELENTE PRODUTO. O KIT COM 10 É O MELHOR PREÇO DO MERCADO PARA QUEM QUER QUALIDADE.", verified: true },
+      { id: 3, name: "LUCAS H.", date: "Há 1 mês", rating: 4, comment: "BOAS CUECAS, TECIDO RESPIRÁVEL E CORES BONITAS. O TAMANHO M FICOU IDEAL.", verified: true }
+    ],
+    "lupo-6": [
+      { id: 1, name: "RODRIGO F.", date: "Há 2 dias", rating: 5, comment: "MICROFIBRA É A MELHOR OPÇÃO PARA QUEM PRATICA ESPORTES. NÃO ACUMULA SUOR E SECA RÁPIDO.", verified: true },
+      { id: 2, name: "BRUNO C.", date: "Há 5 dias", rating: 5, comment: "SEM COSTURA É VIDA. NÃO INCOMODA NADA DURANTE O DIA TODO, PARECE QUE NÃO ESTOU USANDO NADA.", verified: true },
+      { id: 3, name: "MATEUS G.", date: "Há 10 dias", rating: 5, comment: "QUALIDADE LUPO DISPENSA COMENTÁRIOS. O AJUSTE É MUITO MELHOR QUE AS MARCAS BARATAS.", verified: true }
+    ],
+    "4": [
+      { id: 1, name: "FÁBIO J.", date: "Há 8 dias", rating: 5, comment: "SLIP CLÁSSICA E MUITO CONFORTÁVEL. DIFÍCIL ACHAR ALGODÃO DESSA QUALIDADE HOJE EM DIA.", verified: true },
+      { id: 2, name: "DANIEL S.", date: "Há 15 dias", rating: 4, comment: "BOM SUPORTE E O TAMANHO SEGUE O PADRÃO BRASILEIRO. RECOMENDO.", verified: true },
+      { id: 3, name: "SÉRGIO P.", date: "Há 20 dias", rating: 5, comment: "A QUALIDADE DA MARCA ALPHA ME SURPREENDEU POSITIVAMENTE. VOU COMPRAR O KIT AGORA.", verified: true }
+    ],
+    "5": [
+      { id: 1, name: "ALEX K.", date: "Há 1 dia", rating: 5, comment: "MODAL É SIMPLESMENTE O MELHOR TECIDO QUE JÁ EXISTIU. O TOQUE É MUITO MACIO E FRESCO.", verified: true },
+      { id: 2, name: "RAFAEL V.", date: "Há 3 dias", rating: 5, comment: "TOQUE FRIO MUITO GOSTOSO PARA USAR NO VERÃO. ALTA ELASTICIDADE SEM DEFORMAR.", verified: true },
+      { id: 3, name: "LEONARDO M.", date: "Há 1 semana", rating: 5, comment: "VALE O INVESTIMENTO PELA TECNOLOGIA DO TECIDO. MUITO SUPERIOR AO ALGODÃO COMUM.", verified: true }
+    ]
+  }), []);
+
+  const currentReviews = useMemo(() => {
+    return reviewsByProduct[id as keyof typeof reviewsByProduct] || reviewsByProduct["lupo-10"];
+  }, [id, reviewsByProduct]);
 
   useEffect(() => {
     if (product) {
@@ -351,7 +361,7 @@ export default function ProductDetailPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {reviews.map((review) => (
+            {currentReviews.map((review: any) => (
               <div key={review.id} className="bg-card border border-border p-8 rounded-2xl space-y-4 hover:border-primary/30 transition-all">
                 <div className="flex items-center justify-between">
                   <div className="flex gap-0.5">
