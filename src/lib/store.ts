@@ -29,7 +29,10 @@ export const useCartStore = create<CartStore>()(
       items: [],
       addItem: (newItem) => {
         const existingItem = get().items.find(
-          (item) => item.id === newItem.id && item.size === newItem.size && item.color === newItem.color
+          (item) => 
+            item.id === newItem.id && 
+            item.size === newItem.size && 
+            item.color === newItem.color
         );
         if (existingItem) {
           set({
@@ -45,13 +48,21 @@ export const useCartStore = create<CartStore>()(
       },
       removeItem: (id, size, color) => {
         set({
-          items: get().items.filter((item) => !(item.id === id && item.size === size && item.color === color)),
+          items: get().items.filter((item) => 
+            !(item.id === id && item.size === size && item.color === color)
+          ),
         });
       },
       updateQuantity: (id, size, color, quantity) => {
+        if (quantity < 1) {
+          get().removeItem(id, size, color);
+          return;
+        }
         set({
           items: get().items.map((item) =>
-            item.id === id && item.size === size && item.color === color ? { ...item, quantity: Math.max(1, quantity) } : item
+            item.id === id && item.size === size && item.color === color 
+              ? { ...item, quantity } 
+              : item
           ),
         });
       },

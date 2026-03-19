@@ -12,7 +12,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Minus, Plus, Trash2, ShoppingCart as ShoppingCartIcon } from "lucide-react";
+import { Minus, Plus, Trash2, ShoppingCart as ShoppingCartIcon, X } from "lucide-react";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -20,7 +20,7 @@ import { SecureTransition } from "./secure-transition";
 
 export function CartDrawer({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const { items, removeItem, updateQuantity, total } = useCartStore();
+  const { items, removeItem, updateQuantity, clearCart, total } = useCartStore();
   const [mounted, setMounted] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
 
@@ -45,10 +45,20 @@ export function CartDrawer({ children }: { children: React.ReactNode }) {
       <Sheet>
         <SheetTrigger asChild>{children}</SheetTrigger>
         <SheetContent className="w-full sm:max-w-md bg-background flex flex-col p-0 border-l border-border">
-          <SheetHeader className="p-6 border-b border-border">
+          <SheetHeader className="p-6 border-b border-border flex flex-row items-center justify-between space-y-0">
             <SheetTitle className="flex items-center gap-2 uppercase tracking-widest font-black italic">
               Meu Carrinho
             </SheetTitle>
+            {items.length > 0 && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={clearCart}
+                className="text-[10px] font-black uppercase tracking-widest italic hover:text-destructive p-0 h-auto"
+              >
+                Limpar Tudo
+              </Button>
+            )}
           </SheetHeader>
 
           <ScrollArea className="flex-1 p-6">
@@ -56,9 +66,11 @@ export function CartDrawer({ children }: { children: React.ReactNode }) {
               <div className="flex flex-col items-center justify-center h-64 gap-4">
                 <ShoppingCartIcon className="w-12 h-12 text-muted-foreground opacity-20" />
                 <p className="text-muted-foreground font-medium uppercase tracking-widest text-xs">Vazio.</p>
-                <Button variant="outline" className="border-primary text-primary font-black italic uppercase text-xs tracking-widest">
-                  Ver Produtos
-                </Button>
+                <SheetTrigger asChild>
+                  <Button variant="outline" className="border-primary text-primary font-black italic uppercase text-xs tracking-widest">
+                    Ver Produtos
+                  </Button>
+                </SheetTrigger>
               </div>
             ) : (
               <div className="space-y-6">
@@ -73,7 +85,16 @@ export function CartDrawer({ children }: { children: React.ReactNode }) {
                       />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-black text-sm truncate uppercase tracking-tight italic">{item.name}</h4>
+                      <div className="flex justify-between items-start">
+                        <h4 className="font-black text-sm truncate uppercase tracking-tight italic flex-1">{item.name}</h4>
+                        <button
+                          onClick={() => removeItem(item.id, item.size, item.color)}
+                          className="text-muted-foreground hover:text-destructive transition-colors ml-2"
+                          aria-label="Remover item"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
                       <p className="text-[10px] text-muted-foreground uppercase tracking-widest mt-1">
                         Tam: {item.size} • Cor: {item.color}
                       </p>
@@ -98,12 +119,6 @@ export function CartDrawer({ children }: { children: React.ReactNode }) {
                         </span>
                       </div>
                     </div>
-                    <button
-                      onClick={() => removeItem(item.id, item.size, item.color)}
-                      className="text-muted-foreground hover:text-destructive transition-colors pt-1"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
                   </div>
                 ))}
               </div>
@@ -111,8 +126,8 @@ export function CartDrawer({ children }: { children: React.ReactNode }) {
           </ScrollArea>
 
           {items.length > 0 && (
-            <SheetFooter className="p-6 border-t border-border flex-col gap-4">
-              <div className="flex items-center justify-between w-full">
+            <SheetFooter className="p-6 border-t border-border flex-col gap-4 sm:flex-col">
+              <div className="flex items-center justify-between w-full mb-2">
                 <span className="text-muted-foreground uppercase text-[10px] font-black tracking-[0.2em]">Total</span>
                 <span className="text-2xl font-black text-primary italic">R$ {cartTotal.toFixed(2)}</span>
               </div>
