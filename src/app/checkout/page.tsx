@@ -121,7 +121,7 @@ export default function CheckoutPage() {
     const checkoutValue = currentTotal;
 
     try {
-      // 1. Criar o pagamento na Trex Pay via Flow Genkit
+      // 1. Criar o pagamento no fluxo Genkit (internamente usa Trex Pay)
       const trexResponse = await processTrexPayment({
         amount: checkoutValue,
         customer: {
@@ -194,8 +194,8 @@ export default function CheckoutPage() {
             </div>
             <h1 className="text-3xl md:text-5xl font-black italic uppercase tracking-tighter">Pedido <span className="text-primary">Recebido!</span></h1>
             <p className="text-muted-foreground uppercase tracking-widest font-medium text-sm">
-              Seu pedido {orderId} foi gerado via <span className="text-primary font-bold">Trex Pay</span>. <br />
-              Pague agora para garantir seu envio Alpha.
+              Seu pedido {orderId} foi gerado com sucesso. <br />
+              Pague agora via <span className="text-primary font-bold">PIX</span> para garantir seu envio Alpha.
             </p>
 
             <div className="bg-white p-6 rounded-xl inline-block shadow-inner mx-auto">
@@ -263,7 +263,7 @@ export default function CheckoutPage() {
                     <Input required value={customer.name} onChange={(e) => setCustomer({...customer, name: e.target.value})} className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="EX: JOÃO SILVA" />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">CPF (Somente 11 números)</Label>
+                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">CPF (11 números)</Label>
                     <Input required maxLength={11} value={customer.document} onChange={(e) => setCustomer({...customer, document: e.target.value.replace(/\D/g, "")})} className="bg-muted/50 border-border h-12 text-xs font-bold" placeholder="00000000000" />
                   </div>
                 </div>
@@ -312,7 +312,7 @@ export default function CheckoutPage() {
 
             <div className="bg-card border border-border rounded-xl p-6 md:p-8">
               <h2 className="text-xl font-black italic uppercase tracking-widest mb-6 flex items-center gap-2">
-                <div className="w-1.5 h-6 bg-primary" /> Pagamento Seguro via <span className="text-primary italic">Trex Pay</span>
+                <div className="w-1.5 h-6 bg-primary" /> Pagamento Seguro <span className="text-primary italic">Alpha Pay</span>
               </h2>
               <div className="border-2 border-primary bg-primary/5 p-6 rounded-xl flex items-center justify-between shadow-lg shadow-primary/10">
                 <div className="flex items-center gap-4">
@@ -392,7 +392,7 @@ export default function CheckoutPage() {
                   {isProcessing ? <Loader2 className="animate-spin" /> : "FINALIZAR PAGAMENTO PIX"}
                 </Button>
                 <p className="text-[9px] text-center font-bold uppercase text-muted-foreground flex items-center justify-center gap-1">
-                  <ShieldCheck className="w-3 h-3 text-primary" /> Pagamento processado com segurança pela Trex Pay
+                  <ShieldCheck className="w-3 h-3 text-primary" /> Pagamento processado com segurança
                 </p>
               </div>
             </div>
