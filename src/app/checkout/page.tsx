@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useCartStore } from "@/lib/store";
@@ -104,10 +103,11 @@ export default function CheckoutPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (customer.document.replace(/\D/g, "").length !== 11 && customer.document.replace(/\D/g, "").length !== 14) {
+    const documentClean = customer.document.replace(/\D/g, "");
+    if (documentClean.length !== 11) {
       toast({
-        title: "Documento Inválido",
-        description: "Por favor, insira um CPF ou CNPJ válido.",
+        title: "CPF Inválido",
+        description: "Por favor, insira um CPF válido com 11 dígitos.",
         variant: "destructive",
       });
       return;
@@ -122,7 +122,10 @@ export default function CheckoutPage() {
       // 1. Criar o pagamento na Trex Pay via Flow Genkit
       const trexResponse = await processTrexPayment({
         amount: finalTotal,
-        customer: customer,
+        customer: {
+          ...customer,
+          document: documentClean
+        },
         orderId: newOrderId,
       });
 
@@ -132,7 +135,7 @@ export default function CheckoutPage() {
 
       // 2. Salvar pedido no Firestore
       const orderData = {
-        customer: { ...customer, address: { ...address, cep } },
+        customer: { ...customer, document: documentClean, address: { ...address, cep } },
         items: items.map(i => ({ id: i.id, name: i.name, price: i.price, quantity: i.quantity, size: i.size, color: i.color })),
         total: finalTotal,
         status: "pending",
@@ -257,7 +260,7 @@ export default function CheckoutPage() {
                     <Input required value={customer.name} onChange={(e) => setCustomer({...customer, name: e.target.value})} className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="EX: JOÃO SILVA" />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">CPF / CNPJ</Label>
+                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">CPF (Obrigatório)</Label>
                     <Input required value={customer.document} onChange={(e) => setCustomer({...customer, document: e.target.value})} className="bg-muted/50 border-border h-12 text-xs font-bold" placeholder="000.000.000-00" />
                   </div>
                 </div>
