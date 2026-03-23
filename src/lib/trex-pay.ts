@@ -1,10 +1,11 @@
 /**
  * @fileOverview Serviço de integração com a API Trex Pay.
- * Substitua as constantes abaixo pelas credenciais fornecidas pela Trex Pay.
+ * Substitua as constantes abaixo pelas credenciais fornecidas pela Trex Pay no arquivo .env.
  */
 
 const TREX_PAY_API_URL = process.env.TREX_PAY_API_URL || 'https://api.trexpay.com.br/v1';
 const TREX_PAY_TOKEN = process.env.TREX_PAY_TOKEN || '';
+const TREX_PAY_SECRET = process.env.TREX_PAY_SECRET || '';
 
 export interface TrexPaymentRequest {
   amount: number;
@@ -26,11 +27,9 @@ export interface TrexPaymentResponse {
 }
 
 export async function createPixPayment(data: TrexPaymentRequest): Promise<TrexPaymentResponse> {
-  // Nota: Esta é uma implementação baseada em padrões comuns de gateways de pagamento.
-  // Você deve ajustar os campos de acordo com a documentação técnica exata da Trex Pay.
-  
-  if (!TREX_PAY_TOKEN) {
-    console.warn("TREX_PAY_TOKEN não configurado. Usando modo de simulação.");
+  // Se as chaves não estiverem configuradas, usamos o modo de simulação
+  if (!TREX_PAY_TOKEN || !TREX_PAY_SECRET) {
+    console.warn("TREX_PAY_TOKEN ou TREX_PAY_SECRET não configurados. Usando modo de simulação.");
     return simulateTrexPayment(data);
   }
 
@@ -40,10 +39,11 @@ export async function createPixPayment(data: TrexPaymentRequest): Promise<TrexPa
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${TREX_PAY_TOKEN}`,
+        'X-Secret-Key': TREX_PAY_SECRET, // Algumas APIs usam o secret em um header específico
       },
       body: JSON.stringify({
         payment_method: 'pix',
-        amount: data.amount,
+        amount: Math.round(data.amount * 100), // Muitas APIs recebem em centavos
         external_id: data.orderId,
         customer: {
           name: data.customer.name,
@@ -59,9 +59,9 @@ export async function createPixPayment(data: TrexPaymentRequest): Promise<TrexPa
     if (response.ok) {
       return {
         success: true,
-        pixPayload: result.pix_code || result.copy_paste,
-        qrCodeUrl: result.qr_code_url || result.image_url,
-        paymentId: result.id,
+        pixPayload: result.pix_code || result.copy_paste || result.payload,
+        qrCodeUrl: result.qr_code_url || result.image_url || result.qrcode,
+        paymentId: result.id || result.transaction_id,
       };
     } else {
       return {
