@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { CircleCheck, QrCode, Copy, Wallet, Loader2, Search, ShieldCheck, Truck } from "lucide-react";
+import { CircleCheck, QrCode, Copy, Wallet, Loader2, Search, ShieldCheck, Truck, Plus, Flame, Clock } from "lucide-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { doc, setDoc } from "firebase/firestore";
@@ -16,9 +16,10 @@ import { initializeFirebase } from "@/firebase/index";
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 import { processTrexPayment } from "@/ai/flows/create-trex-payment-flow";
+import { PRODUCTS } from "@/lib/products";
 
 export default function CheckoutPage() {
-  const { items, total, clearCart } = useCartStore();
+  const { items, total, addItem, clearCart } = useCartStore();
   const [mounted, setMounted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
@@ -98,6 +99,25 @@ export default function CheckoutPage() {
   }
 
   const currentTotal = total();
+
+  const upsellProducts = PRODUCTS.filter(p => !items.find(item => item.id === p.id)).slice(0, 2);
+
+  const handleAddUpsell = (product: any) => {
+    const discountedPrice = product.price * 0.95;
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: discountedPrice,
+      image: product.image,
+      quantity: 1,
+      size: "M", // Default size for upsell
+      color: "Sortidas", // Default color for upsell
+    });
+    toast({
+      title: "Oferta Ativada!",
+      description: `${product.name} adicionado com 5% de desconto extra!`,
+    });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -254,7 +274,7 @@ export default function CheckoutPage() {
                   </div>
                   <div className="space-y-2">
                     <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">CPF</Label>
-                    <Input required maxLength={11} value={customer.document} onChange={(e) => setCustomer({...customer, document: e.target.value.replace(/\D/g, "")})} className="bg-muted/50 border-border h-12 text-xs font-bold" placeholder="00000000000" />
+                    <Input required maxLength={11} value={customer.document} onChange={(e) => setCustomer({...customer, document: e.target.value.replace(/\D/g, "")})} className="bg-muted/50 border-border h-12 text-xs font-bold" placeholder="000.000.000-00" />
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -390,6 +410,55 @@ export default function CheckoutPage() {
                 </p>
               </div>
             </div>
+
+            {/* Upsell Section */}
+            {upsellProducts.length > 0 && (
+              <div className="bg-card border-2 border-primary/30 rounded-xl p-6 shadow-xl relative overflow-hidden group">
+                <div className="absolute top-0 right-0 p-2">
+                  <Badge className="bg-secondary text-white font-black italic text-[8px] uppercase tracking-widest animate-pulse">
+                    OFERTA RELÂMPAGO
+                  </Badge>
+                </div>
+                
+                <div className="flex items-center gap-2 mb-6">
+                  <Flame className="w-5 h-5 text-secondary animate-bounce" />
+                  <h3 className="font-black italic uppercase text-sm tracking-tighter">
+                    ADICIONE E <span className="text-primary">ECONOMIZE +5%</span>
+                  </h3>
+                </div>
+
+                <div className="space-y-4">
+                  {upsellProducts.map((product) => (
+                    <div key={product.id} className="flex gap-4 p-3 bg-muted/30 rounded-lg border border-border/50 hover:border-primary/50 transition-all">
+                      <div className="relative w-16 h-16 rounded-md overflow-hidden shrink-0">
+                        <Image src={product.image} alt={product.name} fill className="object-cover" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-bold uppercase text-[10px] leading-tight line-clamp-2 italic mb-1">{product.name}</p>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[9px] text-muted-foreground line-through">R$ {product.price.toFixed(2)}</span>
+                          <span className="text-sm font-black text-primary italic">R$ {(product.price * 0.95).toFixed(2)}</span>
+                        </div>
+                        <Button 
+                          onClick={() => handleAddUpsell(product)}
+                          variant="ghost" 
+                          className="h-7 w-full mt-2 bg-primary/10 text-primary hover:bg-primary hover:text-white font-black uppercase italic text-[9px] tracking-widest p-0 rounded"
+                        >
+                          <Plus className="w-3 h-3 mr-1" /> Adicionar Agora
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-6 flex items-center justify-center gap-2 py-2 bg-secondary/10 rounded-lg">
+                  <Clock className="w-3 h-3 text-secondary" />
+                  <span className="text-[8px] font-black uppercase text-secondary tracking-widest">
+                    VÁLIDO SOMENTE PARA ESTA COMPRA
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
