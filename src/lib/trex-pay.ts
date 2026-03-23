@@ -3,9 +3,10 @@
  * Utiliza as credenciais configuradas no arquivo .env.
  */
 
-const TREX_PAY_API_URL = process.env.TREX_PAY_API_URL || 'https://api.trexpay.com/v1';
-const TREX_PAY_TOKEN = process.env.TREX_PAY_TOKEN || '';
-const TREX_PAY_SECRET = process.env.TREX_PAY_SECRET || '';
+// URL padrão corrigida para o endpoint brasileiro da Trex Pay
+const TREX_PAY_API_URL = process.env.TREX_PAY_API_URL || 'https://api.trexpay.com.br/v1';
+const TREX_PAY_TOKEN = process.env.TREX_PAY_TOKEN || '16d4f85d-28e6-46b3-86ab-321c9263e8b9';
+const TREX_PAY_SECRET = process.env.TREX_PAY_SECRET || '135a8d03-2d43-4a78-9020-cf712d2acaa3';
 
 export interface TrexPaymentRequest {
   amount: number;
@@ -34,7 +35,7 @@ export async function createPixPayment(data: TrexPaymentRequest): Promise<TrexPa
       pixPayload: '',
       qrCodeUrl: '',
       paymentId: '',
-      error: 'As chaves TREX_PAY_TOKEN ou TREX_PAY_SECRET não foram encontradas no ambiente.',
+      error: 'Credenciais Trex Pay não configuradas.',
     };
   }
 
@@ -52,6 +53,8 @@ export async function createPixPayment(data: TrexPaymentRequest): Promise<TrexPa
       }
     };
 
+    console.log(`[TrexPay] Iniciando requisição para ${TREX_PAY_API_URL}/payments`);
+
     const response = await fetch(`${TREX_PAY_API_URL}/payments`, {
       method: 'POST',
       headers: {
@@ -67,28 +70,28 @@ export async function createPixPayment(data: TrexPaymentRequest): Promise<TrexPa
     if (response.ok) {
       return {
         success: true,
-        pixPayload: result.pix_code || result.copy_paste || result.payload || '',
-        qrCodeUrl: result.qr_code_url || result.image_url || result.qrcode || '',
+        pixPayload: result.pix_code || result.copy_paste || result.payload || result.pix_payload || '',
+        qrCodeUrl: result.qr_code_url || result.image_url || result.qrcode || result.qr_code || '',
         paymentId: result.id || result.transaction_id || 'N/A',
       };
     } else {
-      // Captura erro específico retornado pela API
+      console.error('[TrexPay] Erro na resposta da API:', result);
       return {
         success: false,
         pixPayload: '',
         qrCodeUrl: '',
         paymentId: '',
-        error: result.message || result.error || `Erro API (${response.status}): Falha na requisição.`,
+        error: result.message || result.error || `Erro API (${response.status})`,
       };
     }
   } catch (error: any) {
-    // Este erro acontece se o domínio estiver errado ou sem internet
+    console.error('[TrexPay] Falha crítica de conexão:', error);
     return {
       success: false,
       pixPayload: '',
       qrCodeUrl: '',
       paymentId: '',
-      error: `Erro de Conexão: ${error.message || 'Verifique a URL da API da Trex Pay'}`,
+      error: `Erro de Conexão: Certifique-se de que a URL ${TREX_PAY_API_URL} está acessível. Detalhe: ${error.message}`,
     };
   }
 }
