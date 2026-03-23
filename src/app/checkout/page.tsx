@@ -62,7 +62,7 @@ export default function CheckoutPage() {
   const currentTotal = useMemo(() => {
     if (!mounted) return 0;
     return total();
-  }, [mounted, total]);
+  }, [mounted, items, total]);
 
   const isCepValid = cep.replace(/\D/g, "").length === 8;
 

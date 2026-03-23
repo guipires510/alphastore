@@ -76,3 +76,64 @@ export const useCartStore = create<CartStore>()(
     }
   )
 );
+
+export interface AlphaUser {
+  id: string;
+  name: string;
+  email: string;
+  cpf: string;
+  phone: string;
+  password?: string;
+}
+
+interface UserStore {
+  users: AlphaUser[];
+  currentUser: AlphaUser | null;
+  register: (user: AlphaUser) => { success: boolean; message: string };
+  login: (email: string, password?: string) => { success: boolean; message: string };
+  logout: () => void;
+}
+
+export const useUserStore = create<UserStore>()(
+  persist(
+    (set, get) => ({
+      users: [],
+      currentUser: null,
+      register: (user) => {
+        const emailExists = get().users.some((u) => u.email === user.email);
+        if (emailExists) {
+          return { success: false, message: "Este e-mail já está cadastrado." };
+        }
+        
+        const cpfExists = get().users.some((u) => u.cpf === user.cpf);
+        if (cpfExists) {
+          return { success: false, message: "Este CPF já está cadastrado." };
+        }
+
+        const newUser = { ...user, id: `USR-${Date.now()}` };
+        set({
+          users: [...get().users, newUser],
+          currentUser: newUser,
+        });
+        
+        return { success: true, message: "Conta criada com sucesso!" };
+      },
+      login: (email, password) => {
+        const user = get().users.find(
+          (u) => u.email.toLowerCase() === email.toLowerCase() && u.password === password
+        );
+        
+        if (user) {
+          set({ currentUser: user });
+          return { success: true, message: "Login realizado com sucesso." };
+        }
+        
+        return { success: false, message: "E-mail ou senha inválidos." };
+      },
+      logout: () => set({ currentUser: null }),
+    }),
+    {
+      name: 'alphaflow-users',
+    }
+  )
+);
