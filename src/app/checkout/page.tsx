@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useCartStore } from "@/lib/store";
@@ -9,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { useState, useEffect, useMemo } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { CircleCheckBig, QrCode, Copy, Wallet, Trash2, CreditCard, Search, Loader2, Plus, Sparkles } from "lucide-react";
+import { CircleCheck, QrCode, Copy, Wallet, Loader2, Search, Sparkles, ShieldCheck } from "lucide-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { PRODUCTS } from "@/lib/products";
@@ -17,13 +16,15 @@ import { doc, setDoc } from "firebase/firestore";
 import { initializeFirebase } from "@/firebase/index";
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
+import { processTrexPayment } from "@/ai/flows/create-trex-payment-flow";
 
 export default function CheckoutPage() {
-  const { items, total, clearCart, removeItem, addItem } = useCartStore();
+  const { items, total, clearCart, addItem } = useCartStore();
   const [mounted, setMounted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
   const [orderId, setOrderId] = useState("");
+  const [pixData, setPixData] = useState({ payload: "", qrCode: "" });
   const { toast } = useToast();
   const router = useRouter();
 
@@ -43,8 +44,6 @@ export default function CheckoutPage() {
     whatsapp: ""
   });
   const [isFetchingCep, setIsFetchingCep] = useState(false);
-
-  const OFFICIAL_PIX_CODE = "00020126360014BR.GOV.BCB.PIX0114ALPHAFOLWLOJA5204000053039865802BR5920ALPHAFOLW6009SAO PAULO62070503***6304E2B1";
 
   const orderBumps = useMemo(() => {
     return PRODUCTS.filter(p => p.category === 'single').slice(0, 2);
@@ -79,9 +78,7 @@ export default function CheckoutPage() {
             uf: data.uf
           }));
         }
-      } catch (error) {
-        // Silently handle fetch errors
-      } finally {
+      } catch (error) {} finally {
         setIsFetchingCep(false);
       }
     }
@@ -100,41 +97,40 @@ export default function CheckoutPage() {
     );
   }
 
-  const cartTotal = total();
-  const hasOrderBump = items.some(item => item.id === '4' || item.id === '5');
-  const comboDiscount = hasOrderBump ? cartTotal * 0.10 : 0;
-  const finalTotal = cartTotal - comboDiscount;
+  const finalTotal = total();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
     
-    const newOrderId = `FLOW-${Math.floor(Math.random() * 99999)}`;
+    const newOrderId = `ALPHA-${Math.floor(Math.random() * 99999)}`;
     const { firestore } = initializeFirebase();
 
-    const orderData = {
-      customer: {
-        ...customer,
-        address: { ...address, cep }
-      },
-      items: items.map(i => ({
-        id: i.id,
-        name: i.name,
-        price: i.price,
-        quantity: i.quantity,
-        size: i.size,
-        color: i.color
-      })),
-      total: finalTotal,
-      status: "pending",
-      pixPayload: OFFICIAL_PIX_CODE,
-      createdAt: new Date().toISOString()
-    };
+    try {
+      // 1. Criar o pagamento na Trex Pay via Flow Genkit
+      const trexResponse = await processTrexPayment({
+        amount: finalTotal,
+        customer: customer,
+        orderId: newOrderId,
+      });
 
-    const orderRef = doc(firestore, 'orders', newOrderId);
+      if (!trexResponse.success) {
+        throw new Error(trexResponse.error || "Erro ao gerar PIX");
+      }
 
-    setDoc(orderRef, orderData)
-      .catch(async (error) => {
+      // 2. Salvar pedido no Firestore
+      const orderData = {
+        customer: { ...customer, address: { ...address, cep } },
+        items: items.map(i => ({ id: i.id, name: i.name, price: i.price, quantity: i.quantity, size: i.size, color: i.color })),
+        total: finalTotal,
+        status: "pending",
+        pixPayload: trexResponse.pixPayload,
+        paymentId: trexResponse.paymentId,
+        createdAt: new Date().toISOString()
+      };
+
+      const orderRef = doc(firestore, 'orders', newOrderId);
+      setDoc(orderRef, orderData).catch(async (error) => {
         const permissionError = new FirestorePermissionError({
           path: orderRef.path,
           operation: 'create',
@@ -143,32 +139,30 @@ export default function CheckoutPage() {
         errorEmitter.emit('permission-error', permissionError);
       });
 
-    setTimeout(() => {
-      setIsProcessing(false);
+      // 3. Atualizar UI
       setOrderId(newOrderId);
+      setPixData({ payload: trexResponse.pixPayload, qrCode: trexResponse.qrCodeUrl });
       setOrderComplete(true);
       clearCart();
+      
       toast({
-        title: "Pedido Gerado!",
-        description: "Aguardando pagamento via PIX.",
+        title: "PIX Gerado com Sucesso!",
+        description: "Aguardando pagamento para envio.",
       });
-    }, 1500);
+    } catch (error: any) {
+      toast({
+        title: "Erro no Pagamento",
+        description: error.message || "Não foi possível gerar seu PIX. Tente novamente.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleAddBump = (product: any) => {
-    addItem({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      image: product.image,
-      quantity: 1,
-      size: "G",
-      color: "Sortidas",
-    });
-    toast({
-      title: "Oferta Ativada!",
-      description: "Desconto Alpha de 10% aplicado ao seu carrinho.",
-    });
+    addItem({ id: product.id, name: product.name, price: product.price, image: product.image, quantity: 1, size: "G", color: "Sortidas" });
+    toast({ title: "Oferta Ativada!", description: "Item adicionado ao seu carrinho Alpha." });
   };
 
   if (orderComplete) {
@@ -178,17 +172,21 @@ export default function CheckoutPage() {
         <div className="container mx-auto px-4 max-w-2xl text-center">
           <div className="bg-card border border-border rounded-2xl p-8 md:p-12 shadow-2xl space-y-8">
             <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto text-primary">
-              <CircleCheckBig className="w-12 h-12" />
+              <CircleCheck className="w-12 h-12" />
             </div>
             <h1 className="text-3xl md:text-5xl font-black italic uppercase tracking-tighter">Pedido <span className="text-primary">Recebido!</span></h1>
             <p className="text-muted-foreground uppercase tracking-widest font-medium text-sm">
-              Seu pedido {orderId} foi gerado. <br />
-              Pague agora via PIX para garantir o envio imediato.
+              Seu pedido {orderId} foi gerado via <span className="text-primary font-bold">Trex Pay</span>. <br />
+              Pague agora para garantir seu envio Alpha.
             </p>
 
             <div className="bg-white p-6 rounded-xl inline-block shadow-inner mx-auto">
               <div className="w-48 h-48 relative flex items-center justify-center">
-                <QrCode className="w-40 h-40 text-black" strokeWidth={1.5} />
+                {pixData.qrCode ? (
+                  <img src={pixData.qrCode} alt="QR Code PIX" className="w-40 h-40" />
+                ) : (
+                  <QrCode className="w-40 h-40 text-black" strokeWidth={1.5} />
+                )}
               </div>
               <p className="text-[10px] text-black/40 font-bold uppercase tracking-widest mt-2">Aponte a câmera do banco</p>
             </div>
@@ -197,18 +195,15 @@ export default function CheckoutPage() {
               <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">PIX Copia e Cola</Label>
               <div className="bg-muted p-4 rounded-lg flex items-center justify-between gap-4 border border-primary/20">
                 <code className="text-[10px] font-mono break-all text-left line-clamp-2">
-                  {OFFICIAL_PIX_CODE}
+                  {pixData.payload}
                 </code>
                 <Button 
                   variant="ghost" 
                   size="icon" 
                   className="shrink-0 hover:bg-primary/20 text-primary" 
                   onClick={() => {
-                    navigator.clipboard.writeText(OFFICIAL_PIX_CODE);
-                    toast({ 
-                      title: "Copiado!", 
-                      description: "Código PIX copiado.",
-                    });
+                    navigator.clipboard.writeText(pixData.payload);
+                    toast({ title: "Copiado!", description: "Código PIX copiado." });
                   }}
                 >
                   <Copy className="w-4 h-4" />
@@ -247,35 +242,16 @@ export default function CheckoutPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Nome Completo</Label>
-                    <Input 
-                      required 
-                      value={customer.name}
-                      onChange={(e) => setCustomer({...customer, name: e.target.value})}
-                      className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" 
-                      placeholder="EX: JOÃO SILVA" 
-                    />
+                    <Input required value={customer.name} onChange={(e) => setCustomer({...customer, name: e.target.value})} className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="EX: JOÃO SILVA" />
                   </div>
                   <div className="space-y-2">
                     <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">WhatsApp</Label>
-                    <Input 
-                      required 
-                      value={customer.whatsapp}
-                      onChange={(e) => setCustomer({...customer, whatsapp: e.target.value})}
-                      className="bg-muted/50 border-border h-12 text-xs font-bold" 
-                      placeholder="(00) 00000-0000" 
-                    />
+                    <Input required value={customer.whatsapp} onChange={(e) => setCustomer({...customer, whatsapp: e.target.value})} className="bg-muted/50 border-border h-12 text-xs font-bold" placeholder="(00) 00000-0000" />
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">E-mail</Label>
-                  <Input 
-                    required 
-                    type="email" 
-                    value={customer.email}
-                    onChange={(e) => setCustomer({...customer, email: e.target.value})}
-                    className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" 
-                    placeholder="E-MAIL@EXEMPLO.COM" 
-                  />
+                  <Input required type="email" value={customer.email} onChange={(e) => setCustomer({...customer, email: e.target.value})} className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="E-MAIL@EXEMPLO.COM" />
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -284,59 +260,24 @@ export default function CheckoutPage() {
                       CEP {isFetchingCep && <Loader2 className="w-3 h-3 animate-spin text-primary" />}
                     </Label>
                     <div className="relative">
-                      <Input 
-                        required 
-                        value={cep}
-                        onChange={handleCepChange}
-                        className="bg-muted/50 border-border h-12 text-xs font-bold pr-10" 
-                        placeholder="00000-000" 
-                      />
+                      <Input required value={cep} onChange={handleCepChange} className="bg-muted/50 border-border h-12 text-xs font-bold pr-10" placeholder="00000-000" />
                       <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground opacity-50" />
                     </div>
                   </div>
                   <div className="md:col-span-2 space-y-2">
                     <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Rua / Logradouro</Label>
-                    <Input 
-                      required 
-                      value={address.logradouro}
-                      onChange={(e) => setAddress({...address, logradouro: e.target.value})}
-                      className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" 
-                      placeholder="EX: RUA DAS FLORES" 
-                    />
+                    <Input required value={address.logradouro} onChange={(e) => setAddress({...address, logradouro: e.target.value})} className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="RUA..." />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="md:col-span-1 space-y-2">
                     <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Número</Label>
-                    <Input 
-                      required 
-                      value={address.numero}
-                      onChange={(e) => setAddress({...address, numero: e.target.value})}
-                      className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" 
-                      placeholder="123" 
-                    />
+                    <Input required value={address.numero} onChange={(e) => setAddress({...address, numero: e.target.value})} className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="123" />
                   </div>
                   <div className="md:col-span-2 space-y-2">
                     <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Bairro</Label>
-                    <Input 
-                      required 
-                      value={address.bairro}
-                      onChange={(e) => setAddress({...address, bairro: e.target.value})}
-                      className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" 
-                      placeholder="BAIRRO" 
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Cidade</Label>
-                    <Input required value={address.cidade} readOnly className="bg-muted/20 border-border h-12 uppercase text-xs font-bold cursor-not-allowed" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Estado (UF)</Label>
-                    <Input required value={address.uf} readOnly className="bg-muted/20 border-border h-12 uppercase text-xs font-bold cursor-not-allowed" />
+                    <Input required value={address.bairro} onChange={(e) => setAddress({...address, bairro: e.target.value})} className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="BAIRRO" />
                   </div>
                 </div>
               </form>
@@ -344,33 +285,19 @@ export default function CheckoutPage() {
 
             <div className="bg-card border border-border rounded-xl p-6 md:p-8">
               <h2 className="text-xl font-black italic uppercase tracking-widest mb-6 flex items-center gap-2">
-                <div className="w-1.5 h-6 bg-primary" /> Método de Pagamento
+                <div className="w-1.5 h-6 bg-primary" /> Pagamento Seguro via <span className="text-primary italic">Trex Pay</span>
               </h2>
-              
-              <div className="space-y-4">
-                <div className="border-2 border-primary bg-primary/5 p-6 rounded-xl flex items-center justify-between shadow-lg shadow-primary/10">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center text-white">
-                      <Wallet className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <p className="font-black italic uppercase text-lg leading-none">PIX</p>
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-primary mt-1">Aprovação Imediata • Envio Prioritário</p>
-                    </div>
+              <div className="border-2 border-primary bg-primary/5 p-6 rounded-xl flex items-center justify-between shadow-lg shadow-primary/10">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center text-white">
+                    <Wallet className="w-6 h-6" />
                   </div>
-                  <div className="w-6 h-6 rounded-full border-4 border-primary bg-white" />
-                </div>
-
-                <div className="border border-border bg-muted/30 p-6 rounded-xl flex items-center justify-between opacity-60 cursor-not-allowed relative">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center text-muted-foreground">
-                      <CreditCard className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <p className="font-black italic uppercase text-lg leading-none">CARTÃO DE CRÉDITO</p>
-                    </div>
+                  <div>
+                    <p className="font-black italic uppercase text-lg leading-none">PIX</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-primary mt-1">Aprovação Imediata • Envio Prioritário</p>
                   </div>
                 </div>
+                <div className="w-6 h-6 rounded-full border-4 border-primary bg-white" />
               </div>
             </div>
           </div>
@@ -386,7 +313,7 @@ export default function CheckoutPage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-bold uppercase tracking-tight truncate italic text-sm">{item.name}</p>
-                      <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Tam: {item.size} • Cor: {item.color} • Qtd: {item.quantity}</p>
+                      <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Tam: {item.size} • Qtd: {item.quantity}</p>
                     </div>
                     <div className="flex flex-col items-end">
                       <span className="font-black italic text-sm">R$ {(item.price * item.quantity).toFixed(2)}</span>
@@ -402,8 +329,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="space-y-3">
                   {orderBumps.map((product) => {
-                    const isAlreadyInCart = items.some(i => i.id === product.id);
-                    if (isAlreadyInCart) return null;
+                    if (items.some(i => i.id === product.id)) return null;
                     return (
                       <div key={product.id} className="flex items-center justify-between gap-4 p-3 rounded-lg border bg-background/50 border-border">
                         <div className="flex items-center gap-3">
@@ -415,9 +341,7 @@ export default function CheckoutPage() {
                             <p className="text-[10px] font-black text-primary">R$ {product.price.toFixed(2)}</p>
                           </div>
                         </div>
-                        <Button onClick={() => handleAddBump(product)} size="sm" className="h-8 px-3 bg-foreground text-background font-black italic uppercase text-[9px]">
-                          ADICIONAR
-                        </Button>
+                        <Button onClick={() => handleAddBump(product)} size="sm" className="h-8 px-3 bg-foreground text-background font-black italic uppercase text-[9px]">ADICIONAR</Button>
                       </div>
                     );
                   })}
@@ -425,30 +349,25 @@ export default function CheckoutPage() {
               </div>
               
               <div className="space-y-3 border-t pt-6 mb-8 font-bold uppercase tracking-widest text-[10px]">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Subtotal:</span>
-                  <span>R$ {cartTotal.toFixed(2)}</span>
-                </div>
-                {hasOrderBump && (
-                  <div className="flex justify-between text-green-500 font-black italic">
-                    <span>Desconto Combo Alpha (-10%):</span>
-                    <span>- R$ {comboDiscount.toFixed(2)}</span>
-                  </div>
-                )}
                 <div className="flex justify-between text-xl font-black italic pt-4 border-t border-border/50 text-foreground">
                   <span>Total Final:</span>
                   <span className="text-primary">R$ {finalTotal.toFixed(2)}</span>
                 </div>
               </div>
 
-              <Button
-                form="checkout-form"
-                type="submit"
-                disabled={isProcessing}
-                className="w-full h-16 bg-primary hover:bg-primary/90 text-white font-black italic uppercase tracking-[0.2em] text-lg cta-button"
-              >
-                {isProcessing ? "GERANDO PIX..." : "PAGAR COM PIX AGORA"}
-              </Button>
+              <div className="space-y-4">
+                <Button
+                  form="checkout-form"
+                  type="submit"
+                  disabled={isProcessing}
+                  className="w-full h-16 bg-primary hover:bg-primary/90 text-white font-black italic uppercase tracking-[0.2em] text-lg cta-button"
+                >
+                  {isProcessing ? <Loader2 className="animate-spin" /> : "FINALIZAR PAGAMENTO PIX"}
+                </Button>
+                <p className="text-[9px] text-center font-bold uppercase text-muted-foreground flex items-center justify-center gap-1">
+                  <ShieldCheck className="w-3 h-3 text-primary" /> Pagamento processado com segurança pela Trex Pay
+                </p>
+              </div>
             </div>
           </div>
         </div>
