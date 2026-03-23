@@ -9,10 +9,10 @@ import { Label } from "@/components/ui/label";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { CircleCheck, QrCode, Copy, Wallet, Loader2, Search, ShieldCheck, Truck, Plus, Flame, Clock } from "lucide-react";
+import { CircleCheck, QrCode, Copy, Wallet, Loader2, Search, ShieldCheck, Truck, Plus, Flame, Clock, Beaker } from "lucide-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import { doc, setDoc, onSnapshot } from "firebase/firestore";
+import { doc, setDoc, onSnapshot, updateDoc } from "firebase/firestore";
 import { initializeFirebase } from "@/firebase/index";
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
@@ -144,6 +144,13 @@ export default function CheckoutPage() {
     });
   };
 
+  const simulatePaymentApproval = async () => {
+    if (!orderId) return;
+    const { firestore } = initializeFirebase();
+    const orderRef = doc(firestore, 'orders', orderId);
+    await updateDoc(orderRef, { status: 'paid' });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -151,7 +158,7 @@ export default function CheckoutPage() {
     if (documentClean.length !== 11) {
       toast({
         title: "CPF Inválido",
-        description: "Por favor, insira um CPF válido com exatamente 11 dígitos.",
+        description: "Por favor, insira um CPF válido.",
         variant: "destructive",
       });
       return;
@@ -278,6 +285,18 @@ export default function CheckoutPage() {
                       <Copy className="w-4 h-4" />
                     </Button>
                   </div>
+                </div>
+
+                {/* Debug Helper: Simular Pagamento */}
+                <div className="pt-4">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={simulatePaymentApproval}
+                    className="text-[9px] font-black uppercase tracking-widest bg-primary/5 border-primary/20 text-primary/50 hover:text-primary transition-all flex items-center gap-2 mx-auto"
+                  >
+                    <Beaker className="w-3 h-3" /> Simular Aprovação (Debug)
+                  </Button>
                 </div>
               </>
             )}
