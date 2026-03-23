@@ -6,7 +6,7 @@ import { Navbar } from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { CircleCheck, QrCode, Copy, Wallet, Loader2, Search, ShieldCheck, Truck, Plus, Flame, Clock, Minus, Trash2 } from "lucide-react";
@@ -50,14 +50,23 @@ export default function CheckoutPage() {
   });
   const [isFetchingCep, setIsFetchingCep] = useState(false);
 
-  // Validation logic
-  const isCepValid = cep.replace(/\D/g, "").length === 8;
-
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Listen for payment confirmation in real-time
+  // Calculate upsell products only on client to avoid hydration mismatch
+  const upsellProducts = useMemo(() => {
+    if (!mounted) return [];
+    return PRODUCTS.filter(p => !items.find(item => item.id === p.id)).slice(0, 2);
+  }, [mounted, items]);
+
+  const currentTotal = useMemo(() => {
+    if (!mounted) return 0;
+    return total();
+  }, [mounted, total]);
+
+  const isCepValid = cep.replace(/\D/g, "").length === 8;
+
   useEffect(() => {
     if (orderComplete && orderId && firestore) {
       const orderRef = doc(firestore, 'orders', orderId);
@@ -109,22 +118,6 @@ export default function CheckoutPage() {
       }
     }
   };
-
-  if (!mounted) return null;
-
-  if (items.length === 0 && !orderComplete) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen text-center p-4">
-        <h2 className="text-2xl font-black italic uppercase mb-4">Seu carrinho está vazio</h2>
-        <Button onClick={() => router.push("/catalog")} className="bg-primary uppercase font-bold italic tracking-widest">
-          Ir para Loja
-        </Button>
-      </div>
-    );
-  }
-
-  const currentTotal = total();
-  const upsellProducts = PRODUCTS.filter(p => !items.find(item => item.id === p.id)).slice(0, 2);
 
   const handleAddUpsell = (product: any) => {
     const discountedPrice = product.price * 0.95;
@@ -217,6 +210,19 @@ export default function CheckoutPage() {
       setIsProcessing(false);
     }
   };
+
+  if (!mounted) return null;
+
+  if (items.length === 0 && !orderComplete) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen text-center p-4">
+        <h2 className="text-2xl font-black italic uppercase mb-4">Seu carrinho está vazio</h2>
+        <Button onClick={() => router.push("/catalog")} className="bg-primary uppercase font-bold italic tracking-widest">
+          Ir para Loja
+        </Button>
+      </div>
+    );
+  }
 
   if (orderComplete) {
     return (
@@ -487,9 +493,9 @@ export default function CheckoutPage() {
                 >
                   {isProcessing ? <Loader2 className="animate-spin" /> : "FINALIZAR PAGAMENTO PIX"}
                 </Button>
-                <p className="text-[9px] text-center font-bold uppercase text-muted-foreground flex items-center justify-center gap-1">
+                <div className="text-[9px] text-center font-bold uppercase text-muted-foreground flex items-center justify-center gap-1">
                   <ShieldCheck className="w-3 h-3 text-primary" /> Pagamento processado com segurança
-                </p>
+                </div>
               </div>
             </div>
 

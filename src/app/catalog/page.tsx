@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Navbar } from "@/components/navbar";
@@ -10,14 +11,23 @@ import { useState, useMemo } from "react";
 export default function CatalogPage() {
   const [activeBrand, setActiveBrand] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState("Destaques");
 
   const filteredProducts = useMemo(() => {
-    return PRODUCTS.filter((product) => {
+    let result = PRODUCTS.filter((product) => {
       const brandMatch = !activeBrand || product.brand === activeBrand;
       const categoryMatch = !activeCategory || product.category === activeCategory;
       return brandMatch && categoryMatch;
     });
-  }, [activeBrand, activeCategory]);
+
+    if (sortBy === "Menor Preço") {
+      result = [...result].sort((a, b) => a.price - b.price);
+    } else if (sortBy === "Maior Preço") {
+      result = [...result].sort((a, b) => b.price - a.price);
+    }
+
+    return result;
+  }, [activeBrand, activeCategory, sortBy]);
 
   const brands = ["Lupo", "Calvin Klein", "Polo Wear"];
 
@@ -99,11 +109,16 @@ export default function CatalogPage() {
                 Exibindo {filteredProducts.length} resultados
               </span>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Ordenar por:</span>
-                <select className="bg-transparent border-none text-[10px] font-black uppercase tracking-widest text-primary italic outline-none cursor-pointer">
-                  <option>Destaques</option>
-                  <option>Menor Preço</option>
-                  <option>Maior Preço</option>
+                <label htmlFor="sort-select" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Ordenar por:</label>
+                <select 
+                  id="sort-select"
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="bg-transparent border-none text-[10px] font-black uppercase tracking-widest text-primary italic outline-none cursor-pointer"
+                >
+                  <option value="Destaques">Destaques</option>
+                  <option value="Menor Preço">Menor Preço</option>
+                  <option value="Maior Preço">Maior Preço</option>
                 </select>
               </div>
             </div>
