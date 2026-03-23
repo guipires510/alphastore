@@ -47,7 +47,8 @@ export default function CheckoutPage() {
   });
   const [isFetchingCep, setIsFetchingCep] = useState(false);
 
-  const isCpfValid = customer.document.length === 11;
+  // CPF Validation logic for Free Shipping
+  const isCpfValid = customer.document.replace(/\D/g, "").length === 11;
 
   const orderBumps = useMemo(() => {
     return PRODUCTS.filter(p => p.category === 'single').slice(0, 2);
@@ -76,10 +77,10 @@ export default function CheckoutPage() {
         } else {
           setAddress(prev => ({
             ...prev,
-            logradouro: data.logradouro,
-            bairro: data.bairro,
-            cidade: data.localidade,
-            uf: data.uf
+            logradouro: data.logradouro || "",
+            bairro: data.bairro || "",
+            cidade: data.localidade || "",
+            uf: data.uf || ""
           }));
         }
       } catch (error) {} finally {
@@ -123,7 +124,7 @@ export default function CheckoutPage() {
     const checkoutValue = currentTotal;
 
     try {
-      const trexResponse = await processTrexPayment({
+      const paymentResponse = await processTrexPayment({
         amount: checkoutValue,
         customer: {
           ...customer,
@@ -132,8 +133,8 @@ export default function CheckoutPage() {
         orderId: newOrderId,
       });
 
-      if (!trexResponse.success) {
-        throw new Error(trexResponse.error || "Erro ao gerar PIX");
+      if (!paymentResponse.success) {
+        throw new Error(paymentResponse.error || "Erro ao gerar PIX");
       }
 
       const orderData = {
@@ -141,8 +142,8 @@ export default function CheckoutPage() {
         items: items.map(i => ({ id: i.id, name: i.name, price: i.price, quantity: i.quantity, size: i.size, color: i.color })),
         total: checkoutValue,
         status: "pending",
-        pixPayload: trexResponse.pixPayload,
-        paymentId: trexResponse.paymentId,
+        pixPayload: paymentResponse.pixPayload,
+        paymentId: paymentResponse.paymentId,
         createdAt: new Date().toISOString()
       };
 
@@ -157,14 +158,14 @@ export default function CheckoutPage() {
       });
 
       setOrderId(newOrderId);
-      setPixData({ payload: trexResponse.pixPayload, qrCode: trexResponse.qrCodeUrl });
+      setPixData({ payload: paymentResponse.pixPayload, qrCode: paymentResponse.qrCodeUrl });
       setFinalValue(checkoutValue);
       setOrderComplete(true);
       clearCart();
       
       toast({
-        title: "PIX Gerado com Sucesso!",
-        description: "Aguardando pagamento para envio.",
+        title: "PIX Gerado!",
+        description: "Pague para garantir seu envio Alpha.",
       });
     } catch (error: any) {
       toast({
@@ -193,8 +194,8 @@ export default function CheckoutPage() {
             </div>
             <h1 className="text-3xl md:text-5xl font-black italic uppercase tracking-tighter">Pedido <span className="text-primary">Recebido!</span></h1>
             <p className="text-muted-foreground uppercase tracking-widest font-medium text-sm">
-              Seu pedido {orderId} foi gerado com sucesso. <br />
-              Pague agora via <span className="text-primary font-bold">PIX</span> para garantir seu envio Alpha.
+              Seu pedido {orderId} foi gerado. <br />
+              Pague agora via <span className="text-primary font-bold">PIX</span> para garantir seu envio prioritário.
             </p>
 
             <div className="bg-white p-6 rounded-xl inline-block shadow-inner mx-auto">
@@ -262,18 +263,22 @@ export default function CheckoutPage() {
                     <Input required value={customer.name} onChange={(e) => setCustomer({...customer, name: e.target.value})} className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="EX: JOÃO SILVA" />
                   </div>
                   <div className="space-y-2">
-                    <div className="flex justify-between items-center">
-                      <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">CPF (11 números)</Label>
+                    <div className="flex justify-between items-center h-4">
+                      <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">CPF (Obrigatório)</Label>
+                    </div>
+                    <div className="relative">
+                      <Input required maxLength={11} value={customer.document} onChange={(e) => setCustomer({...customer, document: e.target.value.replace(/\D/g, "")})} className={`bg-muted/50 border-border h-12 text-xs font-bold transition-all ${isCpfValid ? 'ring-2 ring-green-600/30 border-green-600/30' : ''}`} placeholder="000.000.000-00" />
                       {isCpfValid && (
-                        <Badge className="bg-green-600/20 text-green-600 border-green-600/30 text-[9px] font-black uppercase italic tracking-widest flex items-center gap-1">
-                          <Truck className="w-2.5 h-2.5" /> FRETE GRÁTIS LIBERADO!
-                        </Badge>
+                        <div className="absolute -bottom-6 left-0">
+                          <Badge className="bg-green-600/20 text-green-600 border-green-600/30 text-[8px] font-black uppercase italic tracking-widest flex items-center gap-1">
+                            <Truck className="w-2.5 h-2.5" /> FRETE GRÁTIS ATIVADO!
+                          </Badge>
+                        </div>
                       )}
                     </div>
-                    <Input required maxLength={11} value={customer.document} onChange={(e) => setCustomer({...customer, document: e.target.value.replace(/\D/g, "")})} className={`bg-muted/50 border-border h-12 text-xs font-bold transition-all ${isCpfValid ? 'ring-2 ring-green-600/30 border-green-600/30' : ''}`} placeholder="00000000000" />
                   </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
                   <div className="space-y-2">
                     <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">E-mail</Label>
                     <Input required type="email" value={customer.email} onChange={(e) => setCustomer({...customer, email: e.target.value})} className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="E-MAIL@EXEMPLO.COM" />
@@ -299,7 +304,7 @@ export default function CheckoutPage() {
                   </div>
                   <div className="md:col-span-2 space-y-2">
                     <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Rua / Logradouro</Label>
-                    <Input required value={address.logradouro} onChange={(e) => setAddress({...address, logradouro: e.target.value})} className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="RUA..." />
+                    <Input required value={address.logradouro} onChange={(e) => setAddress({...address, logradouro: e.target.value})} className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="NOME DA RUA..." />
                   </div>
                 </div>
 
@@ -313,12 +318,23 @@ export default function CheckoutPage() {
                     <Input required value={address.bairro} onChange={(e) => setAddress({...address, bairro: e.target.value})} className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="BAIRRO" />
                   </div>
                 </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="md:col-span-2 space-y-2">
+                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Cidade</Label>
+                    <Input required value={address.cidade} onChange={(e) => setAddress({...address, cidade: e.target.value})} className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="SUA CIDADE" />
+                  </div>
+                  <div className="md:col-span-1 space-y-2">
+                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Estado (UF)</Label>
+                    <Input required maxLength={2} value={address.uf} onChange={(e) => setAddress({...address, uf: e.target.value.toUpperCase()})} className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="SP" />
+                  </div>
+                </div>
               </form>
             </div>
 
             <div className="bg-card border border-border rounded-xl p-6 md:p-8">
               <h2 className="text-xl font-black italic uppercase tracking-widest mb-6 flex items-center gap-2">
-                <div className="w-1.5 h-6 bg-primary" /> Pagamento Seguro <span className="text-primary italic">Alpha Pay</span>
+                <div className="w-1.5 h-6 bg-primary" /> Pagamento Seguro
               </h2>
               <div className="border-2 border-primary bg-primary/5 p-6 rounded-xl flex items-center justify-between shadow-lg shadow-primary/10">
                 <div className="flex items-center gap-4">
@@ -327,7 +343,7 @@ export default function CheckoutPage() {
                   </div>
                   <div>
                     <p className="font-black italic uppercase text-lg leading-none">PIX</p>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-primary mt-1">Aprovação Imediata • Envio Prioritário</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-primary mt-1">Aprovação Imediata • Envio Alpha</p>
                   </div>
                 </div>
                 <div className="w-6 h-6 rounded-full border-4 border-primary bg-white" />
@@ -355,32 +371,6 @@ export default function CheckoutPage() {
                 ))}
               </div>
 
-              <div className="bg-primary/5 border-2 border-dashed border-primary/30 rounded-xl p-4 mb-8">
-                <div className="flex items-center gap-2 mb-2">
-                  <Sparkles className="w-4 h-4 text-primary animate-pulse" />
-                  <span className="text-[10px] font-black uppercase tracking-widest text-primary italic">Oferta Relâmpago Alpha</span>
-                </div>
-                <div className="space-y-3">
-                  {orderBumps.map((product) => {
-                    if (items.some(i => i.id === product.id)) return null;
-                    return (
-                      <div key={product.id} className="flex items-center justify-between gap-4 p-3 rounded-lg border bg-background/50 border-border">
-                        <div className="flex items-center gap-3">
-                          <div className="relative w-10 h-10 rounded border overflow-hidden">
-                            <Image src={product.image} alt={product.name} fill className="object-cover" />
-                          </div>
-                          <div>
-                            <p className="text-[10px] font-bold uppercase truncate w-32">{product.name}</p>
-                            <p className="text-[10px] font-black text-primary">R$ {product.price.toFixed(2)}</p>
-                          </div>
-                        </div>
-                        <Button onClick={() => handleAddBump(product)} size="sm" className="h-8 px-3 bg-foreground text-background font-black italic uppercase text-[9px]">ADICIONAR</Button>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-              
               <div className="space-y-3 border-t pt-6 mb-8 font-bold uppercase tracking-widest text-[10px]">
                 <div className="flex justify-between items-center text-muted-foreground">
                   <span>Subtotal:</span>
@@ -391,7 +381,7 @@ export default function CheckoutPage() {
                   {isCpfValid ? (
                     <span className="text-green-600 font-black italic">GRÁTIS</span>
                   ) : (
-                    <span className="text-[8px] italic">Aguardando CPF...</span>
+                    <span className="text-[8px] italic">Preencha o CPF...</span>
                   )}
                 </div>
                 <div className="flex justify-between text-xl font-black italic pt-4 border-t border-border/50 text-foreground">
