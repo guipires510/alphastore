@@ -45,7 +45,6 @@ export async function generateMarketingCopy(
 
 const marketingCopyPrompt = ai.definePrompt({
   name: 'marketingCopyPrompt',
-  model: 'googleai/gemini-1.5-flash',
   input: {schema: GenerateMarketingCopyInputSchema},
   output: {schema: GenerateMarketingCopyOutputSchema},
   prompt: `You are an expert marketing copywriter specializing in e-commerce for men's underwear, with a focus on conversion and urgency.
