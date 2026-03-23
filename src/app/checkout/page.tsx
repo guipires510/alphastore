@@ -57,7 +57,7 @@ export default function CheckoutPage() {
   // Calculate upsell products only on client to avoid hydration mismatch
   const upsellProducts = useMemo(() => {
     if (!mounted) return [];
-    return PRODUCTS.filter(p => !items.find(item => item.id === p.id)).slice(0, 2);
+    return PRODUCTS.filter(p => p.id !== 'teste-alpha' && !items.find(item => item.id === p.id)).slice(0, 2);
   }, [mounted, items]);
 
   const currentTotal = useMemo(() => {
@@ -211,15 +211,27 @@ export default function CheckoutPage() {
     }
   };
 
-  if (!mounted) return null;
+  if (!mounted) {
+    return (
+      <div className="flex flex-col min-h-screen pt-24">
+        <Navbar />
+        <div className="flex-1 flex items-center justify-center">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      </div>
+    );
+  }
 
   if (items.length === 0 && !orderComplete) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen text-center p-4">
-        <h2 className="text-2xl font-black italic uppercase mb-4">Seu carrinho está vazio</h2>
-        <Button onClick={() => router.push("/catalog")} className="bg-primary uppercase font-bold italic tracking-widest">
-          Ir para Loja
-        </Button>
+      <div className="flex flex-col min-h-screen pt-24">
+        <Navbar />
+        <div className="flex-1 flex flex-col items-center justify-center text-center p-4">
+          <h2 className="text-2xl font-black italic uppercase mb-4">Seu carrinho está vazio</h2>
+          <Button onClick={() => router.push("/catalog")} className="bg-primary uppercase font-bold italic tracking-widest">
+            Ir para Loja
+          </Button>
+        </div>
       </div>
     );
   }
