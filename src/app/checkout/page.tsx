@@ -13,8 +13,8 @@ import { CircleCheckBig, QrCode, Copy, Wallet, Trash2, CreditCard, Search, Loade
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { PRODUCTS } from "@/lib/products";
-import { getFirestore, doc, setDoc, serverTimestamp } from "firebase/firestore";
-import { initializeFirebase } from "@/firebase";
+import { doc, setDoc } from "firebase/firestore";
+import { initializeFirebase } from "@/firebase/index";
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 
@@ -44,7 +44,7 @@ export default function CheckoutPage() {
   });
   const [isFetchingCep, setIsFetchingCep] = useState(false);
 
-  const OFFICIAL_PIX_CODE = "ALPHA_FLOW_PIX_GEN_PENDING";
+  const OFFICIAL_PIX_CODE = "00020126360014BR.GOV.BCB.PIX0114ALPHAFOLWLOJA5204000053039865802BR5920ALPHAFOLW6009SAO PAULO62070503***6304E2B1";
 
   const orderBumps = useMemo(() => {
     return PRODUCTS.filter(p => p.category === 'single').slice(0, 2);
@@ -112,8 +112,6 @@ export default function CheckoutPage() {
     const newOrderId = `FLOW-${Math.floor(Math.random() * 99999)}`;
     const { firestore } = initializeFirebase();
 
-    if (!firestore) return;
-
     const orderData = {
       customer: {
         ...customer,
@@ -135,7 +133,6 @@ export default function CheckoutPage() {
 
     const orderRef = doc(firestore, 'orders', newOrderId);
 
-    // Save to Firestore without await to allow optimistic UI or background sync
     setDoc(orderRef, orderData)
       .catch(async (error) => {
         const permissionError = new FirestorePermissionError({
@@ -146,7 +143,6 @@ export default function CheckoutPage() {
         errorEmitter.emit('permission-error', permissionError);
       });
 
-    // Simulate payment generation latency
     setTimeout(() => {
       setIsProcessing(false);
       setOrderId(newOrderId);
@@ -191,8 +187,8 @@ export default function CheckoutPage() {
             </p>
 
             <div className="bg-white p-6 rounded-xl inline-block shadow-inner mx-auto">
-              <div className="w-48 h-48 bg-muted relative flex items-center justify-center">
-                <QrCode className="w-40 h-40 text-background" strokeWidth={1.5} />
+              <div className="w-48 h-48 relative flex items-center justify-center">
+                <QrCode className="w-40 h-40 text-black" strokeWidth={1.5} />
               </div>
               <p className="text-[10px] text-black/40 font-bold uppercase tracking-widest mt-2">Aponte a câmera do banco</p>
             </div>

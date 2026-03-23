@@ -14,7 +14,7 @@ export function initializeFirebase(): { app: FirebaseApp; firestore: Firestore; 
   return { app, firestore, auth };
 }
 
-export { FirebaseProvider } from './provider';
+export { FirebaseProvider, useFirebase } from './provider';
 export { FirebaseClientProvider } from './client-provider';
 export { errorEmitter } from './error-emitter';
 export { FirestorePermissionError } from './errors';
