@@ -37,12 +37,11 @@ export async function createPixPayment(data: TrexPaymentRequest): Promise<TrexPa
     };
   }
 
-  // Define o endpoint final. Se a URL base já incluir a versão, ajustamos aqui.
-  const endpoint = `${TREX_PAY_API_URL.replace(/\/$/, '')}/api/v1/payments`;
+  // Ajustado para o endpoint mais comum de criação de PIX na Trex Pay
+  const endpoint = `${TREX_PAY_API_URL.replace(/\/$/, '')}/api/v1/pix`;
 
   try {
     const payload = {
-      payment_method: 'pix',
       amount: Math.round(data.amount * 100), // Valor em centavos
       external_id: data.orderId,
       customer: {
@@ -57,13 +56,28 @@ export async function createPixPayment(data: TrexPaymentRequest): Promise<TrexPa
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
         'Authorization': `Bearer ${TREX_PAY_TOKEN}`,
         'X-Secret-Key': TREX_PAY_SECRET,
       },
       body: JSON.stringify(payload),
     });
 
-    const result = await response.json();
+    const responseText = await response.text();
+    let result;
+
+    try {
+      result = JSON.parse(responseText);
+    } catch (e) {
+      // Se não for JSON, o servidor retornou um HTML (erro 404, 500 ou Login)
+      return {
+        success: false,
+        pixPayload: '',
+        qrCodeUrl: '',
+        paymentId: '',
+        error: `O servidor retornou um erro inesperado (HTML). Status: ${response.status}. Verifique se a URL e as chaves estão corretas.`,
+      };
+    }
 
     if (response.ok) {
       return {
@@ -87,7 +101,7 @@ export async function createPixPayment(data: TrexPaymentRequest): Promise<TrexPa
       pixPayload: '',
       qrCodeUrl: '',
       paymentId: '',
-      error: `Erro de Conexão: Falha ao acessar ${endpoint}. Verifique se a URL está correta e se o servidor aceita conexões. Detalhe: ${error.message}`,
+      error: `Falha de conexão: ${error.message}`,
     };
   }
 }
