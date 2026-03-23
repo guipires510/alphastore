@@ -9,11 +9,11 @@ import { Label } from "@/components/ui/label";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { CircleCheck, QrCode, Copy, Wallet, Loader2, Search, ShieldCheck, Truck, Plus, Flame, Clock, Beaker } from "lucide-react";
+import { CircleCheck, QrCode, Copy, Wallet, Loader2, Search, ShieldCheck, Truck, Plus, Flame, Clock } from "lucide-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import { doc, setDoc, onSnapshot, updateDoc } from "firebase/firestore";
-import { initializeFirebase } from "@/firebase/index";
+import { doc, setDoc, onSnapshot } from "firebase/firestore";
+import { useFirebase } from "@/firebase/provider";
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 import { processTrexPayment } from "@/ai/flows/create-trex-payment-flow";
@@ -21,6 +21,7 @@ import { PRODUCTS } from "@/lib/products";
 
 export default function CheckoutPage() {
   const { items, total, addItem, clearCart } = useCartStore();
+  const { firestore } = useFirebase();
   const [mounted, setMounted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
@@ -58,8 +59,7 @@ export default function CheckoutPage() {
 
   // Listen for payment confirmation in real-time
   useEffect(() => {
-    if (orderComplete && orderId) {
-      const { firestore } = initializeFirebase();
+    if (orderComplete && orderId && firestore) {
       const orderRef = doc(firestore, 'orders', orderId);
       
       const unsubscribe = onSnapshot(orderRef, (snapshot) => {
@@ -77,7 +77,7 @@ export default function CheckoutPage() {
       
       return () => unsubscribe();
     }
-  }, [orderComplete, orderId, toast]);
+  }, [orderComplete, orderId, toast, firestore]);
 
   const handleCepChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, "").substring(0, 8);
@@ -124,7 +124,6 @@ export default function CheckoutPage() {
   }
 
   const currentTotal = total();
-
   const upsellProducts = PRODUCTS.filter(p => !items.find(item => item.id === p.id)).slice(0, 2);
 
   const handleAddUpsell = (product: any) => {
@@ -135,20 +134,13 @@ export default function CheckoutPage() {
       price: discountedPrice,
       image: product.image,
       quantity: 1,
-      size: "M", // Default size for upsell
-      color: "Sortidas", // Default color for upsell
+      size: "M",
+      color: "Sortidas",
     });
     toast({
       title: "Oferta Ativada!",
       description: `${product.name} adicionado com 5% de desconto extra!`,
     });
-  };
-
-  const simulatePaymentApproval = async () => {
-    if (!orderId) return;
-    const { firestore } = initializeFirebase();
-    const orderRef = doc(firestore, 'orders', orderId);
-    await updateDoc(orderRef, { status: 'paid' });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -164,10 +156,11 @@ export default function CheckoutPage() {
       return;
     }
 
+    if (!firestore) return;
+
     setIsProcessing(true);
     
     const newOrderId = `ALPHA-${Math.floor(Math.random() * 99999)}`;
-    const { firestore } = initializeFirebase();
     const checkoutValue = currentTotal;
 
     try {
@@ -285,18 +278,6 @@ export default function CheckoutPage() {
                       <Copy className="w-4 h-4" />
                     </Button>
                   </div>
-                </div>
-
-                {/* Debug Helper: Simular Pagamento */}
-                <div className="pt-4">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={simulatePaymentApproval}
-                    className="text-[9px] font-black uppercase tracking-widest bg-primary/5 border-primary/20 text-primary/50 hover:text-primary transition-all flex items-center gap-2 mx-auto"
-                  >
-                    <Beaker className="w-3 h-3" /> Simular Aprovação (Debug)
-                  </Button>
                 </div>
               </>
             )}
