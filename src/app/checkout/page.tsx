@@ -49,7 +49,6 @@ export default function CheckoutPage() {
 
   // Validation logic
   const isCepValid = cep.replace(/\D/g, "").length === 8;
-  const isCpfValid = customer.document.replace(/\D/g, "").length === 11;
 
   useEffect(() => {
     setMounted(true);
@@ -255,8 +254,8 @@ export default function CheckoutPage() {
                     <Input required value={customer.name} onChange={(e) => setCustomer({...customer, name: e.target.value})} className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="EX: JOÃO SILVA" />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">CPF (Somente 11 números)</Label>
-                    <Input required maxLength={11} value={customer.document} onChange={(e) => setCustomer({...customer, document: e.target.value.replace(/\D/g, "")})} className="bg-muted/50 border-border h-12 text-xs font-bold" placeholder="00000000000" />
+                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">CPF (Obrigatório 11 números)</Label>
+                    <Input required maxLength={11} value={customer.document} onChange={(e) => setCustomer({...customer, document: e.target.value.replace(/\D/g, "")})} className="bg-muted/50 border-border h-12 text-xs font-bold" placeholder="000.000.000-00" />
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
@@ -278,13 +277,15 @@ export default function CheckoutPage() {
                     <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                       CEP {isFetchingCep && <Loader2 className="w-3 h-3 animate-spin text-primary" />}
                     </Label>
-                    <div className="relative">
-                      <Input required value={cep} onChange={handleCepChange} className={`bg-muted/50 border-border h-12 text-xs font-bold pr-10 transition-all ${isCepValid ? 'ring-2 ring-green-600/30 border-green-600/30' : ''}`} placeholder="00000-000" />
-                      <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground opacity-50" />
+                    <div className="space-y-2">
+                      <div className="relative">
+                        <Input required value={cep} onChange={handleCepChange} className={`bg-muted/50 border-border h-12 text-xs font-bold pr-10 transition-all ${isCepValid ? 'ring-2 ring-green-600/30 border-green-600/30' : ''}`} placeholder="00000-000" />
+                        <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground opacity-50" />
+                      </div>
                       {isCepValid && (
-                        <div className="absolute -bottom-6 left-0">
-                          <Badge className="bg-green-600/20 text-green-600 border-green-600/30 text-[8px] font-black uppercase italic tracking-widest flex items-center gap-1">
-                            <Truck className="w-2.5 h-2.5" /> FRETE GRÁTIS ATIVADO!
+                        <div className="flex items-center gap-2 py-1">
+                          <Badge className="bg-green-600/20 text-green-600 border-green-600/30 text-[9px] font-black uppercase italic tracking-widest flex items-center gap-1.5 px-3">
+                            <Truck className="w-3 h-3" /> FRETE GRÁTIS ATIVADO!
                           </Badge>
                         </div>
                       )}
@@ -307,7 +308,7 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
                   <div className="md:col-span-2 space-y-2">
                     <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Cidade</Label>
                     <Input required value={address.cidade} onChange={(e) => setAddress({...address, cidade: e.target.value})} className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="SUA CIDADE" />
