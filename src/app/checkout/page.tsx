@@ -293,16 +293,20 @@ export default function CheckoutPage() {
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="md:col-span-1 space-y-2">
-                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
-                      CEP {isFetchingCep && <Loader2 className="w-3 h-3 animate-spin text-primary" />}
-                    </Label>
+                    <div className="h-4 flex items-center">
+                      <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+                        CEP {isFetchingCep && <Loader2 className="w-3 h-3 animate-spin text-primary" />}
+                      </Label>
+                    </div>
                     <div className="relative">
                       <Input required value={cep} onChange={handleCepChange} className={`bg-muted/50 border-border h-12 text-xs font-bold pr-10 transition-all ${isCepValid ? 'ring-2 ring-green-600/30 border-green-600/30' : ''}`} placeholder="00000-000" />
                       <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground opacity-50" />
                     </div>
                   </div>
                   <div className="md:col-span-2 space-y-2">
-                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Rua / Logradouro</Label>
+                    <div className="h-4 flex items-center">
+                      <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Rua / Logradouro</Label>
+                    </div>
                     <Input required value={address.logradouro} onChange={(e) => setAddress({...address, logradouro: e.target.value})} className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="NOME DA RUA..." />
                   </div>
                   {isCepValid && (
@@ -452,9 +456,8 @@ export default function CheckoutPage() {
                 </div>
 
                 <div className="mt-6 flex items-center justify-center gap-2 py-2 bg-secondary rounded-lg">
-                  <Clock className="w-3 h-3 text-white" />
-                  <span className="text-[8px] font-black uppercase text-white tracking-widest">
-                    VÁLIDO SOMENTE PARA ESTA COMPRA
+                  <span className="text-[10px] font-black uppercase text-white tracking-widest flex items-center gap-2">
+                    <Clock className="w-3 h-3 text-white" /> VÁLIDO SOMENTE PARA ESTA COMPRA
                   </span>
                 </div>
               </div>
