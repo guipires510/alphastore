@@ -451,9 +451,9 @@ export default function CheckoutPage() {
                   ))}
                 </div>
 
-                <div className="mt-6 flex items-center justify-center gap-2 py-2 bg-secondary/10 rounded-lg">
-                  <Clock className="w-3 h-3 text-secondary" />
-                  <span className="text-[8px] font-black uppercase text-secondary tracking-widest">
+                <div className="mt-6 flex items-center justify-center gap-2 py-2 bg-secondary rounded-lg">
+                  <Clock className="w-3 h-3 text-white" />
+                  <span className="text-[8px] font-black uppercase text-white tracking-widest">
                     VÁLIDO SOMENTE PARA ESTA COMPRA
                   </span>
                 </div>
