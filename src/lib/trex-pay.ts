@@ -1,6 +1,7 @@
+
 /**
  * @fileOverview Serviço de integração com a API Trex Pay.
- * Substitua as constantes abaixo pelas credenciais fornecidas pela Trex Pay no arquivo .env.
+ * Utiliza as credenciais configuradas no arquivo .env.
  */
 
 const TREX_PAY_API_URL = process.env.TREX_PAY_API_URL || 'https://api.trexpay.com.br/v1';
@@ -27,28 +28,35 @@ export interface TrexPaymentResponse {
 }
 
 export async function createPixPayment(data: TrexPaymentRequest): Promise<TrexPaymentResponse> {
-  // Se as chaves não estiverem configuradas, usamos o modo de simulação
+  // Se as chaves não estiverem configuradas, avisamos no console (fallback para simulação removido para segurança em produção)
   if (!TREX_PAY_TOKEN || !TREX_PAY_SECRET) {
-    console.warn("TREX_PAY_TOKEN ou TREX_PAY_SECRET não configurados. Usando modo de simulação.");
-    return simulateTrexPayment(data);
+    console.error("TREX_PAY_TOKEN ou TREX_PAY_SECRET não configurados corretamente.");
+    return {
+      success: false,
+      pixPayload: '',
+      qrCodeUrl: '',
+      paymentId: '',
+      error: 'Configuração de pagamento incompleta.',
+    };
   }
 
   try {
+    // Nota: Em produção, ajuste o endpoint conforme a documentação técnica final da Trex Pay
     const response = await fetch(`${TREX_PAY_API_URL}/payments`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${TREX_PAY_TOKEN}`,
-        'X-Secret-Key': TREX_PAY_SECRET, // Algumas APIs usam o secret em um header específico
+        'X-Secret-Key': TREX_PAY_SECRET,
       },
       body: JSON.stringify({
         payment_method: 'pix',
-        amount: Math.round(data.amount * 100), // Muitas APIs recebem em centavos
+        amount: Math.round(data.amount * 100), // Valor em centavos
         external_id: data.orderId,
         customer: {
           name: data.customer.name,
           email: data.customer.email,
-          document: data.customer.document,
+          document: data.customer.document || "00000000000",
           phone: data.customer.phone,
         }
       }),
@@ -59,9 +67,9 @@ export async function createPixPayment(data: TrexPaymentRequest): Promise<TrexPa
     if (response.ok) {
       return {
         success: true,
-        pixPayload: result.pix_code || result.copy_paste || result.payload,
-        qrCodeUrl: result.qr_code_url || result.image_url || result.qrcode,
-        paymentId: result.id || result.transaction_id,
+        pixPayload: result.pix_code || result.copy_paste || result.payload || '',
+        qrCodeUrl: result.qr_code_url || result.image_url || result.qrcode || '',
+        paymentId: result.id || result.transaction_id || 'N/A',
       };
     } else {
       return {
@@ -82,20 +90,4 @@ export async function createPixPayment(data: TrexPaymentRequest): Promise<TrexPa
       error: 'Falha na conexão com o gateway de pagamento.',
     };
   }
-}
-
-/**
- * Simulação para desenvolvimento enquanto as chaves não são configuradas.
- */
-function simulateTrexPayment(data: TrexPaymentRequest): Promise<TrexPaymentResponse> {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        success: true,
-        pixPayload: `00020126360014BR.GOV.BCB.PIX0114TREXPAYDEMO5204000053039865802BR5920ALPHAFOLW6009SAO PAULO62070503***6304E2B1`,
-        qrCodeUrl: 'https://placehold.co/400x400?text=QR+CODE+TREXPAY',
-        paymentId: `TRX-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
-      });
-    }, 1000);
-  });
 }
