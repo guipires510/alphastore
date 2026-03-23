@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { CircleCheck, QrCode, Copy, Wallet, Loader2, Search, ShieldCheck, Truck, Plus, Flame, Clock } from "lucide-react";
+import { CircleCheck, QrCode, Copy, Wallet, Loader2, Search, ShieldCheck, Truck, Plus, Flame, Clock, Minus, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { doc, setDoc, onSnapshot } from "firebase/firestore";
@@ -20,7 +20,7 @@ import { processTrexPayment } from "@/ai/flows/create-trex-payment-flow";
 import { PRODUCTS } from "@/lib/products";
 
 export default function CheckoutPage() {
-  const { items, total, addItem, clearCart } = useCartStore();
+  const { items, total, addItem, clearCart, updateQuantity, removeItem } = useCartStore();
   const { firestore } = useFirebase();
   const [mounted, setMounted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -352,13 +352,13 @@ export default function CheckoutPage() {
                     </div>
                     <Input required value={address.logradouro} onChange={(e) => setAddress({...address, logradouro: e.target.value})} className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="NOME DA RUA..." />
                   </div>
-                  {isCepValid && (
-                    <div className="md:col-span-3">
-                      <Badge className="w-full justify-center bg-green-600/20 text-green-600 border-green-600/30 h-10 text-[10px] font-black uppercase italic tracking-widest flex items-center gap-2 px-6">
+                  <div className="md:col-span-3">
+                    {isCepValid && (
+                      <Badge className="w-full justify-center bg-green-600/20 text-green-600 border-green-600/30 h-10 text-[10px] font-black uppercase italic tracking-widest flex items-center gap-2 px-6 animate-in fade-in slide-in-from-top-2 duration-300">
                         <Truck className="w-4 h-4" /> FRETE GRÁTIS ALPHA ATIVADO PARA TODO O BRASIL!
                       </Badge>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
@@ -409,13 +409,42 @@ export default function CheckoutPage() {
               <h2 className="text-xl font-black italic uppercase tracking-widest mb-8 border-b pb-4">Resumo do <span className="text-primary">Pedido</span></h2>
               <div className="space-y-6 mb-8">
                 {items.map((item) => (
-                  <div key={`${item.id}-${item.size}-${item.color}`} className="flex gap-4 items-center">
-                    <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-border bg-muted">
+                  <div key={`${item.id}-${item.size}-${item.color}`} className="flex gap-4 items-center pb-4 border-b border-border/30 last:border-0 last:pb-0">
+                    <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-border bg-muted shrink-0">
                       <Image src={item.image} alt={item.name} fill className="object-cover" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-bold uppercase tracking-tight truncate italic text-sm">{item.name}</p>
-                      <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Tam: {item.size} • Qtd: {item.quantity}</p>
+                      <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Tam: {item.size} • Cor: {item.color}</p>
+                      
+                      {/* Controles de Quantidade e Remoção */}
+                      <div className="flex items-center gap-3 mt-2">
+                        <div className="flex items-center border border-border rounded-md overflow-hidden h-7">
+                          <button 
+                            type="button"
+                            onClick={() => updateQuantity(item.id, item.size, item.color, item.quantity - 1)}
+                            className="px-2 hover:bg-muted text-muted-foreground transition-colors"
+                          >
+                            <Minus className="w-3 h-3" />
+                          </button>
+                          <span className="w-7 text-center text-[10px] font-black italic">{item.quantity}</span>
+                          <button 
+                            type="button"
+                            onClick={() => updateQuantity(item.id, item.size, item.color, item.quantity + 1)}
+                            className="px-2 hover:bg-muted text-muted-foreground transition-colors"
+                          >
+                            <Plus className="w-3 h-3" />
+                          </button>
+                        </div>
+                        <button 
+                          type="button"
+                          onClick={() => removeItem(item.id, item.size, item.color)}
+                          className="text-muted-foreground hover:text-destructive transition-colors p-1"
+                          title="Remover item"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                     </div>
                     <div className="flex flex-col items-end">
                       <span className="font-black italic text-sm">R$ {(item.price * item.quantity).toFixed(2)}</span>
