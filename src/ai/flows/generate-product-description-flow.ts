@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview A Genkit flow for generating detailed and appealing product descriptions for underwear items.
@@ -41,6 +42,7 @@ export async function generateProductDescription(
 
 const generateProductDescriptionPrompt = ai.definePrompt({
   name: 'generateProductDescriptionPrompt',
+  model: 'googleai/gemini-1.5-flash-latest',
   input: {schema: GenerateProductDescriptionInputSchema},
   output: {schema: GenerateProductDescriptionOutputSchema},
   prompt: `You are an expert copywriter specializing in e-commerce product descriptions for men's underwear.
