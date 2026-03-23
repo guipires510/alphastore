@@ -121,7 +121,7 @@ export default function CheckoutPage() {
     const checkoutValue = currentTotal;
 
     try {
-      // 1. Criar o pagamento no fluxo Genkit (internamente usa Trex Pay)
+      // 1. Criar o pagamento
       const trexResponse = await processTrexPayment({
         amount: checkoutValue,
         customer: {

@@ -92,29 +92,5 @@ export const PRODUCTS: Product[] = [
     material: 'Microfibra',
     features: ['Tecnologia Sem Costura', 'Secagem Rápida', 'Conforto Térmico'],
     availableColors: ['Pretas', 'Azul Escuro', 'Sortidas']
-  },
-  {
-    id: '4',
-    name: 'Cueca Slip Algodão Clássica',
-    price: 29.90,
-    description: 'O corte clássico que nunca sai de moda. 100% algodão premium para suporte firme e conforto tradicional no dia a dia.',
-    image: 'https://picsum.photos/seed/brief_alpha/800/800',
-    category: 'single',
-    brand: 'Alpha',
-    quantity: 1,
-    material: 'Algodão',
-    features: ['100% Algodão', 'Suporte Firme', 'Design Clássico']
-  },
-  {
-    id: '5',
-    name: 'Cueca Boxer Modal Ultra Soft',
-    price: 49.90,
-    description: 'O ápice da tecnologia em tecidos. Toque frio e conforto inigualável com fibra modal sustentável de alta elasticidade.',
-    image: 'https://picsum.photos/seed/modal_alpha/800/800',
-    category: 'single',
-    brand: 'Alpha',
-    quantity: 1,
-    material: 'Modal',
-    features: ['Toque Frio', 'Sustentável', 'Alta Elasticidade']
   }
 ];
