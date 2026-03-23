@@ -3,7 +3,6 @@
  * Utiliza as credenciais configuradas no arquivo .env.
  */
 
-// URL base atualizada conforme informado pelo usuário
 const TREX_PAY_API_URL = process.env.TREX_PAY_API_URL || 'https://app.trexpay.com.br';
 const TREX_PAY_TOKEN = process.env.TREX_PAY_TOKEN || '16d4f85d-28e6-46b3-86ab-321c9263e8b9';
 const TREX_PAY_SECRET = process.env.TREX_PAY_SECRET || '135a8d03-2d43-4a78-9020-cf712d2acaa3';
@@ -28,7 +27,6 @@ export interface TrexPaymentResponse {
 }
 
 export async function createPixPayment(data: TrexPaymentRequest): Promise<TrexPaymentResponse> {
-  // Verificação de segurança das chaves
   if (!TREX_PAY_TOKEN || !TREX_PAY_SECRET) {
     return {
       success: false,
@@ -39,9 +37,10 @@ export async function createPixPayment(data: TrexPaymentRequest): Promise<TrexPa
     };
   }
 
+  // Define o endpoint final. Se a URL base já incluir a versão, ajustamos aqui.
+  const endpoint = `${TREX_PAY_API_URL.replace(/\/$/, '')}/api/v1/payments`;
+
   try {
-    // Preparação do payload seguindo o padrão REST da Trex Pay
-    // Nota: Algumas APIs usam cents, outras o valor float. Mantemos cents por segurança.
     const payload = {
       payment_method: 'pix',
       amount: Math.round(data.amount * 100), // Valor em centavos
@@ -53,12 +52,6 @@ export async function createPixPayment(data: TrexPaymentRequest): Promise<TrexPa
         phone: data.customer.phone.replace(/\D/g, ""),
       }
     };
-
-    // A rota exata pode variar entre /api/v1/payments ou apenas /payments. 
-    // Tentamos /api/v1/payments como padrão de API REST.
-    const endpoint = `${TREX_PAY_API_URL}/api/v1/payments`;
-    
-    console.log(`[TrexPay] Iniciando requisição para ${endpoint}`);
 
     const response = await fetch(endpoint, {
       method: 'POST',
@@ -73,7 +66,6 @@ export async function createPixPayment(data: TrexPaymentRequest): Promise<TrexPa
     const result = await response.json();
 
     if (response.ok) {
-      // Mapeamento flexível de campos de resposta
       return {
         success: true,
         pixPayload: result.pix_code || result.copy_paste || result.payload || result.pix_payload || result.data?.pix_code || '',
@@ -81,7 +73,6 @@ export async function createPixPayment(data: TrexPaymentRequest): Promise<TrexPa
         paymentId: result.id || result.transaction_id || result.data?.id || 'N/A',
       };
     } else {
-      console.error('[TrexPay] Erro na resposta da API:', result);
       return {
         success: false,
         pixPayload: '',
@@ -91,13 +82,12 @@ export async function createPixPayment(data: TrexPaymentRequest): Promise<TrexPa
       };
     }
   } catch (error: any) {
-    console.error('[TrexPay] Falha crítica de conexão:', error);
     return {
       success: false,
       pixPayload: '',
       qrCodeUrl: '',
       paymentId: '',
-      error: `Erro de Conexão: Certifique-se de que a URL ${TREX_PAY_API_URL} está correta e que o servidor permite chamadas externas. Detalhe: ${error.message}`,
+      error: `Erro de Conexão: Falha ao acessar ${endpoint}. Verifique se a URL está correta e se o servidor aceita conexões. Detalhe: ${error.message}`,
     };
   }
 }
