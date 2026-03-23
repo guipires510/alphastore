@@ -63,8 +63,9 @@ export default function ContactPage() {
                   <MapPin className="w-6 h-6" />
                 </div>
                 <div>
-                  <h4 className="font-black italic uppercase text-sm mb-1">Centro de Distribuição</h4>
-                  <p className="text-xs text-muted-foreground uppercase tracking-widest">São Paulo, SP - Brasil</p>
+                  <h4 className="font-black italic uppercase text-sm mb-1">Showroom Alpha</h4>
+                  <p className="text-xs text-muted-foreground uppercase tracking-widest font-bold">Shopping Morumbi - Loja 205, Piso 2</p>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-widest">São Paulo, SP - Brasil</p>
                 </div>
               </div>
             </div>
