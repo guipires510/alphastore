@@ -17,7 +17,8 @@ import { cn } from "@/lib/utils";
 import { SecureTransition } from "@/components/secure-transition";
 
 export default function ProductDetailPage() {
-  const { id } = useParams();
+  const params = useParams();
+  const id = params?.id as string;
   const router = useRouter();
   const { toast } = useToast();
   const addItem = useCartStore((state) => state.addItem);
@@ -38,7 +39,7 @@ export default function ProductDetailPage() {
     { name: "Sortidas", hex: "linear-gradient(45deg, #000, #808080, #fff, #00008b)" },
   ];
 
-  const reviewsByProduct = useMemo(() => ({
+  const reviewsByProduct: Record<string, any[]> = useMemo(() => ({
     "lupo-10": [
       { id: 1, name: "RICARDO S.", date: "Há 2 dias", rating: 5, comment: "MELHOR CUSTO BENEFÍCIO QUE JÁ ENCONTREI. O MATERIAL É REALMENTE PREMIUM E NÃO ENROLA NA PERNA. COMPREI O KIT DE 10 E VALE CADA CENTAVO.", verified: true },
       { id: 2, name: "MARCOS A.", date: "Há 1 semana", rating: 5, comment: "ENTREGA MUITO RÁPIDA! O SUPORTE NO WHATSAPP FOI NOTA 10. AS CUECAS SÃO EXTREMAMENTE CONFORTÁVEIS PARA TREINAR.", verified: true },
@@ -59,20 +60,15 @@ export default function ProductDetailPage() {
       { id: 2, name: "BRUNO C.", date: "Há 5 dias", rating: 5, comment: "SEM COSTURA É VIDA. NÃO INCOMODA NADA DURANTE O DIA TODO, PARECE QUE NÃO ESTOU USANDO NADA.", verified: true },
       { id: 3, name: "MATEUS G.", date: "Há 10 dias", rating: 5, comment: "QUALIDADE LUPO DISPENSA COMENTÁRIOS. O AJUSTE É MUITO MELHOR QUE AS MARCAS BARATAS.", verified: true }
     ],
-    "4": [
-      { id: 1, name: "FÁBIO J.", date: "Há 8 dias", rating: 5, comment: "SLIP CLÁSSICA E MUITO CONFORTÁVEL. DIFÍCIL ACHAR ALGODÃO DESSA QUALIDADE HOJE EM DIA.", verified: true },
-      { id: 2, name: "DANIEL S.", date: "Há 15 dias", rating: 4, comment: "BOM SUPORTE E O TAMANHO SEGUE O PADRÃO BRASILEIRO. RECOMENDO.", verified: true },
-      { id: 3, name: "SÉRGIO P.", date: "Há 20 dias", rating: 5, comment: "A QUALIDADE DA MARCA ALPHA ME SURPREENDEU POSITIVAMENTE. VOU COMPRAR O KIT AGORA.", verified: true }
-    ],
-    "5": [
-      { id: 1, name: "ALEX K.", date: "Há 1 dia", rating: 5, comment: "MODAL É SIMPLESMENTE O MELHOR TECIDO QUE JÁ EXISTIU. O TOQUE É MUITO MACIO E FRESCO.", verified: true },
-      { id: 2, name: "RAFAEL V.", date: "Há 3 dias", rating: 5, comment: "TOQUE FRIO MUITO GOSTOSO PARA USAR NO VERÃO. ALTA ELASTICIDADE SEM DEFORMAR.", verified: true },
-      { id: 3, name: "LEONARDO M.", date: "Há 1 semana", rating: 5, comment: "VALE O INVESTIMENTO PELA TECNOLOGIA DO TECIDO. MUITO SUPERIOR AO ALGODÃO COMUM.", verified: true }
+    "default": [
+      { id: 1, name: "ALFA T.", date: "Há 1 dia", rating: 5, comment: "PRODUTO DE ALTÍSSIMA QUALIDADE. O TOQUE DO TECIDO É SURPREENDENTE.", verified: true },
+      { id: 2, name: "BRUNO V.", date: "Há 3 dias", rating: 5, comment: "ENTREGA SUPER RÁPIDA E EMBALAGEM MUITO BEM FEITA. ALPHA É ALPHA.", verified: true },
+      { id: 3, name: "MÁRCIO R.", date: "Há 1 semana", rating: 5, comment: "RECOMENDO PARA QUEM QUER CONFORTO NO DIA A DIA.", verified: true }
     ]
   }), []);
 
   const currentReviews = useMemo(() => {
-    return reviewsByProduct[id as keyof typeof reviewsByProduct] || reviewsByProduct["lupo-10"];
+    return reviewsByProduct[id] || reviewsByProduct["default"];
   }, [id, reviewsByProduct]);
 
   useEffect(() => {
@@ -366,7 +362,7 @@ export default function ProductDetailPage() {
                 <div className="flex items-center justify-between">
                   <div className="flex gap-0.5">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className={`w-3 h-3 ${i < review.rating ? 'fill-primary text-primary' : 'text-muted'}`} />
+                      <Star key={i} className={`w-3 h-3 ${i < review.rating ? 'fill-primary text-primary' : 'text-muted-foreground'}`} />
                     ))}
                   </div>
                   <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{review.date}</span>

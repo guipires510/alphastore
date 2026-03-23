@@ -188,7 +188,7 @@ export default function CheckoutPage() {
       };
 
       const orderRef = doc(firestore, 'orders', newOrderId);
-      setDoc(orderRef, orderData).catch(async (error) => {
+      await setDoc(orderRef, orderData).catch(async (error) => {
         const permissionError = new FirestorePermissionError({
           path: orderRef.path,
           operation: 'create',
@@ -252,7 +252,14 @@ export default function CheckoutPage() {
                 <div className="bg-white p-6 rounded-xl inline-block shadow-inner mx-auto">
                   <div className="w-48 h-48 relative flex items-center justify-center">
                     {pixData.qrCode ? (
-                      <img src={pixData.qrCode} alt="QR Code PIX" className="w-40 h-40" />
+                      <Image 
+                        src={pixData.qrCode} 
+                        alt="QR Code PIX" 
+                        width={160} 
+                        height={160}
+                        className="w-40 h-40" 
+                        unoptimized
+                      />
                     ) : (
                       <QrCode className="w-40 h-40 text-black" strokeWidth={1.5} />
                     )}
@@ -417,7 +424,6 @@ export default function CheckoutPage() {
                       <p className="font-bold uppercase tracking-tight truncate italic text-sm">{item.name}</p>
                       <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Tam: {item.size} • Cor: {item.color}</p>
                       
-                      {/* Controles de Quantidade e Remoção */}
                       <div className="flex items-center gap-3 mt-2">
                         <div className="flex items-center border border-border rounded-md overflow-hidden h-7">
                           <button 
@@ -487,7 +493,6 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            {/* Upsell Section */}
             {!isPaid && upsellProducts.length > 0 && (
               <div className="bg-card border-2 border-primary/30 rounded-xl p-6 shadow-xl relative overflow-hidden group">
                 <div className="absolute top-0 right-0 p-2">
