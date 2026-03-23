@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useCartStore } from "@/lib/store";
@@ -41,7 +42,8 @@ export default function CheckoutPage() {
   const [customer, setCustomer] = useState({
     name: "",
     email: "",
-    whatsapp: ""
+    whatsapp: "",
+    document: ""
   });
   const [isFetchingCep, setIsFetchingCep] = useState(false);
 
@@ -101,6 +103,16 @@ export default function CheckoutPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (customer.document.replace(/\D/g, "").length !== 11 && customer.document.replace(/\D/g, "").length !== 14) {
+      toast({
+        title: "Documento Inválido",
+        description: "Por favor, insira um CPF ou CNPJ válido.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsProcessing(true);
     
     const newOrderId = `ALPHA-${Math.floor(Math.random() * 99999)}`;
@@ -236,7 +248,7 @@ export default function CheckoutPage() {
           <div className="space-y-8">
             <div className="bg-card border border-border rounded-xl p-6 md:p-8">
               <h2 className="text-xl font-black italic uppercase tracking-widest mb-6 flex items-center gap-2">
-                <div className="w-1.5 h-6 bg-primary" /> Dados de Entrega
+                <div className="w-1.5 h-6 bg-primary" /> Dados do Cliente
               </h2>
               <form id="checkout-form" onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -245,15 +257,24 @@ export default function CheckoutPage() {
                     <Input required value={customer.name} onChange={(e) => setCustomer({...customer, name: e.target.value})} className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="EX: JOÃO SILVA" />
                   </div>
                   <div className="space-y-2">
+                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">CPF / CNPJ</Label>
+                    <Input required value={customer.document} onChange={(e) => setCustomer({...customer, document: e.target.value})} className="bg-muted/50 border-border h-12 text-xs font-bold" placeholder="000.000.000-00" />
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">E-mail</Label>
+                    <Input required type="email" value={customer.email} onChange={(e) => setCustomer({...customer, email: e.target.value})} className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="E-MAIL@EXEMPLO.COM" />
+                  </div>
+                  <div className="space-y-2">
                     <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">WhatsApp</Label>
                     <Input required value={customer.whatsapp} onChange={(e) => setCustomer({...customer, whatsapp: e.target.value})} className="bg-muted/50 border-border h-12 text-xs font-bold" placeholder="(00) 00000-0000" />
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">E-mail</Label>
-                  <Input required type="email" value={customer.email} onChange={(e) => setCustomer({...customer, email: e.target.value})} className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="E-MAIL@EXEMPLO.COM" />
-                </div>
                 
+                <h2 className="text-xl font-black italic uppercase tracking-widest mt-12 mb-6 flex items-center gap-2">
+                  <div className="w-1.5 h-6 bg-primary" /> Endereço de Entrega
+                </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="md:col-span-1 space-y-2">
                     <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">

@@ -13,6 +13,7 @@
             "name": { "type": "string" },
             "email": { "type": "string", "format": "email" },
             "whatsapp": { "type": "string" },
+            "document": { "type": "string", "description": "CPF ou CNPJ do cliente" },
             "address": {
               "type": "object",
               "properties": {

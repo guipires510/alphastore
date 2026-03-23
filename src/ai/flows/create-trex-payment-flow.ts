@@ -1,3 +1,4 @@
+
 'use server';
 /**
  * @fileOverview Fluxo Genkit para processar pagamentos via Trex Pay de forma segura.
@@ -13,6 +14,7 @@ const CreateTrexPaymentInputSchema = z.object({
     name: z.string(),
     email: z.string().email(),
     whatsapp: z.string(),
+    document: z.string(),
   }),
   orderId: z.string(),
 });
@@ -46,7 +48,7 @@ const createTrexPaymentFlow = ai.defineFlow(
         name: input.customer.name,
         email: input.customer.email,
         phone: input.customer.whatsapp,
-        document: "000.000.000-00", // CPF deve ser coletado no checkout para produção
+        document: input.customer.document,
       },
       orderId: input.orderId,
     });
