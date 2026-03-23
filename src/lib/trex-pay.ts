@@ -100,12 +100,21 @@ export async function createPixPayment(data: TrexPaymentRequest): Promise<TrexPa
         paymentId,
       };
     } else {
+      let errorMessage = result.message || result.error || "A operadora de pagamento recusou a solicitação.";
+      if (result.errors) {
+        // Collect detailed field errors (e.g. {"email": ["O e-mail é inválido"]})
+        const details = Object.values(result.errors).flat().join(" ");
+        if (details) {
+          errorMessage = `${errorMessage}: ${details}`;
+        }
+      }
+      
       return {
         success: false,
         pixPayload: '',
         qrCodeUrl: '',
         paymentId: '',
-        error: result.message || result.error || "A operadora de pagamento recusou a solicitação.",
+        error: errorMessage,
       };
     }
   } catch (error: any) {

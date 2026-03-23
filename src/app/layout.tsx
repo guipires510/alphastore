@@ -1,13 +1,29 @@
 
 import type {Metadata} from 'next';
+import { Inter } from 'next/font/google';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { MessageCircle } from "lucide-react";
 import { FirebaseClientProvider } from '@/firebase/index';
 
+const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--font-inter' });
+
 export const metadata: Metadata = {
   title: 'AlphaFlow Underwear | Estilo e Conforto Masculino',
   description: 'A melhor loja de cuecas masculinas premium. Kits exclusivos com entrega rápida.',
+  openGraph: {
+    title: 'AlphaFlow Underwear | Estilo e Conforto Masculino',
+    description: 'A melhor loja de cuecas masculinas premium. Kits exclusivos com entrega rápida.',
+    url: 'https://alphaflow-underwear.vercel.app',
+    siteName: 'AlphaFlow',
+    locale: 'pt_BR',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'AlphaFlow Underwear | Estilo e Conforto Masculino',
+    description: 'A melhor loja de cuecas masculinas premium.',
+  },
 };
 
 export default function RootLayout({
@@ -17,12 +33,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className="dark">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-      </head>
-      <body className="font-body antialiased bg-background text-foreground min-h-screen">
+      <body className={`font-body antialiased bg-background text-foreground min-h-screen ${inter.variable} ${inter.className}`}>
         <FirebaseClientProvider>
           {children}
           <a

@@ -19,20 +19,6 @@ export interface Product {
 
 export const PRODUCTS: Product[] = [
   {
-    id: 'teste-alpha',
-    name: 'Produto de Teste AlphaFlow',
-    price: 1.00,
-    originalPrice: 10.00,
-    description: 'Produto exclusivo para validação técnica de checkout e integração de pagamentos PIX. Garanta a melhor experiência Alpha.',
-    image: 'https://picsum.photos/seed/test_alpha/800/800',
-    category: 'single',
-    brand: 'Alpha',
-    quantity: 1,
-    material: 'Premium Test Material',
-    features: ['Validação de Pagamento', 'Aprovação Imediata', 'Suporte Técnico'],
-    availableColors: ['Sortidas']
-  },
-  {
     id: 'lupo-10',
     name: 'Kit Com 10 Cuecas Boxer Algodão Lupo',
     price: 59.90,

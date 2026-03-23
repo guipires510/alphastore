@@ -41,6 +41,7 @@ export default function Home() {
           alt="AlphaFlow Hero"
           fill
           priority
+          sizes="100vw"
           className="object-cover brightness-50"
           data-ai-hint="male model underwear"
         />
@@ -128,6 +129,7 @@ export default function Home() {
                 src={featuredImage}
                 alt={featuredProduct.name}
                 fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
                 data-ai-hint="luxury underwear"
               />

@@ -183,14 +183,22 @@ export default function CheckoutPage() {
       };
 
       const orderRef = doc(firestore, 'orders', newOrderId);
-      await setDoc(orderRef, orderData).catch(async (error) => {
-        const permissionError = new FirestorePermissionError({
-          path: orderRef.path,
-          operation: 'create',
-          requestResourceData: orderData,
-        });
-        errorEmitter.emit('permission-error', permissionError);
-      });
+      try {
+        const setDocPromise = setDoc(orderRef, orderData);
+        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("firebase_timeout")), 5000));
+        await Promise.race([setDocPromise, timeoutPromise]);
+      } catch (error: any) {
+        if (error.message === "firebase_timeout") {
+          console.warn("A conexão com o banco de dados falhou por timeout (chaves do Firebase incorretas?). Simulação continuará offline para exibição na UI.");
+        } else {
+          const permissionError = new FirestorePermissionError({
+            path: orderRef.path,
+            operation: 'create',
+            requestResourceData: orderData,
+          });
+          errorEmitter.emit('permission-error', permissionError);
+        }
+      }
 
       setOrderId(newOrderId);
       setPixData({ payload: paymentResponse.pixPayload, qrCode: paymentResponse.qrCodeUrl });
