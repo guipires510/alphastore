@@ -5,13 +5,12 @@ import { Navbar } from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { CircleCheck, QrCode, Copy, Wallet, Loader2, Search, ShieldCheck, Truck } from "lucide-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import { PRODUCTS } from "@/lib/products";
 import { doc, setDoc } from "firebase/firestore";
 import { initializeFirebase } from "@/firebase/index";
 import { errorEmitter } from '@/firebase/error-emitter';
@@ -277,24 +276,22 @@ export default function CheckoutPage() {
                     <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                       CEP {isFetchingCep && <Loader2 className="w-3 h-3 animate-spin text-primary" />}
                     </Label>
-                    <div className="space-y-2">
-                      <div className="relative">
-                        <Input required value={cep} onChange={handleCepChange} className={`bg-muted/50 border-border h-12 text-xs font-bold pr-10 transition-all ${isCepValid ? 'ring-2 ring-green-600/30 border-green-600/30' : ''}`} placeholder="00000-000" />
-                        <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground opacity-50" />
-                      </div>
-                      {isCepValid && (
-                        <div className="flex items-center gap-2 py-1">
-                          <Badge className="bg-green-600/20 text-green-600 border-green-600/30 text-[9px] font-black uppercase italic tracking-widest flex items-center gap-1.5 px-3">
-                            <Truck className="w-3 h-3" /> FRETE GRÁTIS ATIVADO!
-                          </Badge>
-                        </div>
-                      )}
+                    <div className="relative">
+                      <Input required value={cep} onChange={handleCepChange} className={`bg-muted/50 border-border h-12 text-xs font-bold pr-10 transition-all ${isCepValid ? 'ring-2 ring-green-600/30 border-green-600/30' : ''}`} placeholder="00000-000" />
+                      <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground opacity-50" />
                     </div>
                   </div>
                   <div className="md:col-span-2 space-y-2">
                     <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Rua / Logradouro</Label>
                     <Input required value={address.logradouro} onChange={(e) => setAddress({...address, logradouro: e.target.value})} className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="NOME DA RUA..." />
                   </div>
+                  {isCepValid && (
+                    <div className="md:col-span-3">
+                      <Badge className="w-full justify-center bg-green-600/20 text-green-600 border-green-600/30 h-10 text-[10px] font-black uppercase italic tracking-widest flex items-center gap-2 px-6">
+                        <Truck className="w-4 h-4" /> FRETE GRÁTIS ALPHA ATIVADO PARA TODO O BRASIL!
+                      </Badge>
+                    </div>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
