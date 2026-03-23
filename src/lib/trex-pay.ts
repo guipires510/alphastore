@@ -1,10 +1,8 @@
 /**
- * @fileOverview Serviço de integração com a API Trex Pay.
- * Utiliza as credenciais configuradas no arquivo .env.
+ * @fileOverview Serviço de integração com a API Trex Pay seguindo a documentação oficial.
  */
 
-// Geralmente APIs de pagamento usam o subdomínio 'api' para integrações técnicas
-const TREX_PAY_API_URL = 'https://api.trexpay.com.br';
+const TREX_PAY_ENDPOINT = 'https://app.trexpay.com.br/api/wallet/deposit/payment';
 const TREX_PAY_TOKEN = '16d4f85d-28e6-46b3-86ab-321c9263e8b9';
 const TREX_PAY_SECRET = '135a8d03-2d43-4a78-9020-cf712d2acaa3';
 
@@ -38,28 +36,28 @@ export async function createPixPayment(data: TrexPaymentRequest): Promise<TrexPa
     };
   }
 
-  // Endpoint padrão para criação de PIX
-  const endpoint = `${TREX_PAY_API_URL}/api/v1/pix`;
-
   try {
+    // Montando o payload exatamente como na documentação enviada
     const payload = {
-      amount: Math.round(data.amount * 100), // Valor em centavos
-      external_id: data.orderId,
-      customer: {
-        name: data.customer.name,
-        email: data.customer.email,
-        document: data.customer.document.replace(/\D/g, "") || "00000000000",
-        phone: data.customer.phone.replace(/\D/g, ""),
-      }
+      token: TREX_PAY_TOKEN,
+      secret: TREX_PAY_SECRET,
+      postback: `https://alphaflow-ecommerce.web.app/api/webhook/trex?orderId=${data.orderId}`,
+      amount: data.amount, // Valor como número decimal (ex: 59.90)
+      debtor_name: data.customer.name,
+      email: data.customer.email,
+      debtor_document_number: data.customer.document.replace(/\D/g, "") || "00000000000",
+      phone: data.customer.phone.replace(/\D/g, ""),
+      method_pay: "pix",
+      src: "alphaflow_store",
+      utm_source: "direct",
+      utm_campaign: "checkout_alpha"
     };
 
-    const response = await fetch(endpoint, {
+    const response = await fetch(TREX_PAY_ENDPOINT, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'Authorization': `Bearer ${TREX_PAY_TOKEN}`,
-        'X-Secret-Key': TREX_PAY_SECRET,
       },
       body: JSON.stringify(payload),
     });
@@ -75,15 +73,25 @@ export async function createPixPayment(data: TrexPaymentRequest): Promise<TrexPa
         pixPayload: '',
         qrCodeUrl: '',
         paymentId: '',
-        error: `Erro de formato na resposta (HTML recebido). Status: ${response.status}. Verifique se o endpoint ${endpoint} está correto.`,
+        error: `Resposta inválida do servidor (HTML). Status: ${response.status}. Verifique o endpoint.`,
       };
     }
 
-    if (response.ok) {
-      // Mapeamento flexível de campos para diferentes versões da API
+    if (response.ok || result.status === 'success' || result.success === true) {
+      // Mapeamento flexível baseado em retornos comuns de gateways
       const pixPayload = result.pix_code || result.copy_paste || result.payload || result.pix_payload || (result.data && result.data.pix_code) || '';
       const qrCodeUrl = result.qr_code_url || result.image_url || result.qrcode || result.qr_code || (result.data && result.data.qr_code_url) || '';
-      const paymentId = result.id || result.transaction_id || (result.data && result.data.id) || 'N/A';
+      const paymentId = result.id || result.transaction_id || result.payment_id || (result.data && result.data.id) || 'N/A';
+
+      if (!pixPayload) {
+        return {
+          success: false,
+          pixPayload: '',
+          qrCodeUrl: '',
+          paymentId: '',
+          error: result.message || 'PIX gerado, mas código não retornado pela API.',
+        };
+      }
 
       return {
         success: true,
@@ -97,7 +105,7 @@ export async function createPixPayment(data: TrexPaymentRequest): Promise<TrexPa
         pixPayload: '',
         qrCodeUrl: '',
         paymentId: '',
-        error: result.message || result.error || (result.errors && result.errors[0] && result.errors[0].message) || `Erro na API Trex Pay (Status ${response.status})`,
+        error: result.message || result.error || "Erro ao processar pagamento na Trex Pay.",
       };
     }
   } catch (error: any) {
@@ -106,7 +114,7 @@ export async function createPixPayment(data: TrexPaymentRequest): Promise<TrexPa
       pixPayload: '',
       qrCodeUrl: '',
       paymentId: '',
-      error: `Falha na comunicação com a Trex Pay: ${error.message}`,
+      error: `Falha de conexão com a Trex Pay: ${error.message}`,
     };
   }
 }
