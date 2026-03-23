@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { useState, useEffect, useMemo } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { CircleCheck, QrCode, Copy, Wallet, Loader2, Search, Sparkles, ShieldCheck, Truck } from "lucide-react";
+import { CircleCheck, QrCode, Copy, Wallet, Loader2, Search, ShieldCheck, Truck } from "lucide-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { PRODUCTS } from "@/lib/products";
@@ -19,7 +19,7 @@ import { FirestorePermissionError } from '@/firebase/errors';
 import { processTrexPayment } from "@/ai/flows/create-trex-payment-flow";
 
 export default function CheckoutPage() {
-  const { items, total, clearCart, addItem } = useCartStore();
+  const { items, total, clearCart } = useCartStore();
   const [mounted, setMounted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
@@ -47,12 +47,9 @@ export default function CheckoutPage() {
   });
   const [isFetchingCep, setIsFetchingCep] = useState(false);
 
-  // CPF Validation logic for Free Shipping
+  // Validation logic
+  const isCepValid = cep.replace(/\D/g, "").length === 8;
   const isCpfValid = customer.document.replace(/\D/g, "").length === 11;
-
-  const orderBumps = useMemo(() => {
-    return PRODUCTS.filter(p => p.category === 'single').slice(0, 2);
-  }, []);
 
   useEffect(() => {
     setMounted(true);
@@ -178,11 +175,6 @@ export default function CheckoutPage() {
     }
   };
 
-  const handleAddBump = (product: any) => {
-    addItem({ id: product.id, name: product.name, price: product.price, image: product.image, quantity: 1, size: "G", color: "Sortidas" });
-    toast({ title: "Oferta Ativada!", description: "Item adicionado ao seu carrinho Alpha." });
-  };
-
   if (orderComplete) {
     return (
       <div className="flex flex-col min-h-screen pt-24 pb-12">
@@ -231,7 +223,7 @@ export default function CheckoutPage() {
 
             <div className="pt-8 border-t flex flex-col gap-4">
               <div className="flex justify-between font-black italic uppercase">
-                <span>Total a Pagar:</span>
+                <span>Total Final:</span>
                 <span className="text-primary text-2xl">R$ {finalValue.toFixed(2)}</span>
               </div>
               <Button onClick={() => router.push("/")} className="w-full bg-foreground text-background font-black italic uppercase tracking-widest h-14 cta-button">
@@ -263,19 +255,8 @@ export default function CheckoutPage() {
                     <Input required value={customer.name} onChange={(e) => setCustomer({...customer, name: e.target.value})} className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="EX: JOÃO SILVA" />
                   </div>
                   <div className="space-y-2">
-                    <div className="flex justify-between items-center h-4">
-                      <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">CPF (Obrigatório)</Label>
-                    </div>
-                    <div className="relative">
-                      <Input required maxLength={11} value={customer.document} onChange={(e) => setCustomer({...customer, document: e.target.value.replace(/\D/g, "")})} className={`bg-muted/50 border-border h-12 text-xs font-bold transition-all ${isCpfValid ? 'ring-2 ring-green-600/30 border-green-600/30' : ''}`} placeholder="000.000.000-00" />
-                      {isCpfValid && (
-                        <div className="absolute -bottom-6 left-0">
-                          <Badge className="bg-green-600/20 text-green-600 border-green-600/30 text-[8px] font-black uppercase italic tracking-widest flex items-center gap-1">
-                            <Truck className="w-2.5 h-2.5" /> FRETE GRÁTIS ATIVADO!
-                          </Badge>
-                        </div>
-                      )}
-                    </div>
+                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">CPF (Somente 11 números)</Label>
+                    <Input required maxLength={11} value={customer.document} onChange={(e) => setCustomer({...customer, document: e.target.value.replace(/\D/g, "")})} className="bg-muted/50 border-border h-12 text-xs font-bold" placeholder="00000000000" />
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
@@ -298,8 +279,15 @@ export default function CheckoutPage() {
                       CEP {isFetchingCep && <Loader2 className="w-3 h-3 animate-spin text-primary" />}
                     </Label>
                     <div className="relative">
-                      <Input required value={cep} onChange={handleCepChange} className="bg-muted/50 border-border h-12 text-xs font-bold pr-10" placeholder="00000-000" />
+                      <Input required value={cep} onChange={handleCepChange} className={`bg-muted/50 border-border h-12 text-xs font-bold pr-10 transition-all ${isCepValid ? 'ring-2 ring-green-600/30 border-green-600/30' : ''}`} placeholder="00000-000" />
                       <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground opacity-50" />
+                      {isCepValid && (
+                        <div className="absolute -bottom-6 left-0">
+                          <Badge className="bg-green-600/20 text-green-600 border-green-600/30 text-[8px] font-black uppercase italic tracking-widest flex items-center gap-1">
+                            <Truck className="w-2.5 h-2.5" /> FRETE GRÁTIS ATIVADO!
+                          </Badge>
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className="md:col-span-2 space-y-2">
@@ -308,7 +296,7 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
                   <div className="md:col-span-1 space-y-2">
                     <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Número</Label>
                     <Input required value={address.numero} onChange={(e) => setAddress({...address, numero: e.target.value})} className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="123" />
@@ -343,7 +331,7 @@ export default function CheckoutPage() {
                   </div>
                   <div>
                     <p className="font-black italic uppercase text-lg leading-none">PIX</p>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-primary mt-1">Aprovação Imediata • Envio Alpha</p>
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-primary mt-1">Aprovação Imediata • Envio Prioritário</p>
                   </div>
                 </div>
                 <div className="w-6 h-6 rounded-full border-4 border-primary bg-white" />
@@ -378,10 +366,10 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex justify-between items-center text-muted-foreground">
                   <span>Frete:</span>
-                  {isCpfValid ? (
+                  {isCepValid ? (
                     <span className="text-green-600 font-black italic">GRÁTIS</span>
                   ) : (
-                    <span className="text-[8px] italic">Preencha o CPF...</span>
+                    <span className="text-[8px] italic">Digite o CEP...</span>
                   )}
                 </div>
                 <div className="flex justify-between text-xl font-black italic pt-4 border-t border-border/50 text-foreground">
