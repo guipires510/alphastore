@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useCartStore } from "@/lib/store";
@@ -11,7 +12,7 @@ import { useRouter } from "next/navigation";
 import { CircleCheck, QrCode, Copy, Wallet, Loader2, Search, ShieldCheck, Truck, Plus, Flame, Clock } from "lucide-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, onSnapshot } from "firebase/firestore";
 import { initializeFirebase } from "@/firebase/index";
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
@@ -23,6 +24,7 @@ export default function CheckoutPage() {
   const [mounted, setMounted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [orderComplete, setOrderComplete] = useState(false);
+  const [isPaid, setIsPaid] = useState(false);
   const [orderId, setOrderId] = useState("");
   const [pixData, setPixData] = useState({ payload: "", qrCode: "" });
   const [finalValue, setFinalValue] = useState(0);
@@ -53,6 +55,29 @@ export default function CheckoutPage() {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Listen for payment confirmation in real-time
+  useEffect(() => {
+    if (orderComplete && orderId) {
+      const { firestore } = initializeFirebase();
+      const orderRef = doc(firestore, 'orders', orderId);
+      
+      const unsubscribe = onSnapshot(orderRef, (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.data();
+          if (data.status === 'paid') {
+            setIsPaid(true);
+            toast({
+              title: "Pagamento Confirmado!",
+              description: "Sua compra foi aprovada e já está em processamento.",
+            });
+          }
+        }
+      });
+      
+      return () => unsubscribe();
+    }
+  }, [orderComplete, orderId, toast]);
 
   const handleCepChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value.replace(/\D/g, "").substring(0, 8);
@@ -199,45 +224,63 @@ export default function CheckoutPage() {
         <Navbar />
         <div className="container mx-auto px-4 max-w-2xl text-center">
           <div className="bg-card border border-border rounded-2xl p-8 md:p-12 shadow-2xl space-y-8">
-            <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto text-primary">
-              <CircleCheck className="w-12 h-12" />
-            </div>
-            <h1 className="text-3xl md:text-5xl font-black italic uppercase tracking-tighter">Pedido <span className="text-primary">Recebido!</span></h1>
-            <p className="text-muted-foreground uppercase tracking-widest font-medium text-sm">
-              Seu pedido {orderId} foi gerado. <br />
-              Pague agora via <span className="text-primary font-bold">PIX</span> para garantir seu envio prioritário.
-            </p>
-
-            <div className="bg-white p-6 rounded-xl inline-block shadow-inner mx-auto">
-              <div className="w-48 h-48 relative flex items-center justify-center">
-                {pixData.qrCode ? (
-                  <img src={pixData.qrCode} alt="QR Code PIX" className="w-40 h-40" />
-                ) : (
-                  <QrCode className="w-40 h-40 text-black" strokeWidth={1.5} />
-                )}
+            {isPaid ? (
+              <div className="space-y-6 animate-in zoom-in duration-500">
+                <div className="w-20 h-20 bg-green-600/10 rounded-full flex items-center justify-center mx-auto text-green-600 border-2 border-green-600">
+                  <CircleCheck className="w-12 h-12" />
+                </div>
+                <h1 className="text-3xl md:text-5xl font-black italic uppercase tracking-tighter">Pagamento <span className="text-green-600">Aprovado!</span></h1>
+                <p className="text-muted-foreground uppercase tracking-widest font-medium text-sm">
+                  Sua compra foi confirmada com sucesso. <br />
+                  Seu pedido <span className="text-foreground font-black">{orderId}</span> já está em separação para envio imediato.
+                </p>
+                <div className="bg-green-600/10 border border-green-600/30 p-4 rounded-xl inline-block">
+                  <p className="text-[10px] text-green-600 font-black uppercase tracking-[0.2em] italic">Status: Preparando para envio</p>
+                </div>
               </div>
-              <p className="text-[10px] text-black/40 font-bold uppercase tracking-widest mt-2">Aponte a câmera do banco</p>
-            </div>
+            ) : (
+              <>
+                <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto text-primary">
+                  <Wallet className="w-12 h-12" />
+                </div>
+                <h1 className="text-3xl md:text-5xl font-black italic uppercase tracking-tighter">Pedido <span className="text-primary">Recebido!</span></h1>
+                <p className="text-muted-foreground uppercase tracking-widest font-medium text-sm">
+                  Seu pedido {orderId} foi gerado. <br />
+                  Pague agora via <span className="text-primary font-bold">PIX</span> para garantir seu envio prioritário.
+                </p>
 
-            <div className="space-y-4">
-              <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">PIX Copia e Cola</Label>
-              <div className="bg-muted p-4 rounded-lg flex items-center justify-between gap-4 border border-primary/20">
-                <code className="text-[10px] font-mono break-all text-left line-clamp-2">
-                  {pixData.payload}
-                </code>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="shrink-0 hover:bg-primary/20 text-primary" 
-                  onClick={() => {
-                    navigator.clipboard.writeText(pixData.payload);
-                    toast({ title: "Copiado!", description: "Código PIX copiado." });
-                  }}
-                >
-                  <Copy className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
+                <div className="bg-white p-6 rounded-xl inline-block shadow-inner mx-auto">
+                  <div className="w-48 h-48 relative flex items-center justify-center">
+                    {pixData.qrCode ? (
+                      <img src={pixData.qrCode} alt="QR Code PIX" className="w-40 h-40" />
+                    ) : (
+                      <QrCode className="w-40 h-40 text-black" strokeWidth={1.5} />
+                    )}
+                  </div>
+                  <p className="text-[10px] text-black/40 font-bold uppercase tracking-widest mt-2">Aponte a câmera do banco</p>
+                </div>
+
+                <div className="space-y-4">
+                  <Label className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">PIX Copia e Cola</Label>
+                  <div className="bg-muted p-4 rounded-lg flex items-center justify-between gap-4 border border-primary/20">
+                    <code className="text-[10px] font-mono break-all text-left line-clamp-2">
+                      {pixData.payload}
+                    </code>
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="shrink-0 hover:bg-primary/20 text-primary" 
+                      onClick={() => {
+                        navigator.clipboard.writeText(pixData.payload);
+                        toast({ title: "Copiado!", description: "Código PIX copiado." });
+                      }}
+                    >
+                      <Copy className="w-4 h-4" />
+                    </Button>
+                  </div>
+                </div>
+              </>
+            )}
 
             <div className="pt-8 border-t flex flex-col gap-4">
               <div className="flex justify-between font-black italic uppercase">
@@ -416,7 +459,7 @@ export default function CheckoutPage() {
             </div>
 
             {/* Upsell Section */}
-            {upsellProducts.length > 0 && (
+            {!isPaid && upsellProducts.length > 0 && (
               <div className="bg-card border-2 border-primary/30 rounded-xl p-6 shadow-xl relative overflow-hidden group">
                 <div className="absolute top-0 right-0 p-2">
                   <Badge className="bg-secondary text-white font-black italic text-[8px] uppercase tracking-widest animate-pulse">
