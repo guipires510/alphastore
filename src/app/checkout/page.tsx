@@ -16,7 +16,7 @@ import { doc, setDoc, onSnapshot } from "firebase/firestore";
 import { useFirebase } from "@/firebase/provider";
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
-import { processTrexPayment } from "@/ai/flows/create-trex-payment-flow";
+import { createPixPayment } from "@/lib/trex-pay";
 import { PRODUCTS } from "@/lib/products";
 
 export default function CheckoutPage() {
@@ -54,7 +54,6 @@ export default function CheckoutPage() {
     setMounted(true);
   }, []);
 
-  // Calculate upsell products only on client to avoid hydration mismatch
   const upsellProducts = useMemo(() => {
     if (!mounted) return [];
     return PRODUCTS.filter(p => p.id !== 'teste-alpha' && !items.find(item => item.id === p.id)).slice(0, 2);
@@ -157,10 +156,13 @@ export default function CheckoutPage() {
     const checkoutValue = currentTotal;
 
     try {
-      const paymentResponse = await processTrexPayment({
+      // Chamada direta para a API de pagamentos
+      const paymentResponse = await createPixPayment({
         amount: checkoutValue,
         customer: {
-          ...customer,
+          name: customer.name,
+          email: customer.email,
+          phone: customer.whatsapp,
           document: documentClean
         },
         orderId: newOrderId,

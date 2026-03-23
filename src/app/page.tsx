@@ -196,136 +196,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Oferta da Semana Section */}
-      <section className="py-24 container mx-auto px-4 bg-muted/20 border-y border-border/50">
-        <div className="mb-12 text-center md:text-left">
-          <span className="text-primary font-black uppercase italic tracking-widest text-xs">OFERTA DA SEMANA</span>
-          <h2 className="text-4xl md:text-6xl font-black italic leading-none tracking-tighter uppercase mt-2">Kit <span className="text-primary">Microfibra</span></h2>
-        </div>
-
-        <div className="group relative bg-card border border-border rounded-2xl overflow-hidden shadow-2xl product-card-hover transition-all duration-500">
-          <div className="grid grid-cols-1 lg:grid-cols-2">
-            <div className="relative aspect-[16/9] lg:aspect-auto h-full overflow-hidden bg-muted order-1 lg:order-2">
-              <Image
-                src={weeklyImage}
-                alt={weeklyProduct.name}
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-105"
-                data-ai-hint="lupo microfibra"
-              />
-              <div className="absolute top-6 right-6 flex flex-col items-end gap-2">
-                <Badge className="bg-primary text-white font-black italic px-4 py-1 uppercase tracking-widest text-xs">
-                  DESTAQUE ALPHA
-                </Badge>
-              </div>
-            </div>
-            
-            <div className="p-8 md:p-12 flex flex-col justify-center gap-6 order-2 lg:order-1">
-              <div className="space-y-4">
-                <h3 className="text-3xl md:text-5xl font-black uppercase italic tracking-tight leading-none">
-                  {weeklyProduct.name}
-                </h3>
-                <p className="text-muted-foreground uppercase tracking-widest font-medium text-sm leading-relaxed max-w-md">
-                  {weeklyProduct.description}
-                </p>
-              </div>
-
-              <div className="flex items-end gap-4">
-                <div className="flex flex-col">
-                  {weeklyProduct.originalPrice && (
-                    <span className="text-sm text-muted-foreground line-through decoration-primary/50 font-bold">
-                      DE R$ {weeklyProduct.originalPrice.toFixed(2)}
-                    </span>
-                  )}
-                  <span className="text-4xl md:text-6xl font-black text-primary italic leading-none">
-                    R$ {weeklyProduct.price.toFixed(2)}
-                  </span>
-                </div>
-              </div>
-
-              <div className="pt-4 space-y-4">
-                <Button 
-                  disabled={navLoading === 'cta-weekly'}
-                  onClick={() => handleNav('cta-weekly', `/product/${weeklyProduct.id}`)}
-                  size="lg" 
-                  className="w-full md:w-fit h-16 px-12 bg-foreground text-background hover:bg-primary hover:text-white font-black uppercase tracking-widest italic text-lg transition-all cta-button animate-white-pulse"
-                >
-                  {navLoading === 'cta-weekly' ? (
-                    <Loader2 className="animate-spin" />
-                  ) : (
-                    <>
-                      <Sparkles className="w-5 h-5 mr-3" />
-                      COMPRE AQUI!
-                    </>
-                  )}
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-12 flex justify-center">
-          <Button 
-            variant="outline" 
-            size="lg" 
-            disabled={navLoading === 'catalog-bottom'}
-            onClick={() => handleNav('catalog-bottom', '/catalog')}
-            className="h-14 px-12 border-border font-black uppercase italic tracking-widest text-sm hover:border-primary hover:text-primary transition-all group"
-          >
-            {navLoading === 'catalog-bottom' ? (
-              <Loader2 className="animate-spin" />
-            ) : (
-              <>
-                Ver Mais Produtos <ArrowRight className="w-4 h-4 ml-3 group-hover:translate-x-2 transition-transform" />
-              </>
-            )}
-          </Button>
-        </div>
-      </section>
-
       {/* Marketing Section */}
       <section className="py-12 bg-background border-t">
         <div className="container mx-auto px-4">
-          <MarketingBanner theme="Kit 10 cuecas boxer com desconto exclusivo no PIX" />
+          <MarketingBanner theme="Alpha Promo" />
         </div>
       </section>
 
       <footer className="bg-card py-16 border-t">
-        <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12">
-          <div className="space-y-6">
-            <Link href="/">
-              <AlphaLogo />
-            </Link>
-            <p className="text-muted-foreground text-xs uppercase tracking-widest leading-relaxed">
-              Elevando o padrão do underwear masculino brasileiro com conforto e estilo desde 2026.
-            </p>
-          </div>
-          <div>
-            <h4 className="font-black text-sm uppercase italic mb-6 tracking-widest">Shop</h4>
-            <ul className="space-y-4">
-              <li><Link href="/catalog" className="text-xs text-muted-foreground hover:text-primary uppercase tracking-widest transition-colors font-medium">Todos os Produtos</Link></li>
-              <li><Link href="/catalog?filter=kit" className="text-xs text-muted-foreground hover:text-primary uppercase tracking-widest transition-colors font-medium">Kits Promocionais</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-black text-sm uppercase italic mb-6 tracking-widest">Suporte</h4>
-            <ul className="space-y-4">
-              <li><Link href="/contact" className="text-xs text-muted-foreground hover:text-primary uppercase tracking-widest transition-colors font-medium">Fale Conosco</Link></li>
-              <li><Link href="#" className="text-xs text-muted-foreground hover:text-primary uppercase tracking-widest transition-colors font-medium">Trocas e Devoluções</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-black text-sm uppercase italic mb-6 tracking-widest">Social</h4>
-            <div className="flex gap-4">
-              <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center hover:bg-primary transition-colors cursor-pointer group">
-                <span className="text-[10px] font-black group-hover:text-white">IG</span>
-              </div>
-              <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center hover:bg-primary transition-colors cursor-pointer group">
-                <span className="text-[10px] font-black group-hover:text-white">TK</span>
-              </div>
-            </div>
-          </div>
-        </div>
         <div className="container mx-auto px-4 mt-16 pt-8 border-t border-border/50 text-center">
           <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">
             © 2026 AlphaFlow Underwear • Estilo e Performance

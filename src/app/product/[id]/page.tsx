@@ -11,7 +11,6 @@ import { useState, useEffect, useMemo } from "react";
 import { useCartStore } from "@/lib/store";
 import { useToast } from "@/hooks/use-toast";
 import { ShieldCheck, Truck, Zap, Star } from "lucide-react";
-import { generateProductDescription } from "@/ai/flows/generate-product-description-flow";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { SecureTransition } from "@/components/secure-transition";
@@ -27,8 +26,6 @@ export default function ProductDetailPage() {
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [selectedColor, setSelectedColor] = useState<string>("");
   const [activeImage, setActiveImage] = useState<string>("");
-  const [aiDescription, setAiDescription] = useState<string | null>(null);
-  const [loadingAi, setLoadingAi] = useState(false);
   const [isRedirecting, setIsRedirecting] = useState(false);
 
   const colors = [
@@ -74,16 +71,6 @@ export default function ProductDetailPage() {
   useEffect(() => {
     if (product) {
       setActiveImage(product.image);
-      setLoadingAi(true);
-      generateProductDescription({
-        material: product.material,
-        style: product.category === 'kit' ? 'boxer brief' : 'brief',
-        features: product.features
-      })
-      .then(res => setAiDescription(res.description))
-      .catch(() => {})
-      .finally(() => setLoadingAi(false));
-
       if (product.availableColors && product.availableColors.length === 1) {
         setSelectedColor(product.availableColors[0]);
       }
@@ -198,21 +185,21 @@ export default function ProductDetailPage() {
             )}
 
             <div className="space-y-6 pt-6">
-              <h3 className="text-sm font-black uppercase tracking-[0.2em] italic border-b pb-2">Descrição Detalhada</h3>
+              <h3 className="text-sm font-black uppercase tracking-[0.2em] italic border-b pb-2">Descrição do Produto</h3>
               <div className="prose prose-invert max-w-none">
                 <p className="text-muted-foreground uppercase tracking-widest font-medium text-sm leading-relaxed mb-4">
                   {product.description}
                 </p>
-                {loadingAi ? (
-                  <div className="space-y-2">
-                    <div className="h-3 bg-muted animate-pulse rounded w-full" />
-                    <div className="h-3 bg-muted animate-pulse rounded w-4/5" />
-                  </div>
-                ) : (
-                  <p className="text-foreground uppercase tracking-widest font-bold text-xs leading-relaxed italic border-l-2 border-primary pl-4">
-                    {aiDescription}
-                  </p>
-                )}
+                <div className="bg-muted/30 p-4 rounded-xl border border-border">
+                  <h4 className="text-[10px] font-black uppercase tracking-widest mb-2 text-primary">Características Premium:</h4>
+                  <ul className="grid grid-cols-2 gap-2">
+                    {product.features.map((feature, idx) => (
+                      <li key={idx} className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
+                        <Zap className="w-3 h-3 text-primary" /> {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
