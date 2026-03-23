@@ -3,9 +3,10 @@
  * Utiliza as credenciais configuradas no arquivo .env.
  */
 
-const TREX_PAY_API_URL = process.env.TREX_PAY_API_URL || 'https://app.trexpay.com.br';
-const TREX_PAY_TOKEN = process.env.TREX_PAY_TOKEN || '16d4f85d-28e6-46b3-86ab-321c9263e8b9';
-const TREX_PAY_SECRET = process.env.TREX_PAY_SECRET || '135a8d03-2d43-4a78-9020-cf712d2acaa3';
+// Geralmente APIs de pagamento usam o subdomínio 'api' para integrações técnicas
+const TREX_PAY_API_URL = 'https://api.trexpay.com.br';
+const TREX_PAY_TOKEN = '16d4f85d-28e6-46b3-86ab-321c9263e8b9';
+const TREX_PAY_SECRET = '135a8d03-2d43-4a78-9020-cf712d2acaa3';
 
 export interface TrexPaymentRequest {
   amount: number;
@@ -37,8 +38,8 @@ export async function createPixPayment(data: TrexPaymentRequest): Promise<TrexPa
     };
   }
 
-  // Ajustado para o endpoint mais comum de criação de PIX na Trex Pay
-  const endpoint = `${TREX_PAY_API_URL.replace(/\/$/, '')}/api/v1/pix`;
+  // Endpoint padrão para criação de PIX
+  const endpoint = `${TREX_PAY_API_URL}/api/v1/pix`;
 
   try {
     const payload = {
@@ -69,22 +70,26 @@ export async function createPixPayment(data: TrexPaymentRequest): Promise<TrexPa
     try {
       result = JSON.parse(responseText);
     } catch (e) {
-      // Se não for JSON, o servidor retornou um HTML (erro 404, 500 ou Login)
       return {
         success: false,
         pixPayload: '',
         qrCodeUrl: '',
         paymentId: '',
-        error: `O servidor retornou um erro inesperado (HTML). Status: ${response.status}. Verifique se a URL e as chaves estão corretas.`,
+        error: `Erro de formato na resposta (HTML recebido). Status: ${response.status}. Verifique se o endpoint ${endpoint} está correto.`,
       };
     }
 
     if (response.ok) {
+      // Mapeamento flexível de campos para diferentes versões da API
+      const pixPayload = result.pix_code || result.copy_paste || result.payload || result.pix_payload || (result.data && result.data.pix_code) || '';
+      const qrCodeUrl = result.qr_code_url || result.image_url || result.qrcode || result.qr_code || (result.data && result.data.qr_code_url) || '';
+      const paymentId = result.id || result.transaction_id || (result.data && result.data.id) || 'N/A';
+
       return {
         success: true,
-        pixPayload: result.pix_code || result.copy_paste || result.payload || result.pix_payload || result.data?.pix_code || '',
-        qrCodeUrl: result.qr_code_url || result.image_url || result.qrcode || result.qr_code || result.data?.qr_code_url || '',
-        paymentId: result.id || result.transaction_id || result.data?.id || 'N/A',
+        pixPayload,
+        qrCodeUrl,
+        paymentId,
       };
     } else {
       return {
@@ -92,7 +97,7 @@ export async function createPixPayment(data: TrexPaymentRequest): Promise<TrexPa
         pixPayload: '',
         qrCodeUrl: '',
         paymentId: '',
-        error: result.message || result.error || result.errors?.[0]?.message || `Erro API (${response.status})`,
+        error: result.message || result.error || (result.errors && result.errors[0] && result.errors[0].message) || `Erro na API Trex Pay (Status ${response.status})`,
       };
     }
   } catch (error: any) {
@@ -101,7 +106,7 @@ export async function createPixPayment(data: TrexPaymentRequest): Promise<TrexPa
       pixPayload: '',
       qrCodeUrl: '',
       paymentId: '',
-      error: `Falha de conexão: ${error.message}`,
+      error: `Falha na comunicação com a Trex Pay: ${error.message}`,
     };
   }
 }
