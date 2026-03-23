@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { useState, useEffect, useMemo } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
-import { CircleCheck, QrCode, Copy, Wallet, Loader2, Search, Sparkles, ShieldCheck } from "lucide-react";
+import { CircleCheck, QrCode, Copy, Wallet, Loader2, Search, Sparkles, ShieldCheck, Truck } from "lucide-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { PRODUCTS } from "@/lib/products";
@@ -46,6 +46,8 @@ export default function CheckoutPage() {
     document: ""
   });
   const [isFetchingCep, setIsFetchingCep] = useState(false);
+
+  const isCpfValid = customer.document.length === 11;
 
   const orderBumps = useMemo(() => {
     return PRODUCTS.filter(p => p.category === 'single').slice(0, 2);
@@ -121,7 +123,6 @@ export default function CheckoutPage() {
     const checkoutValue = currentTotal;
 
     try {
-      // 1. Criar o pagamento
       const trexResponse = await processTrexPayment({
         amount: checkoutValue,
         customer: {
@@ -135,7 +136,6 @@ export default function CheckoutPage() {
         throw new Error(trexResponse.error || "Erro ao gerar PIX");
       }
 
-      // 2. Salvar pedido no Firestore
       const orderData = {
         customer: { ...customer, document: documentClean, address: { ...address, cep } },
         items: items.map(i => ({ id: i.id, name: i.name, price: i.price, quantity: i.quantity, size: i.size, color: i.color })),
@@ -156,7 +156,6 @@ export default function CheckoutPage() {
         errorEmitter.emit('permission-error', permissionError);
       });
 
-      // 3. Atualizar UI
       setOrderId(newOrderId);
       setPixData({ payload: trexResponse.pixPayload, qrCode: trexResponse.qrCodeUrl });
       setFinalValue(checkoutValue);
@@ -263,8 +262,15 @@ export default function CheckoutPage() {
                     <Input required value={customer.name} onChange={(e) => setCustomer({...customer, name: e.target.value})} className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="EX: JOÃO SILVA" />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">CPF (11 números)</Label>
-                    <Input required maxLength={11} value={customer.document} onChange={(e) => setCustomer({...customer, document: e.target.value.replace(/\D/g, "")})} className="bg-muted/50 border-border h-12 text-xs font-bold" placeholder="00000000000" />
+                    <div className="flex justify-between items-center">
+                      <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">CPF (11 números)</Label>
+                      {isCpfValid && (
+                        <Badge className="bg-green-600/20 text-green-600 border-green-600/30 text-[9px] font-black uppercase italic tracking-widest flex items-center gap-1">
+                          <Truck className="w-2.5 h-2.5" /> FRETE GRÁTIS LIBERADO!
+                        </Badge>
+                      )}
+                    </div>
+                    <Input required maxLength={11} value={customer.document} onChange={(e) => setCustomer({...customer, document: e.target.value.replace(/\D/g, "")})} className={`bg-muted/50 border-border h-12 text-xs font-bold transition-all ${isCpfValid ? 'ring-2 ring-green-600/30 border-green-600/30' : ''}`} placeholder="00000000000" />
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -376,6 +382,18 @@ export default function CheckoutPage() {
               </div>
               
               <div className="space-y-3 border-t pt-6 mb-8 font-bold uppercase tracking-widest text-[10px]">
+                <div className="flex justify-between items-center text-muted-foreground">
+                  <span>Subtotal:</span>
+                  <span>R$ {currentTotal.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between items-center text-muted-foreground">
+                  <span>Frete:</span>
+                  {isCpfValid ? (
+                    <span className="text-green-600 font-black italic">GRÁTIS</span>
+                  ) : (
+                    <span className="text-[8px] italic">Aguardando CPF...</span>
+                  )}
+                </div>
                 <div className="flex justify-between text-xl font-black italic pt-4 border-t border-border/50 text-foreground">
                   <span>Total Final:</span>
                   <span className="text-primary">R$ {currentTotal.toFixed(2)}</span>
