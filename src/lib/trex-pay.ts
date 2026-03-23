@@ -76,28 +76,24 @@ export async function createPixPayment(data: TrexPaymentRequest): Promise<TrexPa
       };
     }
 
-    // Verificamos sucesso tanto pelo status HTTP quanto pelo conteúdo do JSON
-    if (response.ok || result.status === 'success' || result.success === true || result.pix_code) {
+    // De acordo com o log de erro do usuário, a API retorna sucesso mas com campos específicos
+    if (response.ok || result.status === 'success' || result.qrcode) {
       
-      // Busca profunda por campos comuns de PIX
-      const pixPayload = result.pix_code || 
+      // Mapeamento exato baseado no log de erro: "qrcode, qr_code_image_url, idTransaction"
+      const pixPayload = result.qrcode || 
+                        result.pix_code || 
                         result.copy_paste || 
                         result.payload || 
-                        result.pix_payload || 
-                        (result.data && (result.data.pix_code || result.data.copy_paste || result.data.payload)) || 
                         '';
 
-      const qrCodeUrl = result.qr_code_url || 
+      const qrCodeUrl = result.qr_code_image_url || 
+                       result.qr_code_url || 
                        result.image_url || 
-                       result.qrcode || 
-                       result.qr_code || 
-                       (result.data && (result.data.qr_code_url || result.data.image_url || result.data.qrcode)) || 
                        '';
 
-      const paymentId = result.id || 
+      const paymentId = result.idTransaction || 
                        result.transaction_id || 
-                       result.payment_id || 
-                       (result.data && (result.data.id || result.data.transaction_id)) || 
+                       result.id || 
                        'N/A';
 
       if (!pixPayload) {
