@@ -1,6 +1,3 @@
-
-'use client';
-
 export const firebaseConfig = {
   apiKey: "AIzaSyDummyKey",
   authDomain: "alphaflow-ecommerce.firebaseapp.com",

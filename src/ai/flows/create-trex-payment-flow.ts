@@ -1,7 +1,6 @@
-
 'use server';
 /**
- * @fileOverview Fluxo Genkit para processar pagamentos via Trex Pay de forma segura.
+ * @fileOverview Fluxo Genkit para processar pagamentos de forma segura.
  */
 
 import { ai } from '@/ai/genkit';
@@ -12,7 +11,7 @@ const CreateTrexPaymentInputSchema = z.object({
   amount: z.number(),
   customer: z.object({
     name: z.string(),
-    email: z.string().email(),
+    email: z.string(),
     whatsapp: z.string(),
     document: z.string(),
   }),
@@ -31,7 +30,18 @@ export type CreateTrexPaymentInput = z.infer<typeof CreateTrexPaymentInputSchema
 export type CreateTrexPaymentOutput = z.infer<typeof CreateTrexPaymentOutputSchema>;
 
 export async function processTrexPayment(input: CreateTrexPaymentInput): Promise<CreateTrexPaymentOutput> {
-  return createTrexPaymentFlow(input);
+  try {
+    return await createTrexPaymentFlow(input);
+  } catch (error: any) {
+    console.error('Erro no processamento do fluxo de pagamento:', error);
+    return {
+      success: false,
+      pixPayload: '',
+      qrCodeUrl: '',
+      paymentId: '',
+      error: error.message || 'Erro interno no processamento do pedido.',
+    };
+  }
 }
 
 const createTrexPaymentFlow = ai.defineFlow(
@@ -41,7 +51,7 @@ const createTrexPaymentFlow = ai.defineFlow(
     outputSchema: CreateTrexPaymentOutputSchema,
   },
   async (input) => {
-    // Aqui chamamos o serviço que integra com a API da Trex Pay
+    // Chamada ao serviço de integração
     const result = await createPixPayment({
       amount: input.amount,
       customer: {
