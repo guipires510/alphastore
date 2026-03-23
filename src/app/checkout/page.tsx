@@ -253,11 +253,11 @@ export default function CheckoutPage() {
                     <Input required value={customer.name} onChange={(e) => setCustomer({...customer, name: e.target.value})} className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="EX: JOÃO SILVA" />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">CPF (Obrigatório 11 números)</Label>
-                    <Input required maxLength={11} value={customer.document} onChange={(e) => setCustomer({...customer, document: e.target.value.replace(/\D/g, "")})} className="bg-muted/50 border-border h-12 text-xs font-bold" placeholder="000.000.000-00" />
+                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">CPF</Label>
+                    <Input required maxLength={11} value={customer.document} onChange={(e) => setCustomer({...customer, document: e.target.value.replace(/\D/g, "")})} className="bg-muted/50 border-border h-12 text-xs font-bold" placeholder="00000000000" />
                   </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2">
                     <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">E-mail</Label>
                     <Input required type="email" value={customer.email} onChange={(e) => setCustomer({...customer, email: e.target.value})} className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="E-MAIL@EXEMPLO.COM" />
