@@ -25,6 +25,7 @@ export default function CheckoutPage() {
   const [orderComplete, setOrderComplete] = useState(false);
   const [orderId, setOrderId] = useState("");
   const [pixData, setPixData] = useState({ payload: "", qrCode: "" });
+  const [finalValue, setFinalValue] = useState(0);
   const { toast } = useToast();
   const router = useRouter();
 
@@ -98,7 +99,7 @@ export default function CheckoutPage() {
     );
   }
 
-  const finalTotal = total();
+  const currentTotal = total();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -107,7 +108,7 @@ export default function CheckoutPage() {
     if (documentClean.length !== 11) {
       toast({
         title: "CPF Inválido",
-        description: "Por favor, insira um CPF válido com 11 dígitos.",
+        description: "Por favor, insira um CPF válido com exatamente 11 dígitos.",
         variant: "destructive",
       });
       return;
@@ -117,11 +118,12 @@ export default function CheckoutPage() {
     
     const newOrderId = `ALPHA-${Math.floor(Math.random() * 99999)}`;
     const { firestore } = initializeFirebase();
+    const checkoutValue = currentTotal;
 
     try {
       // 1. Criar o pagamento na Trex Pay via Flow Genkit
       const trexResponse = await processTrexPayment({
-        amount: finalTotal,
+        amount: checkoutValue,
         customer: {
           ...customer,
           document: documentClean
@@ -137,7 +139,7 @@ export default function CheckoutPage() {
       const orderData = {
         customer: { ...customer, document: documentClean, address: { ...address, cep } },
         items: items.map(i => ({ id: i.id, name: i.name, price: i.price, quantity: i.quantity, size: i.size, color: i.color })),
-        total: finalTotal,
+        total: checkoutValue,
         status: "pending",
         pixPayload: trexResponse.pixPayload,
         paymentId: trexResponse.paymentId,
@@ -157,6 +159,7 @@ export default function CheckoutPage() {
       // 3. Atualizar UI
       setOrderId(newOrderId);
       setPixData({ payload: trexResponse.pixPayload, qrCode: trexResponse.qrCodeUrl });
+      setFinalValue(checkoutValue);
       setOrderComplete(true);
       clearCart();
       
@@ -229,7 +232,7 @@ export default function CheckoutPage() {
             <div className="pt-8 border-t flex flex-col gap-4">
               <div className="flex justify-between font-black italic uppercase">
                 <span>Total a Pagar:</span>
-                <span className="text-primary text-2xl">R$ {finalTotal.toFixed(2)}</span>
+                <span className="text-primary text-2xl">R$ {finalValue.toFixed(2)}</span>
               </div>
               <Button onClick={() => router.push("/")} className="w-full bg-foreground text-background font-black italic uppercase tracking-widest h-14 cta-button">
                 Voltar para Início
@@ -260,8 +263,8 @@ export default function CheckoutPage() {
                     <Input required value={customer.name} onChange={(e) => setCustomer({...customer, name: e.target.value})} className="bg-muted/50 border-border h-12 uppercase text-xs font-bold" placeholder="EX: JOÃO SILVA" />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">CPF (Obrigatório)</Label>
-                    <Input required value={customer.document} onChange={(e) => setCustomer({...customer, document: e.target.value})} className="bg-muted/50 border-border h-12 text-xs font-bold" placeholder="000.000.000-00" />
+                    <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">CPF (Somente 11 números)</Label>
+                    <Input required maxLength={11} value={customer.document} onChange={(e) => setCustomer({...customer, document: e.target.value.replace(/\D/g, "")})} className="bg-muted/50 border-border h-12 text-xs font-bold" placeholder="00000000000" />
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -375,7 +378,7 @@ export default function CheckoutPage() {
               <div className="space-y-3 border-t pt-6 mb-8 font-bold uppercase tracking-widest text-[10px]">
                 <div className="flex justify-between text-xl font-black italic pt-4 border-t border-border/50 text-foreground">
                   <span>Total Final:</span>
-                  <span className="text-primary">R$ {finalTotal.toFixed(2)}</span>
+                  <span className="text-primary">R$ {currentTotal.toFixed(2)}</span>
                 </div>
               </div>
 
