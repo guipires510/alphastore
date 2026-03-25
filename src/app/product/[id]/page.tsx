@@ -218,10 +218,10 @@ export default function ProductDetailPage() {
               <div className="flex flex-col">
                 {product.originalPrice && (
                   <span className="text-sm text-muted-foreground line-through decoration-primary/50 font-bold mb-1">
-                    DE R$ {product.originalPrice.toFixed(2)}
+                    DE R$ {product.originalPrice.toFixed(2).replace('.', ',')}
                   </span>
                 )}
-                <span className="text-4xl md:text-5xl font-black text-primary italic leading-none">R$ {product.price.toFixed(2)}</span>
+                <span className="text-4xl md:text-5xl font-black text-primary italic leading-none">R$ {product.price.toFixed(2).replace('.', ',')}</span>
               </div>
               <div className="bg-primary/10 border border-primary/20 px-3 py-1 rounded text-[10px] font-black uppercase tracking-widest text-primary">
                 OFERTA EXCLUSIVA

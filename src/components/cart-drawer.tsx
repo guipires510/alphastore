@@ -115,7 +115,7 @@ export function CartDrawer({ children }: { children: React.ReactNode }) {
                           </button>
                         </div>
                         <span className="font-black italic text-primary">
-                          R$ {(item.price * item.quantity).toFixed(2)}
+                          R$ {(item.price * item.quantity).toFixed(2).replace('.', ',')}
                         </span>
                       </div>
                     </div>
@@ -129,7 +129,7 @@ export function CartDrawer({ children }: { children: React.ReactNode }) {
             <SheetFooter className="p-6 border-t border-border flex-col gap-4 sm:flex-col">
               <div className="flex items-center justify-between w-full mb-2">
                 <span className="text-muted-foreground uppercase text-[10px] font-black tracking-[0.2em]">Total</span>
-                <span className="text-2xl font-black text-primary italic">R$ {cartTotal.toFixed(2)}</span>
+                <span className="text-2xl font-black text-primary italic">R$ {cartTotal.toFixed(2).replace('.', ',')}</span>
               </div>
               <Button 
                 onClick={handleCheckoutClick}

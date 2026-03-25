@@ -159,11 +159,11 @@ export default function Home() {
                 <div className="flex flex-col">
                   {featuredProduct.originalPrice && (
                     <span className="text-sm text-muted-foreground line-through decoration-primary/50 font-bold">
-                      DE R$ {featuredProduct.originalPrice.toFixed(2)}
+                      DE R$ {featuredProduct.originalPrice.toFixed(2).replace('.', ',')}
                     </span>
                   )}
                   <span className="text-4xl md:text-6xl font-black text-primary italic leading-none">
-                    R$ {featuredProduct.price.toFixed(2)}
+                    R$ {featuredProduct.price.toFixed(2).replace('.', ',')}
                   </span>
                 </div>
               </div>

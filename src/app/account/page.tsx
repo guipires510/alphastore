@@ -275,7 +275,7 @@ export default function AccountPage() {
                           <p className="text-[10px] text-muted-foreground uppercase tracking-widest font-medium">Realizado em {order.date}</p>
                         </div>
                         <div className="flex items-center justify-between md:flex-col md:items-end gap-2">
-                          <span className="text-xl font-black italic tracking-tighter text-primary">R$ {order.total.toFixed(2)}</span>
+                          <span className="text-xl font-black italic tracking-tighter text-primary">R$ {order.total.toFixed(2).replace('.', ',')}</span>
                           <Button variant="link" className="text-xs font-black uppercase tracking-widest italic p-0 h-auto">Ver Detalhes</Button>
                         </div>
                       </div>

@@ -44,10 +44,10 @@ export function ProductCard({ product }: { product: Product }) {
           </h3>
         </Link>
         <div className="flex items-center gap-2 mt-auto">
-          <span className="text-xl font-black text-primary italic">R$ {product.price.toFixed(2)}</span>
+          <span className="text-xl font-black text-primary italic">R$ {product.price.toFixed(2).replace('.', ',')}</span>
           {product.originalPrice && (
             <span className="text-xs text-muted-foreground line-through decoration-primary/50">
-              R$ {product.originalPrice.toFixed(2)}
+              R$ {product.originalPrice.toFixed(2).replace('.', ',')}
             </span>
           )}
         </div>

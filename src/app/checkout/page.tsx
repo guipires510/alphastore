@@ -320,7 +320,7 @@ export default function CheckoutPage() {
             <div className="pt-8 border-t flex flex-col gap-4">
               <div className="flex justify-between font-black italic uppercase">
                 <span>Total Final:</span>
-                <span className="text-primary text-2xl">R$ {finalValue.toFixed(2)}</span>
+                <span className="text-primary text-2xl">R$ {finalValue.toFixed(2).replace('.', ',')}</span>
               </div>
               <Button onClick={() => router.push("/")} className="w-full bg-foreground text-background font-black italic uppercase tracking-widest h-14 cta-button">
                 Voltar para Início
@@ -481,7 +481,7 @@ export default function CheckoutPage() {
                       </div>
                     </div>
                     <div className="flex flex-col items-end">
-                      <span className="font-black italic text-sm">R$ {(item.price * item.quantity).toFixed(2)}</span>
+                      <span className="font-black italic text-sm">R$ {(item.price * item.quantity).toFixed(2).replace('.', ',')}</span>
                     </div>
                   </div>
                 ))}
@@ -490,7 +490,7 @@ export default function CheckoutPage() {
               <div className="space-y-3 border-t pt-6 mb-8 font-bold uppercase tracking-widest text-[10px]">
                 <div className="flex justify-between items-center text-muted-foreground">
                   <span>Subtotal:</span>
-                  <span>R$ {currentTotal.toFixed(2)}</span>
+                  <span>R$ {currentTotal.toFixed(2).replace('.', ',')}</span>
                 </div>
                 <div className="flex justify-between items-center text-muted-foreground">
                   <span>Frete:</span>
@@ -502,7 +502,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex justify-between text-xl font-black italic pt-4 border-t border-border/50 text-foreground">
                   <span>Total Final:</span>
-                  <span className="text-primary">R$ {currentTotal.toFixed(2)}</span>
+                  <span className="text-primary">R$ {currentTotal.toFixed(2).replace('.', ',')}</span>
                 </div>
               </div>
 
@@ -545,8 +545,8 @@ export default function CheckoutPage() {
                       <div className="flex-1 min-w-0">
                         <p className="font-bold uppercase text-[10px] leading-tight line-clamp-2 italic mb-1">{product.name}</p>
                         <div className="flex items-center gap-2">
-                          <span className="text-[9px] text-muted-foreground line-through">R$ {product.price.toFixed(2)}</span>
-                          <span className="text-sm font-black text-primary italic">R$ {(product.price * 0.95).toFixed(2)}</span>
+                          <span className="text-[9px] text-muted-foreground line-through">R$ {product.price.toFixed(2).replace('.', ',')}</span>
+                          <span className="text-sm font-black text-primary italic">R$ {(product.price * 0.95).toFixed(2).replace('.', ',')}</span>
                         </div>
                         <Button 
                           onClick={() => handleAddUpsell(product)}
