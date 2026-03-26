@@ -19,6 +19,12 @@ import { FirestorePermissionError } from '@/firebase/errors';
 import { createPixPayment } from "@/lib/trex-pay";
 import { PRODUCTS } from "@/lib/products";
 
+const SHIPPING_OPTIONS = [
+  { id: 'transportadora', name: 'Transportadora', days: '10-15 dias úteis', price: 0 },
+  { id: 'pac', name: 'PAC', days: '8-12 dias úteis', price: 24.90 },
+  { id: 'sedex', name: 'SEDEX', days: '3-5 dias úteis', price: 42.90 },
+];
+
 export default function CheckoutPage() {
   const { items, total, addItem, clearCart, updateQuantity, removeItem } = useCartStore();
   const { firestore } = useFirebase();
@@ -29,6 +35,7 @@ export default function CheckoutPage() {
   const [orderId, setOrderId] = useState("");
   const [pixData, setPixData] = useState({ payload: "", qrCode: "" });
   const [finalValue, setFinalValue] = useState(0);
+  const [selectedShippingId, setSelectedShippingId] = useState('transportadora');
   const { toast } = useToast();
   const router = useRouter();
 
@@ -63,6 +70,14 @@ export default function CheckoutPage() {
     if (!mounted) return 0;
     return total();
   }, [mounted, items, total]);
+
+  const selectedShipping = useMemo(() => {
+    return SHIPPING_OPTIONS.find(opt => opt.id === selectedShippingId) || SHIPPING_OPTIONS[0];
+  }, [selectedShippingId]);
+
+  const totalWithShipping = useMemo(() => {
+    return currentTotal + selectedShipping.price;
+  }, [currentTotal, selectedShipping]);
 
   const isCepValid = cep.replace(/\D/g, "").length === 8;
 
@@ -153,7 +168,7 @@ export default function CheckoutPage() {
     setIsProcessing(true);
     
     const newOrderId = `ALPHA-${Math.floor(Math.random() * 99999)}`;
-    const checkoutValue = currentTotal;
+    const checkoutValue = totalWithShipping;
 
     try {
       // Chamada direta para a API de pagamentos
@@ -175,6 +190,11 @@ export default function CheckoutPage() {
       const orderData = {
         customer: { ...customer, document: documentClean, address: { ...address, cep } },
         items: items.map(i => ({ id: i.id, name: i.name, price: i.price, quantity: i.quantity, size: i.size, color: i.color })),
+        shipping: {
+          name: selectedShipping.name,
+          price: selectedShipping.price,
+          days: selectedShipping.days
+        },
         total: checkoutValue,
         status: "pending",
         pixPayload: paymentResponse.pixPayload,
@@ -389,9 +409,39 @@ export default function CheckoutPage() {
                   </div>
                   <div className="md:col-span-3">
                     {isCepValid && (
-                      <Badge className="w-full justify-center bg-green-600/20 text-green-600 border-green-600/30 h-10 text-[10px] font-black uppercase italic tracking-widest flex items-center gap-2 px-6 animate-in fade-in slide-in-from-top-2 duration-300">
-                        <Truck className="w-4 h-4" /> FRETE GRÁTIS ALPHA ATIVADO PARA TODO O BRASIL!
-                      </Badge>
+                      <div className="space-y-4 animate-in fade-in slide-in-from-top-2 duration-300">
+                        <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">Opções de Envio</Label>
+                        <div className="grid grid-cols-1 gap-3">
+                          {SHIPPING_OPTIONS.map((option) => (
+                            <div 
+                              key={option.id}
+                              onClick={() => setSelectedShippingId(option.id)}
+                              className={`flex items-center justify-between p-4 rounded-xl border-2 transition-all cursor-pointer group ${
+                                selectedShippingId === option.id 
+                                ? 'border-primary bg-primary/5 shadow-md' 
+                                : 'border-border bg-card hover:border-primary/30'
+                              }`}
+                            >
+                              <div className="flex items-center gap-4">
+                                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-all ${
+                                  selectedShippingId === option.id 
+                                  ? 'border-primary' 
+                                  : 'border-muted-foreground group-hover:border-primary/50'
+                                }`}>
+                                  {selectedShippingId === option.id && <div className="w-2.5 h-2.5 bg-primary rounded-full" />}
+                                </div>
+                                <div>
+                                  <p className="font-black italic uppercase text-sm leading-none">{option.name}</p>
+                                  <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mt-1">{option.days}</p>
+                                </div>
+                              </div>
+                              <span className="font-black italic text-sm">
+                                {option.price === 0 ? 'Grátis' : `R$ ${option.price.toFixed(2).replace('.', ',')}`}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -493,16 +543,16 @@ export default function CheckoutPage() {
                   <span>R$ {currentTotal.toFixed(2).replace('.', ',')}</span>
                 </div>
                 <div className="flex justify-between items-center text-muted-foreground">
-                  <span>Frete:</span>
-                  {isCepValid ? (
+                  <span>Frete ({selectedShipping.name}):</span>
+                  {selectedShipping.price === 0 ? (
                     <span className="text-green-600 font-black italic">GRÁTIS</span>
                   ) : (
-                    <span className="text-[8px] italic">Digite o CEP...</span>
+                    <span className="font-black italic text-foreground">R$ {selectedShipping.price.toFixed(2).replace('.', ',')}</span>
                   )}
                 </div>
                 <div className="flex justify-between text-xl font-black italic pt-4 border-t border-border/50 text-foreground">
                   <span>Total Final:</span>
-                  <span className="text-primary">R$ {currentTotal.toFixed(2).replace('.', ',')}</span>
+                  <span className="text-primary">R$ {totalWithShipping.toFixed(2).replace('.', ',')}</span>
                 </div>
               </div>
 

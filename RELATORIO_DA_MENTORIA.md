@@ -22,6 +22,8 @@ O site travava infinitamente carregando a tela do PIX porque as chaves de API do
 - **Favicon de Inteligência Artificial:** Geramos uma logo de design minimalista com a letra 'A' estilizada (estética preta e dourada) e substituímos o globo genérico do Next.js pelo novo `icon.png`.
 - **LCP e CLS Otimizados:** Removemos fontes de gargalo render-blocking (Google Fonts via link HTTP) passando para compilação local pelo Next.js. Adicionamos a tag `sizes` nas imagens da oferta principal para reduzir o consumo de 4G de quem acessa pelo celular.
 - **SEO Social:** Adicionamos as tags de OpenGraph que garantem que mensagens enviadas no WhatsApp/LinkedIn mostrem o Título rico e o Preview da Loja.
+- **Padrão Brasileiro de Moeda:** Todos os preços do site foram convertidos de `R$ 00.00` para `R$ 00,00` (substituindo pontos por vírgulas) para seguir o padrão nacional.
+- **Logística e Envios:** Adicionamos um seletor de frete no checkout com as opções: **Transportadora (Grátis)**, **PAC (R$ 24,90)** e **SEDEX (R$ 42,90)**. O custo de envio é somado automaticamente ao total do PIX.
 
 ---
 
