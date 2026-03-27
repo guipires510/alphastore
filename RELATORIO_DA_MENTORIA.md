@@ -24,6 +24,7 @@ O site travava infinitamente carregando a tela do PIX porque as chaves de API do
 - **SEO Social:** Adicionamos as tags de OpenGraph que garantem que mensagens enviadas no WhatsApp/LinkedIn mostrem o Título rico e o Preview da Loja.
 - **Padrão Brasileiro de Moeda:** Todos os preços do site foram convertidos de `R$ 00.00` para `R$ 00,00` (substituindo pontos por vírgulas) para seguir o padrão nacional.
 - **Logística e Envios:** Adicionamos um seletor de frete no checkout com as opções: **Transportadora (Grátis)**, **PAC (R$ 24,90)** e **SEDEX (R$ 42,90)**. O custo de envio é somado automaticamente ao total do PIX.
+- **Rastreamento de Marketing:** Integramos os scripts do **UTMfy (Pixel e UTM Tracking)** globalmente. Agora todas as suas campanhas de tráfego pago serão rastreadas automaticamente em todas as páginas da loja.
 
 ---
 

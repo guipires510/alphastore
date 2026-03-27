@@ -5,6 +5,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { MessageCircle } from "lucide-react";
 import { FirebaseClientProvider } from '@/firebase/index';
+import Script from 'next/script';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap', variable: '--font-inter' });
 
@@ -34,6 +35,22 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className="dark">
       <body className={`font-body antialiased bg-background text-foreground min-h-screen ${inter.variable} ${inter.className}`}>
+        <Script id="utmfy-pixel" strategy="afterInteractive">
+          {`
+            window.pixelId = "69c616aa6b3a11cb813def57";
+            var a = document.createElement("script");
+            a.setAttribute("async", "");
+            a.setAttribute("defer", "");
+            a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+            document.head.appendChild(a);
+          `}
+        </Script>
+        <Script 
+          src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+          data-utmify-prevent-xcod-sck=""
+          data-utmify-prevent-subids=""
+          strategy="afterInteractive"
+        />
         <FirebaseClientProvider>
           {children}
           <a
