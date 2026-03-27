@@ -25,6 +25,7 @@ O site travava infinitamente carregando a tela do PIX porque as chaves de API do
 - **Padrão Brasileiro de Moeda:** Todos os preços do site foram convertidos de `R$ 00.00` para `R$ 00,00` (substituindo pontos por vírgulas) para seguir o padrão nacional.
 - **Logística e Envios:** O frete foi simplificado para maior conversão. Agora as opções são: **Transportadora (Grátis - 7 a 10 dias)** e **SEDEX (R$ 28,90)**. O PAC foi removido conforme solicitado.
 - **Correção Visual de Cores:** Resolvemos o bug da página de produto. Agora, ao selecionar uma cor (ex: Branca, Preta, Azul), a imagem principal do produto troca automaticamente para mostrar a cor escolhida, dando confiança ao comprador.
+- **Layout Mobile Otimizado:** Reestruturamos a página de produtos para celulares. Agora o título fica no topo (antes da foto), o preço aparece logo abaixo da imagem e a descrição foi movida para o final, facilitando a conversão e leitura rápida no smartphone.
 - **Rastreamento de Marketing:** Integramos os scripts do **UTMfy (Pixel e UTM Tracking)** globalmente. Todas as campanhas são rastreadas automaticamente.
 
 ---

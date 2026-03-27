@@ -144,6 +144,17 @@ export default function ProductDetailPage() {
       
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 mb-24">
+          {/* TÍTULO MOBILE: ACIMA DA FOTO */}
+          <div className="lg:hidden mb-6">
+            <div className="flex items-center gap-1 text-accent mb-4">
+              {[1, 2, 3, 4, 5].map((s) => <Star key={s} className="w-3 h-3 fill-current" />)}
+              <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-2">(127 avaliações)</span>
+            </div>
+            <h1 className="text-4xl md:text-5xl font-black italic uppercase leading-none tracking-tighter">
+              {product.name}
+            </h1>
+          </div>
+
           <div className="space-y-6">
             <div className="relative aspect-square rounded-2xl overflow-hidden bg-card border border-border group">
               <Image
@@ -184,7 +195,25 @@ export default function ProductDetailPage() {
               </div>
             )}
 
-            <div className="space-y-6 pt-6">
+            {/* PREÇO MOBILE: ABAIXO DA FOTO E THUMBNAILS */}
+            <div className="lg:hidden pt-4">
+              <div className="flex items-center gap-4 mb-2">
+                <div className="flex flex-col">
+                  {product.originalPrice && (
+                    <span className="text-xs text-muted-foreground line-through decoration-primary/50 font-bold mb-1">
+                      DE R$ {product.originalPrice.toFixed(2).replace('.', ',')}
+                    </span>
+                  )}
+                  <span className="text-4xl font-black text-primary italic leading-none">R$ {product.price.toFixed(2).replace('.', ',')}</span>
+                </div>
+                <div className="bg-primary/10 border border-primary/20 px-3 py-1 rounded text-[8px] font-black uppercase tracking-widest text-primary">
+                  OFERTA EXCLUSIVA
+                </div>
+              </div>
+            </div>
+
+            {/* DESCRIÇÃO DESKTOP: PERMANECE NO LADO ESQUERDO */}
+            <div className="space-y-6 pt-6 hidden lg:block">
               <h3 className="text-sm font-black uppercase tracking-[0.2em] italic border-b pb-2">Descrição do Produto</h3>
               <div className="prose prose-invert max-w-none">
                 <p className="text-muted-foreground uppercase tracking-widest font-medium text-sm leading-relaxed mb-4">
@@ -205,30 +234,31 @@ export default function ProductDetailPage() {
           </div>
 
           <div className="flex flex-col">
-            <div className="flex items-center gap-1 text-accent mb-4">
-              {[1, 2, 3, 4, 5].map((s) => <Star key={s} className="w-3 h-3 fill-current" />)}
-              <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-2">(127 avaliações)</span>
+            {/* TÍTULO E AVALIAÇÕES DESKTOP: LADO DIREITO */}
+            <div className="hidden lg:block mb-8">
+              <div className="flex items-center gap-1 text-accent mb-4">
+                {[1, 2, 3, 4, 5].map((s) => <Star key={s} className="w-3 h-3 fill-current" />)}
+                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-2">(127 avaliações)</span>
+              </div>
+              <h1 className="text-4xl md:text-5xl font-black italic uppercase leading-none tracking-tighter mb-4">
+                {product.name}
+              </h1>
+              <div className="flex items-center gap-4">
+                <div className="flex flex-col">
+                  {product.originalPrice && (
+                    <span className="text-sm text-muted-foreground line-through decoration-primary/50 font-bold mb-1">
+                      DE R$ {product.originalPrice.toFixed(2).replace('.', ',')}
+                    </span>
+                  )}
+                  <span className="text-4xl md:text-5xl font-black text-primary italic leading-none">R$ {product.price.toFixed(2).replace('.', ',')}</span>
+                </div>
+                <div className="bg-primary/10 border border-primary/20 px-3 py-1 rounded text-[10px] font-black uppercase tracking-widest text-primary">
+                  OFERTA EXCLUSIVA
+                </div>
+              </div>
             </div>
 
-            <h1 className="text-4xl md:text-5xl font-black italic uppercase leading-none tracking-tighter mb-4">
-              {product.name}
-            </h1>
-
-            <div className="flex items-center gap-4 mb-8">
-              <div className="flex flex-col">
-                {product.originalPrice && (
-                  <span className="text-sm text-muted-foreground line-through decoration-primary/50 font-bold mb-1">
-                    DE R$ {product.originalPrice.toFixed(2).replace('.', ',')}
-                  </span>
-                )}
-                <span className="text-4xl md:text-5xl font-black text-primary italic leading-none">R$ {product.price.toFixed(2).replace('.', ',')}</span>
-              </div>
-              <div className="bg-primary/10 border border-primary/20 px-3 py-1 rounded text-[10px] font-black uppercase tracking-widest text-primary">
-                OFERTA EXCLUSIVA
-              </div>
-            </div>
-
-            <div className="mb-8">
+            <div className="mb-8 mt-8 lg:mt-0">
               <h3 className="text-xs font-black uppercase tracking-[0.2em] mb-4">
                 Selecione o Tamanho <span className="text-primary italic font-black">(Obrigatório)</span>
               </h3>
@@ -272,11 +302,11 @@ export default function ProductDetailPage() {
                       key={color.name}
                       disabled={isUnavailable}
                       onClick={() => {
-                      setSelectedColor(color.name);
-                      if (product.colorImages && product.colorImages[color.name]) {
-                        setActiveImage(product.colorImages[color.name]);
-                      }
-                    }}
+                        setSelectedColor(color.name);
+                        if (product.colorImages && product.colorImages[color.name]) {
+                          setActiveImage(product.colorImages[color.name]);
+                        }
+                      }}
                       className={`relative px-4 h-11 rounded-lg border-2 flex items-center gap-2 transition-all group ${
                         isUnavailable
                           ? "border-muted/30 opacity-40 grayscale cursor-not-allowed"
@@ -323,7 +353,27 @@ export default function ProductDetailPage() {
               </Button>
             </div>
 
-            <div className="grid grid-cols-3 gap-4 mb-12 p-6 bg-card rounded-xl border border-border">
+            {/* DESCRIÇÃO MOBILE: ABAIXO DOS BOTÕES DE COMPRA */}
+            <div className="lg:hidden space-y-6 pt-6 border-t border-border/50">
+              <h3 className="text-sm font-black uppercase tracking-[0.2em] italic border-b pb-2">Descrição do Produto</h3>
+              <div className="prose prose-invert max-w-none">
+                <p className="text-muted-foreground uppercase tracking-widest font-medium text-sm leading-relaxed mb-4">
+                  {product.description}
+                </p>
+                <div className="bg-muted/30 p-4 rounded-xl border border-border">
+                  <h4 className="text-[10px] font-black uppercase tracking-widest mb-2 text-primary">Características Premium:</h4>
+                  <ul className="grid grid-cols-1 gap-2">
+                    {product.features.map((feature, idx) => (
+                      <li key={idx} className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-2">
+                        <Zap className="w-3 h-3 text-primary" /> {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-4 mb-12 p-6 bg-card rounded-xl border border-border mt-12">
               <div className="text-center space-y-2">
                 <Truck className="w-6 h-6 text-primary mx-auto" />
                 <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground leading-tight">Frete Rápido Brasil</p>
