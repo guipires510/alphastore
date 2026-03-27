@@ -35,21 +35,19 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className="dark">
       <body className={`font-body antialiased bg-background text-foreground min-h-screen ${inter.variable} ${inter.className}`}>
-        <Script id="utmfy-pixel" strategy="afterInteractive">
-          {`
-            window.pixelId = "69c616aa6b3a11cb813def57";
-            var a = document.createElement("script");
-            a.setAttribute("async", "");
-            a.setAttribute("defer", "");
-            a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
-            document.head.appendChild(a);
-          `}
+        {/* INICIALIZAÇÃO PRIORITÁRIA DO UTMFY */}
+        <Script id="utmfy-pixel-config" strategy="beforeInteractive">
+          {`window.pixelId = "69c616aa6b3a11cb813def57";`}
         </Script>
+        <Script 
+          src="https://cdn.utmify.com.br/scripts/pixel/pixel.js" 
+          strategy="beforeInteractive"
+        />
         <Script 
           src="https://cdn.utmify.com.br/scripts/utms/latest.js"
           data-utmify-prevent-xcod-sck=""
           data-utmify-prevent-subids=""
-          strategy="afterInteractive"
+          strategy="beforeInteractive"
         />
         <FirebaseClientProvider>
           {children}
