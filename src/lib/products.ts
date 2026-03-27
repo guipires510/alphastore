@@ -15,6 +15,7 @@ export interface Product {
   material: string;
   features: string[];
   availableColors?: string[]; // Cores permitidas para este produto
+  colorImages?: Record<string, string>; // Mapeamento de cor para imagem
 }
 
 export const PRODUCTS: Product[] = [
@@ -32,6 +33,13 @@ export const PRODUCTS: Product[] = [
       'https://i.imgur.com/6STz7KM.png',
       'https://i.imgur.com/nGdxJLl.png'
     ],
+    colorImages: {
+      'Sortidas': 'https://i.imgur.com/A2PO69a.png',
+      'Pretas': 'https://i.imgur.com/JG3lDmj.png',
+      'Brancas': 'https://i.imgur.com/T2I3qTf.png',
+      'Cinza': 'https://i.imgur.com/6STz7KM.png',
+      'Azul Escuro': 'https://i.imgur.com/nGdxJLl.png'
+    },
     category: 'kit',
     brand: 'Lupo',
     quantity: 10,
@@ -48,6 +56,9 @@ export const PRODUCTS: Product[] = [
     images: [
       'https://i.imgur.com/2TET2bx.png'
     ],
+    colorImages: {
+      'Pretas': 'https://i.imgur.com/2TET2bx.png'
+    },
     category: 'kit',
     brand: 'Calvin Klein',
     quantity: 3,
@@ -67,6 +78,11 @@ export const PRODUCTS: Product[] = [
       'https://i.imgur.com/qEpA80D.png',
       'https://i.imgur.com/5vcGwdE.png'
     ],
+    colorImages: {
+      'Sortidas': 'https://i.imgur.com/iSm6PZu.png',
+      'Cinza': 'https://i.imgur.com/qEpA80D.png',
+      'Pretas': 'https://i.imgur.com/5vcGwdE.png'
+    },
     category: 'kit',
     brand: 'Polo Wear',
     quantity: 10,
@@ -86,6 +102,11 @@ export const PRODUCTS: Product[] = [
       'https://i.imgur.com/Hb2uMNx.png',
       'https://i.imgur.com/JhSJAgd.png'
     ],
+    colorImages: {
+      'Azul Escuro': 'https://i.imgur.com/ULYwgXw.png',
+      'Pretas': 'https://i.imgur.com/Hb2uMNx.png',
+      'Sortidas': 'https://i.imgur.com/JhSJAgd.png'
+    },
     category: 'kit',
     brand: 'Lupo',
     quantity: 6,

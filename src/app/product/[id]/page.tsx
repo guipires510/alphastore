@@ -271,7 +271,12 @@ export default function ProductDetailPage() {
                     <button
                       key={color.name}
                       disabled={isUnavailable}
-                      onClick={() => setSelectedColor(color.name)}
+                      onClick={() => {
+                      setSelectedColor(color.name);
+                      if (product.colorImages && product.colorImages[color.name]) {
+                        setActiveImage(product.colorImages[color.name]);
+                      }
+                    }}
                       className={`relative px-4 h-11 rounded-lg border-2 flex items-center gap-2 transition-all group ${
                         isUnavailable
                           ? "border-muted/30 opacity-40 grayscale cursor-not-allowed"

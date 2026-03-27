@@ -20,9 +20,8 @@ import { createPixPayment } from "@/lib/trex-pay";
 import { PRODUCTS } from "@/lib/products";
 
 const SHIPPING_OPTIONS = [
-  { id: 'transportadora', name: 'Transportadora', days: '10-15 dias úteis', price: 0 },
-  { id: 'pac', name: 'PAC', days: '8-12 dias úteis', price: 24.90 },
-  { id: 'sedex', name: 'SEDEX', days: '3-5 dias úteis', price: 42.90 },
+  { id: 'transportadora', name: 'Transportadora', days: '7-10 dias úteis', price: 0 },
+  { id: 'sedex', name: 'SEDEX', days: '3-5 dias úteis', price: 28.90 },
 ];
 
 export default function CheckoutPage() {

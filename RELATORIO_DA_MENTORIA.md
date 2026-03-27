@@ -23,8 +23,9 @@ O site travava infinitamente carregando a tela do PIX porque as chaves de API do
 - **LCP e CLS Otimizados:** Removemos fontes de gargalo render-blocking (Google Fonts via link HTTP) passando para compilação local pelo Next.js. Adicionamos a tag `sizes` nas imagens da oferta principal para reduzir o consumo de 4G de quem acessa pelo celular.
 - **SEO Social:** Adicionamos as tags de OpenGraph que garantem que mensagens enviadas no WhatsApp/LinkedIn mostrem o Título rico e o Preview da Loja.
 - **Padrão Brasileiro de Moeda:** Todos os preços do site foram convertidos de `R$ 00.00` para `R$ 00,00` (substituindo pontos por vírgulas) para seguir o padrão nacional.
-- **Logística e Envios:** Adicionamos um seletor de frete no checkout com as opções: **Transportadora (Grátis)**, **PAC (R$ 24,90)** e **SEDEX (R$ 42,90)**. O custo de envio é somado automaticamente ao total do PIX.
-- **Rastreamento de Marketing:** Integramos os scripts do **UTMfy (Pixel e UTM Tracking)** globalmente. Agora todas as suas campanhas de tráfego pago serão rastreadas automaticamente em todas as páginas da loja.
+- **Logística e Envios:** O frete foi simplificado para maior conversão. Agora as opções são: **Transportadora (Grátis - 7 a 10 dias)** e **SEDEX (R$ 28,90)**. O PAC foi removido conforme solicitado.
+- **Correção Visual de Cores:** Resolvemos o bug da página de produto. Agora, ao selecionar uma cor (ex: Branca, Preta, Azul), a imagem principal do produto troca automaticamente para mostrar a cor escolhida, dando confiança ao comprador.
+- **Rastreamento de Marketing:** Integramos os scripts do **UTMfy (Pixel e UTM Tracking)** globalmente. Todas as campanhas são rastreadas automaticamente.
 
 ---
 
